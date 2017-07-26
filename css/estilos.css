@@ -1426,7 +1426,7 @@ img.img-producto-carrito {
 
 #contacto .fondo .col-lg-7 {
     background-image: url('../img/contacto/bg-contacto.jpg');
-    height: 70vh;
+    height: 75vh;
    -webkit-background-size: cover !important;
    -moz-background-size: cover !important;
    background-size: cover !importantinherit;
@@ -1435,11 +1435,11 @@ img.img-producto-carrito {
 
 #contacto .fondo .col-lg-5 {
     background: #F5F5F5;
-    height: 70vh;
+    height: 75vh;
 }
 
 #contacto .formulario {
-    top: 195px;
+    top: 20%;
     position: absolute;
 }
 
