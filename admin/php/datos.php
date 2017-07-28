@@ -8,7 +8,7 @@
 	require_once 'vectorForms.php';
 
 	//Datos de configuracion iniciales
-	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "e-commerce", "", true);
+	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
 	$config->tbLogin = 'usuarios';
 	$config->theme = 'dark';
 	//$config->cssFiles = ['admin/css/custom/custom.css'];
@@ -91,6 +91,15 @@
 	*/
 	$tabla = new Tabla("productos", "productos", "Productos", "el producto", true, "objeto/productos/", "fa-paper-plane");
 	$tabla->labelField = "NombProd";
+	$tabla->jsFiles = ["admin/js/custom/productos.js"];
+	$tabla->btnList = [
+			array(
+				'id'=> 'btnImg',
+				'titulo'=> '<i class="fa fa-image fa-fw" aria-hidden="true"></i>',
+				'class'=> 'btn-primary',
+				'onclick'=> 'verImagenes'
+			)
+	];
 
 	$tabla->addFieldId("NumeProd", "Número");
 	$tabla->addField("NombProd", "text", 200, "Nombre");
@@ -100,11 +109,37 @@
 	$tabla->addField("ImpoVent", "number", 0, "Precio");
 	$tabla->fields["ImpoVent"]["step"] = "0.1";
 	$tabla->fields["ImpoVent"]["txtAlign"] = "right";
+	$tabla->fields["ImpoVent"]["cssList"] = "editable";
 	
+	$tabla->addField("Novedad", "checkbox", 0, "Es Novedad?");
+	$tabla->addField("Promocion", "checkbox", 0, "Es Promoción?");
+	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["productos"] = $tabla;
+
+	// PRODUCTOS IMAGENES
+	$tabla = new Tabla("productosimagenes", "productosimagenes", "Imágenes de Producto", "la imagen", false, "objeto/productosimagenes/", "fa-image");
+	$tabla->masterTable = "productos";
+	$tabla->masterFieldId = "NumeProd";
+	$tabla->masterFieldName = "NombProd";
+
+	$tabla->order = 'NumeOrde';
+	$tabla->orderField = 'NumeOrde';
+	
+	$tabla->addFieldId('NumeImag', 'number', true, true);
+
+	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
+	$tabla->fields["NumeOrde"]["showOnForm"] = false;
+
+	$tabla->addField("NumeProd", "number", 0, 'Producto');
+	$tabla->fields["NumeProd"]["isHiddenInForm"] = true;
+	$tabla->fields["NumeProd"]["isHiddenInList"] = true;
+
+	$tabla->addFieldFileImage('RutaImag', 'Imagen', 'imgProductos');
+	
+	$config->tablas["productosimagenes"] = $tabla;
 ?>

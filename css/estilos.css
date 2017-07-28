@@ -31,7 +31,7 @@ body {
     height: 70vh;
    -webkit-background-size: cover !important;
    -moz-background-size: cover !important;
-   background-size: cover !importantinherit;
+   background-size: cover !important;
    -o-background-size: cover !important;
 }
 
@@ -535,6 +535,7 @@ span#text-lost-msg {
     padding: 10px 15px;
     display: block;
     cursor: pointer;
+    min-height: 80px;
 }
 
 .precio-producto {
@@ -783,8 +784,13 @@ span#text-lost-msg {
     border-bottom: 2px solid transparent;
 }
 
-#grid-productos .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+/* #grid-productos .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover { */
+.nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     border-bottom: 2px solid #000;
+}
+
+#grid-productos .nav-pills > li.active > a {
+    color: #7B202A;
 }
 
 .breadcrumb {
@@ -895,6 +901,7 @@ span#text-lost-msg {
     font-size: 16px;
     padding: 20px 15px 5px;
     text-align: center;
+    min-height: 170px;
 }
 
 #grid-productos .descripcion-producto {
@@ -940,8 +947,8 @@ span#text-lost-msg {
 
 #article-photo-carousel .carousel-inner > .item > a > img, #article-photo-carousel .carousel-inner > .item > img, #article-photo-carousel .thumbnail a > img,#article-photo-carousel  .thumbnail > img {
     display: block;
-    max-width: 100%;
-    height: auto;
+    width: auto;
+    height: 460px;
     margin: 0 auto;
 }
 
@@ -959,26 +966,22 @@ span#text-lost-msg {
 
 #article-photo-carousel .carousel-indicators li {
     display: inline-block;
-    width: 90px;
-    height: 96px;
+    width: 100px;
+    height: 120px;
     margin: 10px;
     text-indent: -999px;
     cursor: pointer;
-    background-color: #000\9;
+    background-color: #000;
     background-color: rgba(0,0,0,0);
-    border: 1px solid #EFEFEF;
-    border-radius: unset;
-    padding: 10px;
+    border: none;
 }
 
 #article-photo-carousel .carousel-indicators li img {
     display: table;
     margin: 0 auto;
-}
-
-#article-photo-carousel .carousel-indicators .active {
     border: 6px solid #DDDDDD !important;
     padding: 4px;
+    width: 100%;
 }
 
 /* Main carousel style */
@@ -1594,3 +1597,5 @@ footer ul li a:hover {
 .redes-sociales a:hover {
     opacity: 0.8;
 }
+
+.ucase { text-transform: uppercase; }
