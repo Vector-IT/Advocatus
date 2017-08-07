@@ -896,7 +896,7 @@ class Tabla
                                             break;
 
                                         case 'checkbox':
-                                            $strSalida.= $crlf.'<td class="'. $field["cssList"] .'">';
+                                            $strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
                                             $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
                                             if (boolval($fila[$field['name']])) {
                                                 $strSalida.= $crlf.'<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>';
@@ -1287,7 +1287,7 @@ class Tabla
                                         break;
     
                                     default:
-                                        $strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).html());';
+                                        $strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).text());';
                                         break;
                                 }
                             }

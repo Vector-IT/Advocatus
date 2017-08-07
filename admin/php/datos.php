@@ -18,6 +18,7 @@
 	 */
 	$config->menuItems = [
 			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
+			new MenuItem("Productos", 'objeto/productos/', '', 'fa-paper-plane', 2, false, true),
 			new MenuItem("Reportes", 'reportes.php', '', 'fa-slideshare', '', false, false),
 			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, false)
 	];
@@ -91,6 +92,7 @@
 	*/
 	$tabla = new Tabla("productos", "productos", "Productos", "el producto", true, "objeto/productos/", "fa-paper-plane");
 	$tabla->labelField = "NombProd";
+	$tabla->isSubMenu = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];
 	$tabla->btnList = [
 			array(
@@ -112,14 +114,37 @@
 	$tabla->fields["ImpoVent"]["cssList"] = "editable";
 	
 	$tabla->addField("Novedad", "checkbox", 0, "Es Novedad?");
+	$tabla->fields["Novedad"]["txtAlign"] = "center";
 	$tabla->addField("Promocion", "checkbox", 0, "Es Promoción?");
+	$tabla->fields["Promocion"]["txtAlign"] = "center";
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
+	$tabla->fields["Destacado"]["txtAlign"] = "center";
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["productos"] = $tabla;
+
+	/**
+	* ATRIBUTOS
+	*/
+	$tabla = new Tabla("atributos", "atributos", "Atributos", "el atributo", true, "objeto/atributos/", "fa-info-circle");
+	$tabla->isSubItem = true;
+	$tabla->labelField = "NombAtri";
+	$tabla->order = 'NumeOrde';
+	$tabla->orderField = 'NumeOrde';
+
+	$tabla->addFieldId("NumeAtri", "Número", true, true);
+
+	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
+	$tabla->fields["NumeOrde"]["showOnForm"] = false;
+
+	$tabla->addField("NombAtri", "text", 60, "Nombre");
+	$tabla->addField("NumeTipoAtri", "select", 60, "Tipo de atributo", true, false, false, true, '', '', "tiposatributos", "NumeTipoAtri", "NombTipoAtri", "", "NombTipoAtri");
+
+
+	$config->tablas["atributos"] = $tabla;
 
 	// PRODUCTOS IMAGENES
 	$tabla = new Tabla("productosimagenes", "productosimagenes", "Imágenes de Producto", "la imagen", false, "objeto/productosimagenes/", "fa-image");
