@@ -25,6 +25,9 @@ class Tabla
     public $order;
 	public $orderField;
 
+    public $paginacion;
+    public $pageRows;
+
     public $IDField;
     public $labelField;
 
@@ -91,6 +94,9 @@ class Tabla
         $this->order = $order;
 		
 		$this->orderField = '';
+
+        $this->paginacion = false;
+		$this->pageRows = 25;
 
         $this->allowNew = $allowNew;
         $this->allowEdit = $allowEdit;
@@ -687,7 +693,7 @@ class Tabla
         return $strSalida;
     }
 
-    public function listar($strFiltro = "", $conBotones = true, $btnList = [], $order = '')
+    public function listar($strFiltro = "", $conBotones = true, $btnList = [], $order = '', $pagina = 1)
     {
         global $config, $crlf;
 
@@ -761,24 +767,6 @@ class Tabla
                     }
 
                     $filtro.= $crlf. $key ." ". $data["operator"] ." ". $data["value"];
-                    
-                    /*
-                    //switch ($this->fields[$key]["type"]) {
-                    switch ($data["type"]) {
-                        case "number":
-                        	$filtro.= $crlf. $key." = ".$data["value"];
-                            break;
-                        
-                        case "text":
-                        case "textarea":
-                        	$filtro.= $crlf. $key." LIKE '%".$data["value"]."%'";
-                            break;
-
-                        default:
-                        	$filtro.= $crlf. $key." = '".$data["value"]."'";
-                            break;
-                    }
-                    */
                 }
             }
 
@@ -792,10 +780,32 @@ class Tabla
                 $strSQL.= $crlf." ORDER BY ". $this->order;
             }
 
+            if ($this->paginacion) {
+                $strSQL.= $crlf." LIMIT ". (($pagina-1) * $this->pageRows) .", ". $this->pageRows;
+            }
+
             $tabla = $config->cargarTabla($strSQL);
 
             if ($tabla) {
                 if ($tabla->num_rows > 0) {
+                    
+                    if ($this->paginacion) {
+                        $cantTotRows = $config->buscarDato("SELECT COUNT(*) FROM ". $this->tabladb . ($filtro != ""? " WHERE ".$filtro: ""));
+                        $cantPages = ceil($cantTotRows / $this->pageRows);
+
+                        $strSalida.= $crlf.'<ul class="pagination">';
+
+                        for ($I = 1; $I <= $cantPages; $I++) {
+                            if ($I == $pagina) {
+                                $strSalida.= $crlf.'    <li class="active"><a href="javascript:void(0);" onclick="intPagina = '.$I.'; listar'. $this->tabladb .'();">'. $I .'</a></li>';
+                            }
+                            else {
+                                $strSalida.= $crlf.'    <li><a href="javascript:void(0);" onclick="intPagina = '.$I.'; listar'. $this->tabladb .'();">'. $I .'</a></li>';
+                            }
+                        }
+                        $strSalida.= $crlf.'</ul>';
+                    }
+
                     $strSalida.= $crlf.'<table class="table table-striped table-bordered table-hover table-condensed table-responsive">';
                     $strSalida.= $crlf.'<tr>';
                     foreach ($this->fields as $field) {
@@ -1025,7 +1035,7 @@ class Tabla
 
             $strSalida.= $crlf.'<div class="form-group">';
             $strSalida.= $crlf.'	<div class="col-md-offset-2 col-lg-offset-2 col-md-4 col-lg-4">';
-            $strSalida.= $crlf.'		<button type="submit" class="btn btn-sm btn-primary clickable" data-js="listar'. $this->tabladb .'()"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Buscar</button>';
+            $strSalida.= $crlf.'		<button type="submit" class="btn btn-sm btn-primary clickable" data-js="intPagina = 1; listar'. $this->tabladb .'();"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Buscar</button>';
             $strSalida.= $crlf.'	</div>';
             $strSalida.= $crlf.'</div>';
             $strSalida.= $crlf.'</form>';
@@ -1060,6 +1070,8 @@ class Tabla
         $strSalida.= $crlf.'';
         $strSalida.= $crlf.'<script>';
         $strSalida.= $crlf.'var blnEdit = false;';
+        $strSalida.= $crlf.'var intPagina = 1;';
+
         $strSalida.= $crlf.'';
 
 
@@ -1097,7 +1109,7 @@ class Tabla
         $strSalida.= $crlf.'';
         $strSalida.= $crlf.'function listar'. $this->tabladb .'() {';
         $strSalida.= $crlf.'	$("#actualizando").show();';
-        $strSalida.= $crlf.'	$("#divDatos").html("");';
+        // $strSalida.= $crlf.'	$("#divDatos").html("");';
         $strSalida.= $crlf.'';
         $strSalida.= $crlf.'	var filtros = {};';
         // $strSalida.= $crlf.'	var filtros = "";';
@@ -1126,6 +1138,11 @@ class Tabla
         if ($this->masterFieldId != '' && isset($_GET[$this->masterFieldId])) {
             $strSalida.= $crlf.'			, '. $this->masterFieldId .': "'. $_GET[$this->masterFieldId] .'"';
         }
+
+        if ($this->paginacion) {
+            $strSalida.= $crlf.'			, pagina: intPagina';
+        }
+
         $strSalida.= $crlf.'		},';
         $strSalida.= $crlf.'		function(data) {';
         $strSalida.= $crlf.'			$("#actualizando").hide();';

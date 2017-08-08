@@ -108,8 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		//Listar
         case "10":
             $strFiltro = (isset($_POST["filtro"])? $_POST["filtro"]: "");
+            $conBotones = (isset($_POST["conBotones"])? $_POST["conBotones"]: true);
+            $btnList = (isset($_POST["btnList"])? $_POST["btnList"]: []);
+            $order = (isset($_POST["order"])? $_POST["order"]: "");
+            $pagina = (isset($_POST["pagina"])? $_POST["pagina"]: 1);
             
-            $tabla->listar($strFiltro);
+            $tabla->listar($strFiltro, $conBotones, $btnList, $order, $pagina);
             break;
             
         //Funcion propia de cada clase

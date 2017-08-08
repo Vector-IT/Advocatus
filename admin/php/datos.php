@@ -18,7 +18,7 @@
 	 */
 	$config->menuItems = [
 			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
-			new MenuItem("Productos", 'objeto/productos/', '', 'fa-paper-plane', 2, false, true),
+			new MenuItem("Productos", 'productos.php', '', 'fa-paper-plane', 2, false, true),
 			new MenuItem("Reportes", 'reportes.php', '', 'fa-slideshare', '', false, false),
 			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, false)
 	];
@@ -90,9 +90,10 @@
 	/**
 	* PRODUCTOS
 	*/
-	$tabla = new Tabla("productos", "productos", "Productos", "el producto", true, "objeto/productos/", "fa-paper-plane");
+	$tabla = new Tabla("productos", "productos", "Productos", "el producto", true, "productos.php", "fa-paper-plane");
 	$tabla->labelField = "NombProd";
 	$tabla->isSubMenu = true;
+	$tabla->paginacion = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];
 	$tabla->btnList = [
 			array(
@@ -101,6 +102,11 @@
 				'class'=> 'btn-primary',
 				'onclick'=> 'verImagenes'
 			)
+	];
+
+	$tabla->searchFields = [
+		array("name"=>"NumeProd", "operator"=>"=", "join"=>"and"), 
+		array("name"=>"NombProd", "operator"=>"LIKE", "join"=>"and")
 	];
 
 	$tabla->addFieldId("NumeProd", "Número");
