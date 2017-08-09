@@ -38,11 +38,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php
-        require_once 'php/linksHeader.php';
-        
-        $tabla->script();
-    ?>
+    <?php require_once 'php/linksHeader.php'; ?>
+
+    <script src="js/custom/productos.js"></script>
 </head>
 <body>
     <?php
