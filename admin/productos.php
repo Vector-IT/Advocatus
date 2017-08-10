@@ -11,24 +11,26 @@
     $urlIndex = "Location:". "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $config->raiz ."admin/";
     
 	if (!isset($_SESSION['is_logged_in'])) {
-	    header($urlLogin);
-	    die();
+		header($urlLogin);
+		die();
 	}
-	    
+			
 	if ($_SESSION['is_logged_in'] !== 1) {
-	    header($urlLogin);
-	    die();
+		header($urlLogin);
+		die();
 	}
-	    
-   $tabla = $config->tablas['productos'];
-        
-    if ($tabla->numeCarg != '') {
-        if (intval($tabla->numeCarg) < intval($config->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]))) {
-            header($urlIndex);
-            die();
-        }
-    }
-        
+			
+	$tabla = $config->tablas['productos'];
+			
+	if ($tabla->numeCarg != '') {
+		if (intval($tabla->numeCarg) < intval($config->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]))) {
+			header($urlIndex);
+			die();
+		}
+	}
+
+	$atributos = $config->cargarTabla("SELECT NumeAtri, NombAtri, NumeTipoAtri FROM atributos ORDER BY NumeOrde");
+			
     (isset($_REQUEST["id"]))? $item = $_REQUEST["id"]: $item = "";
  
     header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
@@ -40,13 +42,15 @@
 <head>
     <?php require_once 'php/linksHeader.php'; ?>
 
-    <script src="js/custom/productos.js"></script>
+	<script src="js/custom/productos.js"></script>
+	
+	<link rel="stylesheet" href="css/equal-height-columns.css">
 </head>
 <body>
     <?php
-        if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] == 1) {
-            $config->crearMenu();
-        }
+    if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] == 1) {
+        $config->crearMenu();
+    }
         
         require_once 'php/header.php';
     ?>
@@ -79,20 +83,140 @@
             //echo '<button class="btn btn-sm btn-info clickable" data-js="location.href = \''. $config->tablas[$tabla->masterTable]->url .'\';"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>';
             echo '<button class="btn btn-sm btn-info clickable" data-js="history.go(-1);"><i class="fa fa-chevron-circle-left fa-fw" aria-hidden="true"></i> Volver</button>';
         }
-            
-        if ($tabla->allowNew || $tabla->allowEdit) {
-            $tabla->createForm();
-        } else {
-			//Agrego el campo clave solamente para que sea necesario eliminar registros
-			if  ($tabla->allowDelete) {
-				$tabla->createFormHidden();
-			}
+        ?>
 
-            //Botones opcionales
-            if (count($tabla->btnForm) > 0) {
-                for ($I = 0; $I < count($tabla->btnForm); $I++) {
-                    echo $crlf.'<button class="btn btn-sm '. $tabla->btnForm[$I][2] .'" onclick="'. $tabla->btnForm[$I][1] .'">'. $tabla->btnForm[$I][0] .'</button>';
-                }
+        <button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editarproductos(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>
+        <form id="frmproductos" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">
+            <input type="hidden" id="hdnTabla" value="productos" />
+            <input type="hidden" id="hdnOperacion" value="0" />
+
+            <div class="form-group form-group-sm ">
+                <label for="NumeProd" class="control-label col-md-2 col-lg-2">Número:</label>
+                <div class="col-md-2 col-lg-2">
+                    <input type="number" step="1" class="form-control input-sm " id="NumeProd" disabled   readonly  />
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+	            <label for="NombProd" class="control-label col-md-2 col-lg-2">Nombre:</label>
+    	        <div class="col-md-6 col-lg-6">
+        		    <input type="text" class="form-control input-sm " id="NombProd"  required size="200"   />
+            	</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+	            <label for="DescProd" class="control-label col-md-2 col-lg-2">Descripción:</label>
+    	        <div class="col-md-10 col-lg-10">
+        		    <textarea class="form-control input-sm autogrow " id="DescProd" required ></textarea>
+					<script type="text/javascript">
+						$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+					</script>
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<label for="ImpoVent" class="control-label col-md-2 col-lg-2">Precio:</label>
+				<div class="col-md-2 col-lg-2">
+					<input type="number" step="0.1" class="form-control input-sm " id="ImpoVent"  required    />
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">
+					<label class="labelCheck ucase">
+						<input type="checkbox" id="Novedad"> Es Novedad?
+					</label>
+	            </div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">
+					<label class="labelCheck ucase">
+						<input type="checkbox" id="Promocion"> Es Promoción?
+					</label>
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">
+					<label class="labelCheck ucase">
+						<input type="checkbox" id="Destacado"> Es Destacado?
+					</label>
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<label for="NumeEsta" class="control-label col-md-2 col-lg-2">Estado:</label>
+				<div class="col-md-2 col-lg-2">
+					<select class="form-control input-sm ucase " id="NumeEsta" required  >
+						<?php echo $config->cargarCombo("estados", "NumeEsta", "NombEsta");?>
+					</select>
+	            </div>
+            </div>
+
+			<hr>
+			<div class="row row-eq-height">
+				<div class="col-md-6" style="border-right: 1px solid;">
+					<h4>Categorías</h4>
+				</div>
+				<div class="col-md-6">
+					<h4>Atributos</h4>
+					<?php
+						$strSalida = '';
+						if ($atributos->num_rows == 0) { 
+							$strSalida.= $crlf.'<h5>Sin atributos</h5>';
+						}
+
+						while ($atrib = $atributos->fetch_assoc()) {
+							$strSalida.= $crlf. '<div class="form-group form-group-sm ">';
+							$strSalida.= $crlf. '	<label for="Atri'. $atrib["NumeAtri"] .'" class="control-label col-md-2 col-lg-2">'. $atrib["NombAtri"] .':</label>';
+							$strSalida.= $crlf. '	<div class="col-md-10 col-lg-10">';
+							switch ($atrib["NumeTipoAtri"]) {
+								case "1": //Text
+									$strSalida.= $crlf. '		<input type="text" class="form-control input-sm " id="Atri'. $atrib["NumeAtri"] .'" required/>';
+									break;
+
+								case "2": //Textarea
+									$strSalida.= $crlf. '		<textarea class="form-control input-sm autogrow " id="Atri'. $atrib["NumeAtri"] .'" required ></textarea>';
+									$strSalida.= $crlf. '		<script type="text/javascript">';
+									$strSalida.= $crlf. '			$("#Atri'. $atrib["NumeAtri"] .'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
+									$strSalida.= $crlf. '		</script>';
+									break;
+
+								case "3": //Archivo
+									$strSalida.= $crlf. '		<input type="file" class="form-control input-sm" id="Atri'. $atrib["NumeAtri"] .'" required="required" size="80">';
+									break;
+
+								case "7":
+									$strSalida.= $crlf. '		<select class="form-control input-sm ucase " id="Atri'. $atrib["NumeAtri"] .'" required  >';
+									$strSalida.= $crlf. '			'.$config->cargarCombo("atributosopciones", "NumeAtriOpci", "Valor", "NumeAtri = ". $atrib["NumeAtri"], "Valor");
+									$strSalida.= $crlf. '		</select>';
+									break;
+							}
+							$strSalida.= $crlf. '	</div>';
+							$strSalida.= $crlf. '</div>';
+						}
+						echo $strSalida;
+					?>
+				</div>
+			</div>
+			
+			<hr>
+
+			<div class="form-group">
+                <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check fa-fw" aria-hidden="true"></i> Aceptar</button>
+            		&nbsp;
+                    <button type="reset" class="btn btn-sm btn-default" onclick="editarproductos(-1);"><i class="fa fa-times fa-fw" aria-hidden="true"></i> Cancelar</button>
+                </div>
+            </div>
+        </form>
+
+        <?php
+        //Botones opcionales
+        if (count($tabla->btnForm) > 0) {
+            for ($I = 0; $I < count($tabla->btnForm); $I++) {
+                echo $crlf.'<button class="btn btn-sm '. $tabla->btnForm[$I][2] .'" onclick="'. $tabla->btnForm[$I][1] .'">'. $tabla->btnForm[$I][0] .'</button>';
             }
         }
         ?>
@@ -108,11 +232,11 @@
         <?php $tabla->searchForm(); ?>
 
         <div id="divDatos" class="marginTop40">
-            <?php 
-        	if ($tabla->listarOnLoad) {
-            	$tabla->listar();
-			} 
-			?>
+            <?php
+            if ($tabla->listarOnLoad) {
+                $tabla->listar();
+            }
+            ?>
         </div>
     </div>
     
