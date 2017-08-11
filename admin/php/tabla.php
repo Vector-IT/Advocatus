@@ -316,6 +316,49 @@ class Tabla
             'classFormat' => "",
         );
     }
+
+    public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
+    {
+        $this->fields[$name] = array (
+            'name' => $name,
+            'type' => "select",
+            'size' => $size,
+            'label' => $label,
+            'required' => $required,
+            'readOnly' => false,
+            'isID' => false,
+            'showOnList' => true,
+            'showOnForm' => true,
+            'value' => $value,
+            'cssControl' => '',
+            'cssList' => '',
+            'cssGroup' => '',
+            'lookupTable' => $lookupTable,
+            'lookupFieldID' => $lookupFieldID,
+            'lookupFieldLabel' => $lookupFieldLabel,
+            'lookupConditions' => $lookupConditions,
+            'lookupOrder' => $lookupOrder,
+            'isHiddenInForm' => '',
+            'isHiddenInList' => '',
+            'isMasterID' => '',
+            'onChange' => '',
+            'itBlank' => $itBlank,
+            'itBlankText' => $itBlankText,
+            'hoursDisabled' => '',
+            'dtpOnRender' => '',
+            'txtAlign' => 'left',
+            'ruta' => '',
+            'nomFileField' => '',
+            'mirrorField' => '',
+            'mirrorFormat' => '',
+            'formatDb' => '',
+            'isMD5' => false,
+            'step' => "1",
+            'min' => "",
+            'condFormat' => "",
+            'classFormat' => "",
+        );
+    }
     
     public function createForm()
     {

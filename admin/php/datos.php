@@ -6,6 +6,7 @@
 	
 	require_once 'datosdb.php';
 	require_once 'vectorForms.php';
+	require_once 'custom/productos.php';
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
@@ -90,7 +91,7 @@
 	/**
 	* PRODUCTOS
 	*/
-	$tabla = new Tabla("productos", "productos", "Productos", "el producto", true, "productos.php", "fa-paper-plane");
+	$tabla = new Producto("productos", "productos", "Productos", "el producto", true, "productos.php", "fa-paper-plane");
 	$tabla->labelField = "NombProd";
 	$tabla->isSubMenu = true;
 	$tabla->paginacion = true;
@@ -114,7 +115,15 @@
 	$tabla->addField("DescProd", "textarea", 400, "Descripción");
 	$tabla->fields["DescProd"]["isHiddenInList"] = true;
 
-	$tabla->addField("ImpoVent", "number", 0, "Precio");
+	$tabla->addField("CantProd", "number", 0, "Cantidad");
+	$tabla->fields["CantProd"]["step"] = "0.1";
+	$tabla->fields["CantProd"]["txtAlign"] = "right";
+
+	$tabla->addField("ImpoComp", "number", 0, "Imp. Compra");
+	$tabla->fields["ImpoComp"]["step"] = "0.1";
+	$tabla->fields["ImpoComp"]["txtAlign"] = "right";
+
+	$tabla->addField("ImpoVent", "number", 0, "Imp. Venta");
 	$tabla->fields["ImpoVent"]["step"] = "0.1";
 	$tabla->fields["ImpoVent"]["txtAlign"] = "right";
 	$tabla->fields["ImpoVent"]["cssList"] = "editable";
@@ -149,10 +158,32 @@
 	$tabla->addField("NombAtri", "text", 60, "Nombre");
 	$tabla->addField("NumeTipoAtri", "select", 60, "Tipo de atributo", true, false, false, true, '', '', "tiposatributos", "NumeTipoAtri", "NombTipoAtri", "", "NombTipoAtri");
 
+	$tabla->addField("FlagRequ", "checkbox", 0, "Es Obligatorio?");
+	$tabla->fields["FlagRequ"]["txtAlign"] = "center";
+
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["atributos"] = $tabla;
 
-	// PRODUCTOS IMAGENES
+	/**
+	* CATEGORIAS
+	*/
+	$tabla = new Tabla("categorias", "categorias", "Categorías", "la categoría", true, "objeto/categorias/", "fa-code");
+	$tabla->isSubItem = true;
+	$tabla->labelField = "NombCate";
+	$tabla->order = "NumePadr, NombCate";
+
+	$tabla->addFieldId("NumeCate", "Número");
+	$tabla->addField("NombCate", "text", 80, "Nombre");
+	$tabla->addFieldSelect("NumePadr", 80, "Categoría Padre", true, "", "categorias", "NumeCate", "NombCate", "NumePadr IS NULL", "NombCate", true, "SIN PADRE");
+
+	$config->tablas["categorias"] = $tabla;
+
+	/**
+	* PRODUCTOS IMAGENES
+	*/
 	$tabla = new Tabla("productosimagenes", "productosimagenes", "Imágenes de Producto", "la imagen", false, "objeto/productosimagenes/", "fa-image");
 	$tabla->masterTable = "productos";
 	$tabla->masterFieldId = "NumeProd";

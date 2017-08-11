@@ -29,7 +29,7 @@
 		}
 	}
 
-	$atributos = $config->cargarTabla("SELECT NumeAtri, NombAtri, NumeTipoAtri FROM atributos ORDER BY NumeOrde");
+	$atributos = $config->cargarTabla("SELECT NumeAtri, NombAtri, NumeTipoAtri, FlagRequ FROM atributos ORDER BY NumeOrde");
 			
     (isset($_REQUEST["id"]))? $item = $_REQUEST["id"]: $item = "";
  
@@ -115,7 +115,21 @@
             </div>
 
             <div class="form-group form-group-sm ">
-				<label for="ImpoVent" class="control-label col-md-2 col-lg-2">Precio:</label>
+				<label for="CantProd" class="control-label col-md-2 col-lg-2">Cantidad:</label>
+				<div class="col-md-2 col-lg-2">
+					<input type="number" step="0.1" class="form-control input-sm " id="CantProd"  required    />
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<label for="ImpoComp" class="control-label col-md-2 col-lg-2">Imp. Compra:</label>
+				<div class="col-md-2 col-lg-2">
+					<input type="number" step="0.1" class="form-control input-sm " id="ImpoComp"  required    />
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
+				<label for="ImpoVent" class="control-label col-md-2 col-lg-2">Imp. Venta:</label>
 				<div class="col-md-2 col-lg-2">
 					<input type="number" step="0.1" class="form-control input-sm " id="ImpoVent"  required    />
 				</div>
@@ -157,7 +171,26 @@
 			<hr>
 			<div class="row row-eq-height">
 				<div class="col-md-6" style="border-right: 1px solid;">
-					<h4>Categorías</h4>
+                    <h4>Categorías</h4>
+                    <?php
+                        $categorias = $config->cargarTabla("SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL ORDER BY NombCate");
+
+                        $strSalida = '';
+                        $strSalida.= $crlf. '<div class="form-group form-group-sm ">';
+                        $strSalida.= $crlf. '	<div class="list-group">';
+                        while ($cate = $categorias->fetch_assoc()) {
+                            $strSalida.= $crlf. '	    <a id="NumeCate'.$cate["NumeCate"].'" href="#" class="list-group-item" onclick="selectCate('.$cate["NumeCate"].');">'.$cate["NombCate"].'</a>';
+
+                            $subcategorias = $config->cargarTabla("SELECT NumeCate, NombCate FROM categorias WHERE NumePadr = ".$cate["NumeCate"]." ORDER BY NombCate");
+                            while ($subcate = $subcategorias->fetch_assoc()) {
+                                $strSalida.= $crlf. '	    <a id="NumeCate'.$subcate["NumeCate"].'" href="#" class="list-group-item" onclick="selectCate('.$subcate["NumeCate"].');" style="padding-left: 35px;"><i class="fa fa-caret-right" aria-hidden="true"></i> '.$subcate["NombCate"].'</a>';
+                            }
+                        }
+                        $strSalida.= $crlf. '   </div>';
+                        $strSalida.= $crlf. '</div>';
+
+                        echo $strSalida;
+                    ?>
 				</div>
 				<div class="col-md-6">
 					<h4>Atributos</h4>
@@ -173,22 +206,22 @@
 							$strSalida.= $crlf. '	<div class="col-md-10 col-lg-10">';
 							switch ($atrib["NumeTipoAtri"]) {
 								case "1": //Text
-									$strSalida.= $crlf. '		<input type="text" class="form-control input-sm " id="Atri'. $atrib["NumeAtri"] .'" required/>';
+									$strSalida.= $crlf. '		<input type="text" class="form-control input-sm " id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .'/>';
 									break;
 
 								case "2": //Textarea
-									$strSalida.= $crlf. '		<textarea class="form-control input-sm autogrow " id="Atri'. $atrib["NumeAtri"] .'" required ></textarea>';
+									$strSalida.= $crlf. '		<textarea class="form-control input-sm autogrow " id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .'></textarea>';
 									$strSalida.= $crlf. '		<script type="text/javascript">';
 									$strSalida.= $crlf. '			$("#Atri'. $atrib["NumeAtri"] .'").autogrow({vertical: true, horizontal: false, minHeight: 36});';
 									$strSalida.= $crlf. '		</script>';
 									break;
 
 								case "3": //Archivo
-									$strSalida.= $crlf. '		<input type="file" class="form-control input-sm" id="Atri'. $atrib["NumeAtri"] .'" required="required" size="80">';
+									$strSalida.= $crlf. '		<input type="file" class="form-control input-sm" id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .' size="80">';
 									break;
 
 								case "7":
-									$strSalida.= $crlf. '		<select class="form-control input-sm ucase " id="Atri'. $atrib["NumeAtri"] .'" required  >';
+									$strSalida.= $crlf. '		<select class="form-control input-sm ucase " id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .'>';
 									$strSalida.= $crlf. '			'.$config->cargarCombo("atributosopciones", "NumeAtriOpci", "Valor", "NumeAtri = ". $atrib["NumeAtri"], "Valor");
 									$strSalida.= $crlf. '		</select>';
 									break;

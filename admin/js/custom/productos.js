@@ -126,6 +126,8 @@ function editarproductos(strID){
 		$("#NombProd").val($("#NombProd" + strID).text());
 		$("#DescProd").val($("#DescProd" + strID).val());
 		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+		$("#CantProd").val($("#CantProd" + strID).text());
+		$("#ImpoComp").val($("#ImpoComp" + strID).text());
 		$("#ImpoVent").val($("#ImpoVent" + strID).text());
 		$("#Novedad").prop("checked", Boolean(parseInt($("#Novedad" + strID).val())));
 		$("#Promocion").prop("checked", Boolean(parseInt($("#Promocion" + strID).val())));
@@ -155,6 +157,8 @@ function editarproductos(strID){
 		$("#NombProd").val("");
 		$("#DescProd").val("");
 		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+		$("#CantProd").val("");
+		$("#ImpoComp").val("");
 		$("#ImpoVent").val("");
 		$("#Novedad").val("");
 		$("#Promocion").val("");
@@ -177,6 +181,8 @@ function aceptarproductos(){
 	frmData.append("NumeProd", $("#NumeProd").val());
 	frmData.append("NombProd", $("#NombProd").val());
 	frmData.append("DescProd", $("#DescProd").val());
+	frmData.append("CantProd", $("#CantProd").val());
+	frmData.append("ImpoComp", $("#ImpoComp").val());
 	frmData.append("ImpoVent", $("#ImpoVent").val());
 	frmData.append("Novedad", $("#Novedad").prop("checked") ? 1 : 0);
 	frmData.append("Promocion", $("#Promocion").prop("checked") ? 1 : 0);
@@ -219,4 +225,16 @@ function aceptarproductos(){
 
 function verImagenes(strID) {
     location.href= "objeto/productosimagenes&NumeProd=" + strID;
+}
+
+function selectCate(strID) {
+	$("#NumeCate"+strID).toggleClass("active");
+
+	if ($("#NumeCate"+strID).hasClass("active")) {
+		$("#NumeCate"+strID).append('<i class="fa fa-check" aria-hidden="true" style="float: right;"></i>');
+	}
+	else {
+		$("#NumeCate"+strID).find("i.fa-check").remove();
+	}
+	event.preventDefault();
 }
