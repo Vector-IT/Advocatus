@@ -71,7 +71,7 @@ function borrar(campo) {
 
 	$("#divPreview" + campo).html("");
 
-	$("#" + campo).replaceWith($("#" + campo).clone());
+	$("#" + campo).replaceWith($("#" + campo).clone().val(""));
 
 	$("#btnBorrar" + campo).hide();
 }

@@ -116,24 +116,72 @@ function editarproductos(strID){
 	if (strID > 0) {
 	$("#searchForm").fadeOut(function() {
 	    $("#frmproductos").fadeIn(function() {
-		$("html, body").animate({
-			scrollTop: $("#frmproductos").offset().top
-		}, 1000);
-		$("#hdnOperacion").val("1");
-		blnEdit = true;
-		$("#frmproductos").find(".form-control[type!='hidden'][disabled!=disabled][readonly!=readonly]:first").focus()
-		$("#NumeProd").val($("#NumeProd" + strID).text());
-		$("#NombProd").val($("#NombProd" + strID).text());
-		$("#DescProd").val($("#DescProd" + strID).val());
-		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
-		$("#CantProd").val($("#CantProd" + strID).text());
-		$("#ImpoComp").val($("#ImpoComp" + strID).text());
-		$("#ImpoVent").val($("#ImpoVent" + strID).text());
-		$("#Novedad").prop("checked", Boolean(parseInt($("#Novedad" + strID).val())));
-		$("#Promocion").prop("checked", Boolean(parseInt($("#Promocion" + strID).val())));
-		$("#Destacado").prop("checked", Boolean(parseInt($("#Destacado" + strID).val())));
-		$("#NumeEsta").val($("#NumeEsta" + strID).val());
+			$("html, body").animate({
+				scrollTop: $("#frmproductos").offset().top
+			}, 1000);
+
+			$("#hdnOperacion").val("1");
+			blnEdit = true;
+
+			$("#frmproductos").find(".form-control[type!='hidden'][disabled!=disabled][readonly!=readonly]:first").focus()
+			$("#NumeProd").val($("#NumeProd" + strID).text());
+			$("#NombProd").val($("#NombProd" + strID).text());
+			$("#DescProd").val($("#DescProd" + strID).val());
+			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+			$("#CantProd").val($("#CantProd" + strID).text());
+			$("#ImpoComp").val($("#ImpoComp" + strID).text());
+			$("#ImpoVent").val($("#ImpoVent" + strID).text());
+			$("#Novedad").prop("checked", Boolean(parseInt($("#Novedad" + strID).val())));
+			$("#Promocion").prop("checked", Boolean(parseInt($("#Promocion" + strID).val())));
+			$("#Destacado").prop("checked", Boolean(parseInt($("#Destacado" + strID).val())));
+			$("#NumeEsta").val($("#NumeEsta" + strID).val());
 		
+			$.post("php/tablaHandler.php", { 
+				operacion: "100",
+				tabla: "productos",
+				field: "getEdit",
+				data: strID
+				},
+				function (data) {
+					var categorias = data.valor.categorias;
+					var atributos = data.valor.atributos;
+
+					//Categorias
+					$("a[id^='NumeCate']").each(function(i, element) {
+						$(element).removeClass("active");
+						$(element).find("i.fa-check").remove();
+					}, this);
+
+					for (var i = 0; i < categorias.length; i++) {
+						selectCate(categorias[i].NumeCate);
+					}
+
+					//Atributos
+					$("[id^='btnBorrar']").html("").hide();
+					
+					$("[id^='Atri']").each(function(i, element) {
+						$(element).val("");
+					}, this);
+					
+					for (var i = 0; i < atributos.length; i++) {
+						if ($("#Atri"+atributos[i].NumeAtri).attr('type') != "file") {
+							$("#Atri"+atributos[i].NumeAtri).val(atributos[i].Valor);
+						}
+						else {
+							$("#hdnAtri" + atributos[i].NumeAtri + "Clear").val("0");
+
+							var strHTML = '<a href="'+atributos[i].Valor+'" target="_blank">';
+							strHTML+= atributos[i].Valor;
+							strHTML+= '</a>';
+							if ($("#Atri"+atributos[i].NumeAtri).attr("required") != "required") {
+								strHTML+= '<button type="button" class="btn btn-xs btn-danger flRight" onclick="borrar(\'Atri'+atributos[i].NumeAtri+'\');"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+							}
+							$("#btnBorrarAtri"+atributos[i].NumeAtri).html(strHTML);
+							$("#btnBorrarAtri"+atributos[i].NumeAtri).show();
+						}
+					}
+				}
+			);
 	    });
 	});
 	}
@@ -164,6 +212,20 @@ function editarproductos(strID){
 		$("#Promocion").val("");
 		$("#Destacado").val("");
 		$("#NumeEsta").val("1");
+
+		//Categorias
+		$("a[id^='NumeCate']").each(function(i, element) {
+			$(element).removeClass("active");
+			$(element).find("i.fa-check").remove();
+		}, this);
+
+		//Atributos
+		$("[id^='Atri']").each(function(i, element) {
+			$(element).val("");
+			if ($(element).attr('type') == "file") {
+				$("#btnBorrar"+ element.id).html("").hide();
+			}
+		}, this);
 	}
 }
 
@@ -189,6 +251,25 @@ function aceptarproductos(){
 	frmData.append("Destacado", $("#Destacado").prop("checked") ? 1 : 0);
 	frmData.append("NumeEsta", $("#NumeEsta").val());
 
+	//Categorias
+	var categorias = [];
+	$("a[id^='NumeCate'].active").each(function(i, element) {
+		categorias.push(element.id.replace("NumeCate", ""));
+	}, this);
+	frmData.append("Categorias", categorias);
+
+	//Productos
+	var atributos = {};
+	$("[id^='Atri']").each(function(i, element) {
+		if ($(element).attr('type') != "file") {
+			frmData.append(element.id, $(element).val());
+		}
+		else {		
+			if ($(element).get(0).files[0] != null)
+				frmData.append(element.id, $(element).get(0).files[0]);
+		}
+	}, this);
+	
 	if (window.XMLHttpRequest)
 	{// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
@@ -231,10 +312,21 @@ function selectCate(strID) {
 	$("#NumeCate"+strID).toggleClass("active");
 
 	if ($("#NumeCate"+strID).hasClass("active")) {
-		$("#NumeCate"+strID).append('<i class="fa fa-check" aria-hidden="true" style="float: right;"></i>');
+		$("#NumeCate"+strID).append('<i class="fa fa-check flRight" aria-hidden="true"></i>');
 	}
 	else {
 		$("#NumeCate"+strID).find("i.fa-check").remove();
 	}
 	event.preventDefault();
+}
+
+function archivoNuevo(strID) {
+	if ($("#Atri"+strID).attr("required") != "required") {
+		var strHTML = '';
+		strHTML+= '<button type="button" class="btn btn-xs btn-danger flRight" onclick="borrar(\'Atri'+strID+'\');"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+		$("#btnBorrarAtri"+strID).html(strHTML);
+		$("#btnBorrarAtri"+strID).show();	
+
+		$("#hdnAtri" + strID + "Clear").val("0");
+	}
 }

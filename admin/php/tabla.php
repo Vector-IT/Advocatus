@@ -466,9 +466,11 @@ class Tabla
                         break;
 
                     case 'file':
-                        $strSalida.= $crlf.'<button id="btnBorrar'.$fname.'" type="button" class="btn btn-default" title="Borrar" onclick="borrar(\''.$fname.'\');"><i class="fa fa-times" aria-hidden="true"></i> Borrar archivo</button>';
-                        $strSalida.= $crlf.'<input type="'.$field['type'].'" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
-                        $strSalida.= $crlf.'<input id="hdn'.$fname.'Clear" type="hidden" value="0" />';
+                        if ($field["required"] == false) {
+                            $strSalida.= $crlf.'<button id="btnBorrar'.$fname.'" type="button" class="btn btn-default" title="Borrar" onclick="borrar(\''.$fname.'\');"><i class="fa fa-times" aria-hidden="true"></i> Borrar archivo</button>';
+                            $strSalida.= $crlf.'<input id="hdn'.$fname.'Clear" type="hidden" value="0" />';
+                        }
+                        $strSalida.= $crlf.'<input type="'.$field['type'].'" onchange="$(\'#hdn'.$fname.'Clear\').val(0);" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
                         break;
 
                     case 'image':
@@ -477,7 +479,7 @@ class Tabla
                             $strSalida.= $crlf.'<button id="btnBorrar'.$fname.'" type="button" class="btn btn-default" title="Borrar" onclick="borrar(\''.$fname.'\');"><i class="fa fa-times" aria-hidden="true"></i></button>';
                             $strSalida.= $crlf.'<input id="hdn'.$fname.'Clear" type="hidden" value="0" />';
                         }
-                        $strSalida.= $crlf.'<input onchange="preview(event, $(\'#divPreview'.$fname.'\'));" type="file" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
+                        $strSalida.= $crlf.'<input onchange="preview(event, $(\'#divPreview'.$fname.'\')); $(\'#hdn'.$fname.'Clear\').val(0);" type="file" class="form-control input-sm" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['value']!=''?'value="'.$field['value'].'"':'') .'/>';
                         break;
 
                     case 'textarea':

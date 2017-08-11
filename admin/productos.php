@@ -40,7 +40,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php require_once 'php/linksHeader.php'; ?>
+    <?php 
+        require_once 'php/linksHeader.php'; 
+        // require_once 'js/custom/productos.php';
+    ?>
 
 	<script src="js/custom/productos.js"></script>
 	
@@ -216,8 +219,12 @@
 									$strSalida.= $crlf. '		</script>';
 									break;
 
-								case "3": //Archivo
-									$strSalida.= $crlf. '		<input type="file" class="form-control input-sm" id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .' size="80">';
+                                case "3": //Archivo
+                                    if ($atrib["FlagRequ"] != "1") {
+                                        $strSalida.= $crlf. '		<input id="hdnAtri'. $atrib["NumeAtri"] .'Clear" type="hidden" value="0">';
+                                    }
+									$strSalida.= $crlf. '		<input type="file" onchange="archivoNuevo('. $atrib["NumeAtri"] .');" class="form-control input-sm" id="Atri'. $atrib["NumeAtri"] .'" '. ($atrib["FlagRequ"] == "1"? 'required': '') .' size="80">';
+									$strSalida.= $crlf. '		<span id="btnBorrarAtri'. $atrib["NumeAtri"] .'"></span>';
 									break;
 
 								case "7":

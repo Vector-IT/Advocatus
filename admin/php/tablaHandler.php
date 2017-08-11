@@ -29,26 +29,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             //Archivos
             foreach ($_FILES as $name => $val) {
-                $temp = explode(".", $_FILES[$name]["name"]);
-                $extension = end($temp);
-                
-                if ($tabla->fields[$name]['nomFileField'] != '') {
-                    $strRnd = $_POST[$tabla->fields[$name]['nomFileField']];
-                } else {
-                    $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
-                }
-
-                $archivo_viejo = $config->buscarDato("SELECT {$name} FROM {$tabla->tabladb} WHERE {$tabla->IDField} = '{$_POST[$tabla->IDField]}'");
-                if ($archivo_viejo != '') {
-                    $archivo_viejo = "../". $archivo_viejo;
-                }
-                
-                $archivo = $name ."-". $strRnd .".". $extension;
-                $val =  $tabla->fields[$name]['ruta'] ."/". $archivo;
+                if (isset($tabla->fields[$name])) {
+                    $temp = explode(".", $_FILES[$name]["name"]);
+                    $extension = end($temp);
                     
-                subir_archivo($_FILES[$name], "../". $tabla->fields[$name]['ruta'], $archivo, $archivo_viejo);
-                
-                $datos[$name] = $val;
+                    if ($tabla->fields[$name]['nomFileField'] != '') {
+                        $strRnd = $_POST[$tabla->fields[$name]['nomFileField']];
+                    } else {
+                        $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
+                    }
+
+                    $archivo_viejo = $config->buscarDato("SELECT {$name} FROM {$tabla->tabladb} WHERE {$tabla->IDField} = '{$_POST[$tabla->IDField]}'");
+                    if ($archivo_viejo != '') {
+                        $archivo_viejo = "../". $archivo_viejo;
+                    }
+                    
+                    $archivo = $name ."-". $strRnd .".". $extension;
+                    $val =  $tabla->fields[$name]['ruta'] ."/". $archivo;
+                        
+                    subir_archivo($_FILES[$name], "../". $tabla->fields[$name]['ruta'], $archivo, $archivo_viejo);
+                    
+                    $datos[$name] = $val;
+                }
             }
             
             //Campos
