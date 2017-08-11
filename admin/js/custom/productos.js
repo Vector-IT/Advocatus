@@ -14,13 +14,39 @@ $(document).ready(function() {
     $(".editable").blur( function() {
         var numeProd = this.id.replace("ImpoVent", "");
         var nombProd = $("#NombProd" + numeProd).html();
-        var impoVent = $(this).html();
+		var impoVent = $(this).html();
+		
+		if (isNaN(impoVent)) {
+			$(this).html(precioViejo);
+
+			$("#txtHint").html(nombProd + "<br>El precio ingresado es inválido.");
+			$("#divMsj").addClass("alert-danger");
+			$("#divMsj").removeClass("alert-success");
+			$("#divMsj").show();
+			return false;
+		}
 
         if (precioViejo != impoVent) {
-            $("#txtHint").html(nombProd + "<br>Nuevo precio: " + impoVent);
-            $("#divMsj").removeClass("alert-danger");
-            $("#divMsj").addClass("alert-success");
-            $("#divMsj").show();
+			$.post("php/tablaHandler.php", { 
+				operacion: "100",
+				tabla: "productos",
+				field: "precio",
+				data: {"NumeProd": numeProd, "Precio": impoVent}
+				},
+				function (data) {
+					if (data.valor === true) {
+						$("#txtHint").html(nombProd + "<br>Nuevo precio: " + impoVent);
+						$("#divMsj").removeClass("alert-danger");
+						$("#divMsj").addClass("alert-success");
+					}
+					else {
+						$("#txtHint").html(nombProd + "<br>Error al actualizar precio.");
+						$("#divMsj").addClass("alert-danger");
+						$("#divMsj").removeClass("alert-success");
+					}
+					$("#divMsj").show();
+				}
+			);
         }
     });
 
@@ -158,7 +184,7 @@ function editarproductos(strID){
 
 					//Atributos
 					$("[id^='btnBorrar']").html("").hide();
-					
+
 					$("[id^='Atri']").each(function(i, element) {
 						$(element).val("");
 					}, this);

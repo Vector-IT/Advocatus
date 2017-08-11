@@ -106,7 +106,7 @@
 							<div class="row">
 							<?php 
 								while ($fila = $novedades->fetch_assoc()) {
-									$cantFav = buscarDato("SELECT COUNT(*) FROM productosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
+									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
 							?>
 								<div class="col-sm-4">
 									<div class="producto">

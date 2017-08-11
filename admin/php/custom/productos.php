@@ -25,6 +25,15 @@ class Producto extends Tabla {
                 return $resultados;
 
                 break;
+
+            case "precio":
+                $numeProd = $post["data"]["NumeProd"];
+                $impoVent = $post["data"]["Precio"];
+
+                $strSQL = "UPDATE productos SET ImpoVent = {$impoVent} WHERE NumeProd = ". $numeProd;
+                return $config->ejecutarCMD($strSQL);
+
+                break;
         }
     }
 

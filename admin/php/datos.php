@@ -6,7 +6,7 @@
 	
 	require_once 'datosdb.php';
 	require_once 'vectorForms.php';
-	require_once 'custom\productos.php';
+	require_once 'custom/productos.php';
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
@@ -95,7 +95,7 @@
 	$tabla->labelField = "NombProd";
 	$tabla->order = "NombProd";
 	$tabla->isSubMenu = true;
-	$tabla->paginacion = true;
+	// $tabla->paginacion = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];
 	$tabla->btnList = [
 			array(
