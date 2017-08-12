@@ -291,6 +291,15 @@ span#text-lost-msg {
     border-right: none !important;
 }
 
+#menu-principal .redes-sociales {
+    text-align: right;
+}
+
+#menu-principal .redes-sociales img {
+    width: 35px;
+    padding: 6px;
+}
+
 @media all and (min-width: 768px) {
 .navbar-nav > li {
     float: left;
@@ -522,6 +531,8 @@ span#text-lost-msg {
    -moz-transition: all 0.3s ease-in-out;
    -o-transition: all 0.3s ease-in-out;
    transition: all 0.3s ease-in-out;
+    width: fit-content;
+    height: fit-content;
 }
 
 .img-producto:hover, .img-producto:focus {
@@ -529,20 +540,22 @@ span#text-lost-msg {
 }
 
 .titulo-producto {
-    font-family: 'Roboto-Medium';
-    font-size: 18px;
+    font-family: 'Open Sans';
+    font-size: 15px;
     color: #000;
     padding: 10px 15px;
     display: block;
     cursor: pointer;
     min-height: 80px;
+    font-weight: bold;
 }
 
 .precio-producto {
-    font-family: 'Roboto-Medium';
-    font-size: 22px;
-    color: rgba(0,0,0,0.5);
+    font-family: 'Open Sans';
+    font-size: 20px;
+    color: #a94442;
     padding: 0px 15px;
+    font-weight: 600;
 }
 
 #consultanos {
@@ -622,7 +635,7 @@ span#text-lost-msg {
     color: #000;
     text-align: center;
     font-weight: bold;
-    font-size: 35px;
+    font-size: 32px;
     line-height: 45px;
 }
 
@@ -630,7 +643,7 @@ span#text-lost-msg {
     font-family: 'MyriadPro-Light';
     color: #000;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 25px;
 }
 
@@ -656,17 +669,17 @@ span#text-lost-msg {
 }
 
 .titulo-destacados {
-    font-family: 'MyriadPro-Regular';
+    font-family: 'Open Sans';
     color: rgba(0,0,0,0.5);
     text-align: center;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 16px;
     line-height: 24px;
 }
 
 .precio-destacados {
-    color: #FF4000;
-    font-family: 'Roboto-Medium';
+    color: #d6615e;
+    font-family: 'Open Sans';
     font-size: 22px;
     text-align: center;
 }
@@ -679,7 +692,7 @@ span#text-lost-msg {
     text-align: center;
     display: table;
     margin: 55px auto 35px;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 26px;
 }
 
@@ -708,7 +721,7 @@ span#text-lost-msg {
 
 .advocatus p {
     font-family: 'MyriadPro-Light';
-    font-size: 22px;
+    font-size: 20px;
     color: #000;
     margin-bottom: 100px;
 }
@@ -728,7 +741,7 @@ span#text-lost-msg {
 
 .mision-vision p {
     font-family: 'MyriadPro-Light';
-    font-size: 22px;
+    font-size: 20px;
     color: #000;
     margin-bottom: 45px;
 }
@@ -745,7 +758,7 @@ span#text-lost-msg {
     font-family: 'BentonSans-Regular';
     color: rgba(0,0,0,0.5);
     text-align: center;
-    font-size: 32px;
+    font-size: 26px;
     margin-top: 60px;
 }
 
@@ -902,20 +915,24 @@ span#text-lost-msg {
     padding: 20px 15px 5px;
     text-align: center;
     min-height: 170px;
+    font-family: 'Open Sans';
 }
 
-#grid-productos .descripcion-producto {
-    color: rgba(0,0,0,.5);
-    font-size: 12px;
-    font-family: 'BentonSans-Medium';
+#grid-productos .titulo-producto {
+    font-size: 14px;
+    padding: 20px 15px 5px;
     text-align: center;
-    margin-top: 5px;
+    min-height: 170px;
+    font-family: 'Open Sans';
+    font-weight: 600;
 }
 
 #grid-productos .precio-producto {
     text-align: center;
-    color: #000;
-    font-family: 'Andada-Regular';
+    color: #a94442;
+    font-family: 'Open Sans';
+    font-size: 20px;
+    margin-top: 10px;
 }
 
 #grid-productos .tag-nuevo {
@@ -1219,6 +1236,17 @@ ul.redes-sociales li  {
     text-align: center;
 }
 
+@media all and (min-width: 1200px) and (max-width: 1280px) {
+    #contacto {
+        height: 650px!important;
+    }
+    #contacto .formulario {
+        margin-top: 45px!important;
+    }
+    #contacto .fondo .col-lg-7 {
+        height: 650px!important;
+    }
+}
 
 /* MI CARRITO */
 
@@ -1507,21 +1535,26 @@ img.img-producto-carrito {
 footer {
     margin: 50px 0px 0px;
     background-color: #26272C;
-    padding: 25px 0px 0px 0px;
+    padding: 25px 0px 25px 0px;
     color: #fff;
 }
 
+footer .row {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
 .tels {
-    font-family: Arial;
+    font-family: 'Open Sans';
     margin-top: 15px;
-    font-size: 12px;
-    margin-bottom: 3px;
+    font-size: 13px;
 }
 
 .copyright {
     font-family: Arial;
-    top: -10px;
-    font-size: 11px;
+    margin-top: 15px;
+    font-size: 10px;
+    text-align: right;
 }
 
 footer ul {
@@ -1540,10 +1573,11 @@ footer ul li::before {
 
 
 footer ul li a {
-    color: #fff !important;
-    font-family: 'Roboto-Regular';
-    font-size: 12px;
+    color: #a2a2a2 !important;
+    font-family: 'Open Sans';
+    font-size: 13px;
     padding-left: 5px;
+    line-height: 30px;
 }
 
 footer ul li a:hover {
@@ -1554,14 +1588,15 @@ footer ul li a:hover {
     background-color: rgba(170,170,170,0.5);
     float: right;
     color: #fff !important;
-    padding: 5px 20px;
+    padding: 10px 20px;
     font-size: 11px;
-    letter-spacing: 1.3px;
+    letter-spacing: 0.5px;
     font-family: Arial;
     font-weight: bold;
     margin-bottom: 10px;
     margin-top: 20px;
     width: 290px;
+    text-align: center;
 }
 
 .btn-envios {
@@ -1569,7 +1604,7 @@ footer ul li a:hover {
     float: right;
     text-align: center;
     color: #fff !important;
-    padding: 3px;
+    padding: 6px;
     font-size: 13px;
     font-family: Arial;
     margin-bottom: 20px;
@@ -1581,17 +1616,24 @@ footer ul li a:hover {
 }
 
 .subfooter {
-    background-color: #AAAAAA;
-    padding: 5px;
+    background-color: #26272C;
+    padding: 0px !important;
 }
 
-.redes-sociales {
-    margin-top: -25px;
-    margin-bottom: -25px;
+footer .redes-sociales {
+    margin-top: 0px;
+
 }
 
 .redes-sociales a {
     display: inline-block;
+    margin-top: 15px;
+}
+
+footer .redes-sociales img {
+    width: 35px;
+    padding: 6px;
+    margin-right: 5px;
 }
 
 .redes-sociales a:hover {

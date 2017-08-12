@@ -55,25 +55,51 @@
 								<button type="submit" class="btn btn-primary">Buscar</button>
 								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
 								<div class="dropdown-menu dropdown-menu-right" role="menu">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<label for="filter">Filtrar por</label>
-											<select class="form-control">
-												<option value="0" selected>Todos</option>
-												<option value="1">Destacados</option>
-												<option value="2">Promociones</option>
-											</select>
-										</div>
-										<div class="form-group">
-											<label for="contain">Autor</label>
-											<input class="form-control" type="text" />
-										</div>
-										<div class="form-group">
-											<label for="contain">Contiene las palabras</label>
-											<input class="form-control" type="text" />
-										</div>
-										<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-									</form>
+                    <form class="form-horizontal" role="form">
+                      <div class="form-group">
+                          <label for="filter">Filtrar por</label>
+                          <select class="form-control">
+                            <option value="0" selected>Todos</option>
+                            <option value="1">Destacados</option>
+                            <option value="2">Promociones</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="filter">Filtrar por Editorial</label>
+                          <select class="form-control">
+                            <option value="0" selected>Advocatus Ediciones</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="filter">Filtrar por Categoría</label>
+                          <select class="form-control">
+                            <option value="0" selected>Catálogo</option>
+                            <option value="1">Derecho</option>
+                            <option value="2">Administración, Contabilidad y Economía</option>
+                            <option value="3">Práctica Profesional</option>
+                            <option value="4">Jurisprudencia</option>
+                            <option value="5">Técnicos, Arquitectura e Ingeniería</option>
+                            <option value="6">Códigos y Leyes</option>
+                            <option value="7">Otros Productos</option>
+                            <option value="8">Lectura General</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="contain">Autor</label>
+                          <input class="form-control" type="text" />
+                        </div>
+                        <div class="form-group">
+                          <label for="contain">Año</label>
+                          <input class="form-control" type="text" />
+                        </div>
+                        <div class="form-group">
+                          <label for="contain">Contiene las palabras</label>
+                        <input class="form-control" type="text" />
+                        </div>
+                      <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </form>
 								</div>
 							</div>
 						</div>

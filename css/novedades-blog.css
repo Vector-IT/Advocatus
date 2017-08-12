@@ -51,20 +51,17 @@ hr.small {
   margin-top: 0;
   font-size: 50px;
 }
-.intro-header .site-heading .subheading,
-.intro-header .page-heading .subheading {
-  font-size: 24px;
-  line-height: 1.1;
-  display: block;
-  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  margin: 10px 0 0;
+.intro-header .site-heading .subheading, .intro-header .page-heading .subheading {
+    font-size: 22px;
+    line-height: 1.1;
+    display: block;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    margin: 10px 0 0;
 }
 @media only screen and (min-width: 768px) {
-  .intro-header .site-heading h1,
-  .intro-header .page-heading h1 {
-    font-size: 80px;
-  }
+.intro-header .site-heading h1, .intro-header .page-heading h1 {
+    font-size: 70px;
 }
 .intro-header .post-heading h1 {
   font-size: 35px;
@@ -106,14 +103,15 @@ hr.small {
   color: #0085A1;
 }
 .post-preview > a > .post-title {
-  font-size: 30px;
+  font-size: 24px;
   margin-top: 30px;
   margin-bottom: 10px;
 }
 .post-preview > a > .post-subtitle {
-  margin: 0;
-  font-weight: 300;
-  margin-bottom: 10px;
+    margin: 0;
+    font-weight: 300;
+    margin-bottom: 10px;
+    font-size: 20px;
 }
 .post-preview > .post-meta {
   color: #777777;
@@ -132,7 +130,7 @@ hr.small {
 }
 @media only screen and (min-width: 768px) {
   .post-preview > a > .post-title {
-    font-size: 36px;
+    font-size: 24px;
   }
 }
 .section-heading {
@@ -200,4 +198,9 @@ img::-moz-selection {
 }
 body {
   -webkit-tap-highlight-color: #0085A1;
+}
+article {
+    font-family: 'Open Sans';
+    font-size: 14px;
+    line-height: 24px;
 }

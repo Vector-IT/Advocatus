@@ -6,9 +6,13 @@
           </div>
           <div class="col-sm-10">
             <div class="col-sm-4">
-              <a href="#"><img src="./img/home/logo-footer.png" alt=""></a>
-              <p class="tels">Tel.: 54 351 446 - 1931 / 1932</p>
-              <p class="copyright">EDITORIAL ADVOCATUS LIBRERIA. ©2017</p>
+              <a href="#"><img src="./img/home/logo-footer.png" alt="" style="margin-bottom: 25px;"></a>
+              <div class="redes-sociales">
+                <a href=""><img class="img-center" src="./img/home/social_fb.png" alt=""></a>
+                <a href=""><img class="img-center" src="./img/home/social_tw.png" alt=""></a>
+                <a href=""><img class="img-center" src="./img/home/social_inst.png" alt=""></a>
+                <a href=""><img class="img-center" src="./img/home/social_g.png" alt=""></a>
+              </div> 
             </div>
             <div class="col-sm-4">
               <div class="col-sm-6">
@@ -36,15 +40,21 @@
         </div>
         <!-- /.row -->
         <div class="row noMargin subfooter">
-          <div class="col-lg-12">
-            <img class="img-responsive img-center" src="./img/home/tarjetas-footer.png" alt="">
-            <div class="redes-sociales pull-right">
-              <a href=""><img class="img-center" src="./img/home/social_fb.png" alt=""></a>
-              <a href=""><img class="img-center" src="./img/home/social_tw.png" alt=""></a>
-              <a href=""><img class="img-center" src="./img/home/social_inst.png" alt=""></a>
-              <a href=""><img class="img-center" src="./img/home/social_g.png" alt=""></a>
-            </div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-10">
+          <div class="row noMargin noPadding">
+          <div class="col-lg-3">
+           <p class="tels">Tel.: +54 351 446 - 1931 / 1932</p>  
           </div>
+          <div class="col-lg-6">
+            <img class="img-responsive img-center" src="./img/home/tarjetas-footer.png" alt="" style="max-width: 420px;">
+          </div>
+          <div class="col-lg-3">
+            <p class="copyright">EDITORIAL ADVOCATUS LIBRERIA. ©2017</p> 
+          </div>
+          </div>
+          </div>
+          <div class="col-sm-1"></div>
         </div>
         <!-- /.row -->
       </footer>

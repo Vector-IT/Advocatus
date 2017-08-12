@@ -131,3 +131,11 @@
   font-weight: normal;
   font-style: normal;
 }
+
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fuentes/OpenSans.eot?#iefix') format('embedded-opentype'),  url('../fuentes/OpenSans.woff') format('woff'), url('../fuentes/OpenSans.ttf')  format('truetype'), url('../fuentes/OpenSans.svg#OpenSans') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

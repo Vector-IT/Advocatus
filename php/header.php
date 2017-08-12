@@ -21,8 +21,14 @@
           </button>
           <a class="navbar-brand" href="index.php"><img class="img-responsive img-center" src="./img/home/logo.jpg" alt=""></a>
         </div>
+        <div class="redes-sociales col-md-2 pull-right">
+               <a href=""><img class="" src="./img/home/fb.png" alt=""></a>
+               <a href=""><img class="" src="./img/home/t.png" alt=""></a>
+               <a href=""><img class="" src="./img/home/i.png" alt=""></a>
+               <a href=""><img class="" src="./img/home/g.png" alt=""></a>
+        </div>
         <!-- Buscador -->
-        <div class="buscador col-md-9 pull-right">
+        <div class="buscador col-md-7">
           <div class="input-group" id="adv-search">
             <input type="text" class="form-control busqueda" placeholder="" />
             <div class="input-group-btn">
@@ -41,13 +47,39 @@
                           </select>
                         </div>
                         <div class="form-group">
+                          <label for="filter">Filtrar por Editorial</label>
+                          <select class="form-control">
+                            <option value="0" selected>Advocatus Ediciones</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="filter">Filtrar por Categoría</label>
+                          <select class="form-control">
+                            <option value="0" selected>Catálogo</option>
+                            <option value="1">Derecho</option>
+                            <option value="2">Administración, Contabilidad y Economía</option>
+                            <option value="3">Práctica Profesional</option>
+                            <option value="4">Jurisprudencia</option>
+                            <option value="5">Técnicos, Arquitectura e Ingeniería</option>
+                            <option value="6">Códigos y Leyes</option>
+                            <option value="7">Otros Productos</option>
+                            <option value="8">Lectura General</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
                           <label for="contain">Autor</label>
+                          <input class="form-control" type="text" />
+                        </div>
+                        <div class="form-group">
+                          <label for="contain">Año</label>
                           <input class="form-control" type="text" />
                         </div>
                         <div class="form-group">
                           <label for="contain">Contiene las palabras</label>
                         <input class="form-control" type="text" />
-                      </div>
+                        </div>
                       <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                     </form>
                   </div>

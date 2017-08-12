@@ -147,20 +147,6 @@
                 </div>
 <!-- /.PROMOS -->
 
-
-      <!-- /SUSCRIBIRSE -->
-      <div id="suscribirse" class="container">
-        <div class="row">
-          <div class="col-sm-2">
-          </div>
-          <div class="col-sm-8">
-            <a href="#">SUSCRIBIRSE AL BOLETIN DE NOTICIAS</a>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </div>
-      <!-- /.SUSCRIBIRSE -->   
-
        <?php include 'php/footer.php'; ?>
        <?php include 'php/scripts-footer.php'; ?>
 
