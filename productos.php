@@ -1,7 +1,7 @@
 <?php
 	require_once 'php/conexion.php';
 
-	$strSQL = "SELECT NumeCate, NombCate FROM categorias WHERE NiveCate = 3";
+	$strSQL = "SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL";
 	$categorias = cargarTabla($strSQL);
 ?>
 <!DOCTYPE html>
