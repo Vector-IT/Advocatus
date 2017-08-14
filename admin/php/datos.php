@@ -11,8 +11,8 @@
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
 	$config->tbLogin = 'usuarios';
-	$config->theme = 'dark';
-	//$config->cssFiles = ['admin/css/custom/custom.css'];
+	// $config->theme = 'dark';
+	// $config->cssFiles = ['admin/css/custom/custom.css'];
 
 	/**
 	 * Items de menu adicionales
@@ -106,12 +106,18 @@
 			)
 	];
 
+	$tabla->jsOnList = "armarEditables();";
+
 	$tabla->searchFields = [
-		array("name"=>"NumeProd", "operator"=>"=", "join"=>"and"), 
-		array("name"=>"NombProd", "operator"=>"LIKE", "join"=>"and")
+		// array("name"=>"NumeProd", "operator"=>"=", "join"=>"and"), 
+		array("name"=>"ISBN", "operator"=>"LIKE", "join"=>"and"),
+		array("name"=>"NombProd", "operator"=>"LIKE", "join"=>"and"),
+		array("name"=>"Autor", "operator"=>"LIKE", "join"=>"and"),
 	];
 
-	$tabla->addFieldId("NumeProd", "Número");
+	$tabla->addField("ISBN", "calcfield", 0, "ISBN");
+	
+	$tabla->addFieldId("NumeProd", "Número", true, true);
 	$tabla->addField("NombProd", "text", 200, "Nombre");
 	$tabla->addField("DescProd", "textarea", 400, "Descripción");
 	$tabla->fields["DescProd"]["isHiddenInList"] = true;
@@ -119,10 +125,12 @@
 	$tabla->addField("CantProd", "number", 0, "Cantidad");
 	$tabla->fields["CantProd"]["step"] = "0.1";
 	$tabla->fields["CantProd"]["txtAlign"] = "right";
+	$tabla->fields["CantProd"]["cssList"] = "editable";
 
 	$tabla->addField("ImpoComp", "number", 0, "Imp. Compra");
 	$tabla->fields["ImpoComp"]["step"] = "0.1";
 	$tabla->fields["ImpoComp"]["txtAlign"] = "right";
+	$tabla->fields["ImpoComp"]["cssList"] = "editable";
 
 	$tabla->addField("ImpoVent", "number", 0, "Imp. Venta");
 	$tabla->fields["ImpoVent"]["step"] = "0.1";
@@ -135,6 +143,8 @@
 	$tabla->fields["Promocion"]["txtAlign"] = "center";
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
 	$tabla->fields["Destacado"]["txtAlign"] = "center";
+
+	$tabla->addField("Autor", "calcfield", 40, "Autor");
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';

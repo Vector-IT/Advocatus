@@ -1,54 +1,13 @@
-var precioViejo;
+var cantProdViejo;
+var impoCompViejo;
+var impoVentViejo;
+
 var blnEdit = false;
 var intPagina = 1;
 
 $(document).ready(function() {
     $("#actualizando").hide();
 	$("#divMsj").hide();
-
-    $(".editable").click( function() {
-        precioViejo = $(this).html();
-        $(this).attr("contenteditable", true);
-    });
-
-    $(".editable").blur( function() {
-        var numeProd = this.id.replace("ImpoVent", "");
-        var nombProd = $("#NombProd" + numeProd).html();
-		var impoVent = $(this).html();
-		
-		if (isNaN(impoVent)) {
-			$(this).html(precioViejo);
-
-			$("#txtHint").html(nombProd + "<br>El precio ingresado es inválido.");
-			$("#divMsj").addClass("alert-danger");
-			$("#divMsj").removeClass("alert-success");
-			$("#divMsj").show();
-			return false;
-		}
-
-        if (precioViejo != impoVent) {
-			$.post("php/tablaHandler.php", { 
-				operacion: "100",
-				tabla: "productos",
-				field: "precio",
-				data: {"NumeProd": numeProd, "Precio": impoVent}
-				},
-				function (data) {
-					if (data.valor === true) {
-						$("#txtHint").html(nombProd + "<br>Nuevo precio: " + impoVent);
-						$("#divMsj").removeClass("alert-danger");
-						$("#divMsj").addClass("alert-success");
-					}
-					else {
-						$("#txtHint").html(nombProd + "<br>Error al actualizar precio.");
-						$("#divMsj").addClass("alert-danger");
-						$("#divMsj").removeClass("alert-success");
-					}
-					$("#divMsj").show();
-				}
-			);
-        }
-    });
 
 	$("#frmproductos").submit(function() {
 	    aceptarproductos();
@@ -61,19 +20,22 @@ $(document).ready(function() {
 		$(".divPreview").html("");
 	});
 
-	
+	armarEditables();
 });
 
 function listarproductos() {
 	$("#actualizando").show();
 
 	var filtros = {};
-	if ($("#search-NumeProd").val() != "") {
-        filtros["NumeProd"] = {
-        	"type": "number",
-        	"operator":"=",
-        	"join":"and",
-        	"value":$("#search-NumeProd").val()
+
+	if ($("#search-ISBN").val() != "") {
+        filtros["ISBN"] = {
+        	"value":$("#search-ISBN").val()
+        }
+	}
+	if ($("#search-Autor").val() != "") {
+        filtros["Autor"] = {
+        	"value":$("#search-Autor").val()
         }
 	}
 	if ($("#search-NombProd").val() != "") {
@@ -94,7 +56,8 @@ function listarproductos() {
 		function(data) {
 			$("#actualizando").hide();
 			$("#divDatos").html(data);
-		    
+			
+			armarEditables();
 		}
 	);
 }
@@ -354,5 +317,160 @@ function archivoNuevo(strID) {
 		$("#btnBorrarAtri"+strID).show();	
 
 		$("#hdnAtri" + strID + "Clear").val("0");
+	}
+}
+
+function armarEditables() {
+	$(".editable").click( function() {
+		var campo = this.id.substr(0, 8);
+
+		switch (campo) {
+			case 'CantProd':
+				cantProdViejo = $(this).html();
+				break;
+
+			case 'ImpoComp':
+				impoCompViejo = $(this).html();
+				break;
+
+			case 'ImpoVent':
+				impoVentViejo = $(this).html();
+				break;
+		}
+        
+        $(this).attr("contenteditable", true);
+    });
+
+    $(".editable").blur( function() {
+		var campo = this.id.substr(0, 8);
+		var numeProd = this.id.substr(8);
+
+		switch (campo) {
+			case 'CantProd':
+				editarCantProd(numeProd);
+				break;
+
+			case 'ImpoComp':
+				editarImpoComp(numeProd);
+				break;
+
+			case 'ImpoVent':
+				editarImpoVent(numeProd);
+				break;
+		}
+	});	
+}
+
+function editarCantProd(numeProd) {
+	var nombProd = $("#NombProd" + numeProd).html();
+	var cantProd = $("#CantProd" + numeProd).html();
+	
+	if (isNaN(cantProd)) {
+		$("#CantProd" + numeProd).html(cantProdViejo);
+
+		$("#txtHint").html(nombProd + "<br>La cantidad ingresada es inválida.");
+		$("#divMsj").addClass("alert-danger");
+		$("#divMsj").removeClass("alert-success");
+		$("#divMsj").show();
+		return false;
+	}
+
+	if (cantProd != cantProdViejo) {
+		$.post("php/tablaHandler.php", { 
+			operacion: "100",
+			tabla: "productos",
+			field: "CantProd",
+			data: {"NumeProd": numeProd, "CantProd": cantProd}
+			},
+			function (data) {
+				if (data.valor === true) {
+					$("#txtHint").html(nombProd + "<br>Nueva cantidad: " + cantProd);
+					$("#divMsj").removeClass("alert-danger");
+					$("#divMsj").addClass("alert-success");
+				}
+				else {
+					$("#txtHint").html(nombProd + "<br>Error al actualizar cantidad.");
+					$("#divMsj").addClass("alert-danger");
+					$("#divMsj").removeClass("alert-success");
+				}
+				$("#divMsj").show();
+			}
+		);
+	}
+}
+
+function editarImpoComp(numeProd) {
+	var nombProd = $("#NombProd" + numeProd).html();
+	var impoComp = $("#ImpoComp" + numeProd).html();
+	
+	if (isNaN(impoComp)) {
+		$("#ImpoComp" + numeProd).html(impoCompViejo);
+
+		$("#txtHint").html(nombProd + "<br>El precio ingresado es inválido.");
+		$("#divMsj").addClass("alert-danger");
+		$("#divMsj").removeClass("alert-success");
+		$("#divMsj").show();
+		return false;
+	}
+
+	if (impoComp != impoCompViejo) {
+		$.post("php/tablaHandler.php", { 
+			operacion: "100",
+			tabla: "productos",
+			field: "ImpoComp",
+			data: {"NumeProd": numeProd, "ImpoComp": impoComp}
+			},
+			function (data) {
+				if (data.valor === true) {
+					$("#txtHint").html(nombProd + "<br>Nuevo precio de compra: " + impoComp);
+					$("#divMsj").removeClass("alert-danger");
+					$("#divMsj").addClass("alert-success");
+				}
+				else {
+					$("#txtHint").html(nombProd + "<br>Error al actualizar precio.");
+					$("#divMsj").addClass("alert-danger");
+					$("#divMsj").removeClass("alert-success");
+				}
+				$("#divMsj").show();
+			}
+		);
+	}
+}
+
+function editarImpoVent(numeProd) {
+	var nombProd = $("#NombProd" + numeProd).html();
+	var impoVent = $("#ImpoVent" + numeProd).html();
+	
+	if (isNaN(impoVent)) {
+		$("#ImpoVent" + numeProd).html(impoVentViejo);
+
+		$("#txtHint").html(nombProd + "<br>El precio ingresado es inválido.");
+		$("#divMsj").addClass("alert-danger");
+		$("#divMsj").removeClass("alert-success");
+		$("#divMsj").show();
+		return false;
+	}
+
+	if (impoVent != impoVentViejo) {
+		$.post("php/tablaHandler.php", { 
+			operacion: "100",
+			tabla: "productos",
+			field: "ImpoVent",
+			data: {"NumeProd": numeProd, "ImpoVent": impoVent}
+			},
+			function (data) {
+				if (data.valor === true) {
+					$("#txtHint").html(nombProd + "<br>Nuevo precio de venta: " + impoVent);
+					$("#divMsj").removeClass("alert-danger");
+					$("#divMsj").addClass("alert-success");
+				}
+				else {
+					$("#txtHint").html(nombProd + "<br>Error al actualizar precio.");
+					$("#divMsj").addClass("alert-danger");
+					$("#divMsj").removeClass("alert-success");
+				}
+				$("#divMsj").show();
+			}
+		);
 	}
 }

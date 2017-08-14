@@ -26,9 +26,39 @@ class Producto extends Tabla {
 
                 break;
 
-            case "precio":
+            case "ISBN": 
+                $numeProd = $post["dato"];
+            
+                return $config->buscarDato("SELECT Valor from productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'ISBN')");
+                break;
+
+            case "Autor":
+                $numeProd = $post["dato"];
+
+                return $config->buscarDato("SELECT Valor from productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')");
+                break;
+
+            case "CantProd":
                 $numeProd = $post["data"]["NumeProd"];
-                $impoVent = $post["data"]["Precio"];
+                $cantProd = $post["data"]["CantProd"];
+
+                $strSQL = "UPDATE productos SET CantProd = {$cantProd} WHERE NumeProd = ". $numeProd;
+                return $config->ejecutarCMD($strSQL);
+
+                break;
+
+            case "ImpoComp":
+                $numeProd = $post["data"]["NumeProd"];
+                $impoComp = $post["data"]["ImpoComp"];
+
+                $strSQL = "UPDATE productos SET ImpoComp = {$impoComp} WHERE NumeProd = ". $numeProd;
+                return $config->ejecutarCMD($strSQL);
+
+                break;
+
+            case "ImpoVent":
+                $numeProd = $post["data"]["NumeProd"];
+                $impoVent = $post["data"]["ImpoVent"];
 
                 $strSQL = "UPDATE productos SET ImpoVent = {$impoVent} WHERE NumeProd = ". $numeProd;
                 return $config->ejecutarCMD($strSQL);
@@ -191,6 +221,39 @@ class Producto extends Tabla {
         $config->ejecutarCMD($strSQL);
 
         return parent::borrar($datos, $filtro);
+    }
+
+    public function listar($strFiltro = "", $conBotones = true, $btnList = [], $order = '', $pagina = 1) {
+        if ($strFiltro != "") {
+            if (isset($strFiltro["ISBN"])) {
+                $strFiltro["NumeProd"] = array(
+                    "type"=>"number",
+                    "operator"=>"in",
+                    "join"=>"and",
+                    "value"=>"(SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["ISBN"]["value"] ."%')"
+                );
+
+                unset($strFiltro["ISBN"]);
+            }
+
+            if (isset($strFiltro["Autor"])) {
+                if (isset($strFiltro["NumeProd"])) {
+                    $strFiltro["NumeProd"]["value"].= " AND NumeProd IN (SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')";
+                }
+                else {
+                    $strFiltro["NumeProd"] = array(
+                        "type"=>"number",
+                        "operator"=>"in",
+                        "join"=>"and",
+                        "value"=>"(SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')"
+                    );
+                }
+
+                unset($strFiltro["Autor"]);
+            }
+        }
+
+        parent::listar($strFiltro, $conBotones, $btnList, $order, $pagina);
     }
 }
 ?>
