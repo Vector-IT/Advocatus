@@ -29,17 +29,49 @@
 
 	<?php include 'php/header.php'; ?>
 
-	<!-- PORTADA -->
-	<header class="portada home">
-	<div class="container-full">
-		<div class="row noMargin">
-		<div class="col-lg-12">
-			<a class="descargar-catalogo pull-right" href="#">Catálogo de Productos</a>
-		</div>
-		</div>
-	</div>
-	</header>
-	<!-- /.PORTADA -->
+      <!-- PORTADA -->
+      <header class="">
+        <div class="container-full">
+          <div class="row noMargin">
+            <div class="col-lg-12  noPadding noMargin">
+                <a class="descargar-catalogo pull-right" href="#">Catálogo de Productos</a>
+                <!-- SLIDER INTRO -->
+                <div class="container-full noMargin">
+                <div class="row noMargin">
+                  <div class="col-sm-12 noPadding noMargin">
+                  <div id="intro" class="carousel slide noPadding noMargin" data-ride="carousel">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                    <div class="item active">
+                      <img src="./img/home/portada-home.jpg" alt="">
+                    </div>
+                    <div class="item">
+                      <img src="./img/home/portada-home.jpg" alt="">
+                    </div>
+                    <div class="item">
+                      <img src="./img/home/portada-home.jpg" alt="">
+                    </div>
+                    </div>
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#intro" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="sr-only">Anterior</span>
+                    </a>
+                    <a class="right carousel-control" href="#intro" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                    <span class="sr-only">Siguiente</span>
+                    </a>
+                  </div>
+                  </div>
+                </div>
+                </div>
+                <!-- /.SLIDER INTRO -->
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- /.PORTADA -->
+	  
 	<!-- Buscador -->
 	<div id="buscador-portada">
 		<div class="row noMargin">
@@ -256,11 +288,11 @@
 			</div>
 			</div>
 			<!-- Left and right controls -->
-			<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+			<a class="left carousel-control" href="#promos" data-slide="prev">
 			<span class="glyphicon glyphicon-chevron-left"></span>
 			<span class="sr-only">Anterior</span>
 			</a>
-			<a class="right carousel-control" href="#myCarousel" data-slide="next">
+			<a class="right carousel-control" href="#promos" data-slide="next">
 			<span class="glyphicon glyphicon-chevron-right"></span>
 			<span class="sr-only">Siguiente</span>
 			</a>

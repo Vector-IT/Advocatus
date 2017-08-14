@@ -405,9 +405,12 @@ span#text-lost-msg {
     line-height: 16px;
     text-decoration: none !important;
     -webkit-transition: all 0.3s ease-in-out;
-   -moz-transition: all 0.3s ease-in-out;
-   -o-transition: all 0.3s ease-in-out;
-   transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    z-index: 9998;
+    right: 15px;
 }
 
 .descargar-catalogo:hover {
@@ -463,6 +466,11 @@ span#text-lost-msg {
     min-height: 40px;
     padding: 10px 15px 10px !important;
     border-radius: 0px;
+}
+
+.carousel-inner > .item > img {
+    width: 100%;
+    max-width: unset !important;
 }
     
 #productos {
