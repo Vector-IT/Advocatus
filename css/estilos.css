@@ -472,6 +472,10 @@ span#text-lost-msg {
     width: 100%;
     max-width: unset !important;
 }
+
+.carousel-control {
+    width: 5% !important;
+}
     
 #productos {
     background: #ECECEC;
