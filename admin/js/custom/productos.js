@@ -120,7 +120,6 @@ function editarproductos(strID){
 			$("#CantProd").val($("#CantProd" + strID).text());
 			$("#ImpoComp").val($("#ImpoComp" + strID).text());
 			$("#ImpoVent").val($("#ImpoVent" + strID).text());
-			$("#Novedad").prop("checked", Boolean(parseInt($("#Novedad" + strID).val())));
 			$("#Promocion").prop("checked", Boolean(parseInt($("#Promocion" + strID).val())));
 			$("#Destacado").prop("checked", Boolean(parseInt($("#Destacado" + strID).val())));
 			$("#NumeEsta").val($("#NumeEsta" + strID).val());
@@ -197,7 +196,6 @@ function editarproductos(strID){
 		$("#CantProd").val("");
 		$("#ImpoComp").val("");
 		$("#ImpoVent").val("");
-		$("#Novedad").val("");
 		$("#Promocion").val("");
 		$("#Destacado").val("");
 		$("#NumeEsta").val("1");
@@ -235,7 +233,6 @@ function aceptarproductos(){
 	frmData.append("CantProd", $("#CantProd").val());
 	frmData.append("ImpoComp", $("#ImpoComp").val());
 	frmData.append("ImpoVent", $("#ImpoVent").val());
-	frmData.append("Novedad", $("#Novedad").prop("checked") ? 1 : 0);
 	frmData.append("Promocion", $("#Promocion").prop("checked") ? 1 : 0);
 	frmData.append("Destacado", $("#Destacado").prop("checked") ? 1 : 0);
 	frmData.append("NumeEsta", $("#NumeEsta").val());

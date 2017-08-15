@@ -98,14 +98,16 @@
 	// $tabla->paginacion = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];
 	$tabla->btnList = [
-			array(
-				'id'=> 'btnImg',
-				'titulo'=> '<i class="fa fa-image fa-fw" aria-hidden="true"></i>',
-				'class'=> 'btn-primary',
-				'onclick'=> 'verImagenes'
-			)
+		array(
+			'id'=> 'btnImg',
+			'titulo'=> 'Imágenes',
+			'texto'=> '<i class="fa fa-image fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-primary',
+			'onclick'=> 'verImagenes'
+		)
 	];
 
+	$tabla->jsOnLoad = "armarEditables();";
 	$tabla->jsOnList = "armarEditables();";
 
 	$tabla->searchFields = [
@@ -137,8 +139,6 @@
 	$tabla->fields["ImpoVent"]["txtAlign"] = "right";
 	$tabla->fields["ImpoVent"]["cssList"] = "editable";
 	
-	$tabla->addField("Novedad", "checkbox", 0, "Es Novedad?");
-	$tabla->fields["Novedad"]["txtAlign"] = "center";
 	$tabla->addField("Promocion", "checkbox", 0, "Es Promoción?");
 	$tabla->fields["Promocion"]["txtAlign"] = "center";
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
@@ -161,6 +161,20 @@
 	$tabla->order = 'NumeOrde';
 	$tabla->orderField = 'NumeOrde';
 
+	$tabla->jsFiles = ["admin/js/custom/atributos.js"];
+	$tabla->btnList = [
+		array(
+			'id'=> 'btnOpciones',
+			'titulo'=> 'Opciones',
+			'texto'=> '<i class="fa fa-list fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-primary',
+			'onclick'=> 'verOpciones'
+		)
+	];
+
+	$tabla->jsOnLoad = "habilitarOpciones();";
+	$tabla->jsOnList = "habilitarOpciones();";
+
 	$tabla->addFieldId("NumeAtri", "Número", true, true);
 
 	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
@@ -177,6 +191,24 @@
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["atributos"] = $tabla;
+
+	/**
+	* ATRIBUTOS OPCIONES
+	*/
+	$tabla = new Tabla("atributosopciones", "atributosopciones", "Opciones", "la opción", false);
+	$tabla->order = "Valor";
+	$tabla->masterTable = "atributos";
+	$tabla->masterFieldId = "NumeAtri";
+	$tabla->masterFieldName = "NombAtri";
+
+	$tabla->addFieldId("NumeAtriOpci", "Numero", true, true);
+	$tabla->addField("NumeAtri", "number");
+	$tabla->fields["NumeAtri"]["isHiddenInList"] = true;
+	$tabla->fields["NumeAtri"]["isHiddenInForm"] = true;
+
+	$tabla->addField("Valor", "text", 80, "Valor");
+
+	$config->tablas["atributosopciones"] = $tabla;
 
 	/**
 	* CATEGORIAS
@@ -203,7 +235,7 @@
 	$tabla->order = 'NumeOrde';
 	$tabla->orderField = 'NumeOrde';
 	
-	$tabla->addFieldId('NumeImag', 'number', true, true);
+	$tabla->addFieldId('NumeImag', 'Número', true, true);
 
 	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
 	$tabla->fields["NumeOrde"]["showOnForm"] = false;
@@ -215,4 +247,25 @@
 	$tabla->addFieldFileImage('RutaImag', 'Imagen', 'imgProductos');
 	
 	$config->tablas["productosimagenes"] = $tabla;
+
+	/**
+	* PRODUCTOS NOVEDADES
+	*/
+	$tabla = new Tabla("productosnovedades", "productosnovedades", "Novedades", "el producto", true, "objeto/productosnovedades/", "fa-newspaper-o");
+	$tabla->isSubItem = true;
+
+	$tabla->order = 'NumeOrde';
+	$tabla->orderField = 'NumeOrde';
+	$tabla->orderFieldAppend = false;
+	
+	$tabla->addFieldId("CodiIden", "Número", true, true);
+
+	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
+	$tabla->fields["NumeOrde"]["showOnForm"] = false;
+
+	$tabla->addFieldSelect("NumeProd", 80, "Producto", true, "", "productos", "NumeProd", "NombProd", "NumeProd NOT IN (SELECT NumeProd FROM productosnovedades)", "NombProd");
+	$tabla->addField("FechNove", "datetime", 0, "Fecha");
+	$tabla->fields["FechNove"]["showOnForm"] = false;
+
+	$config->tablas["productosnovedades"] = $tabla;
 ?>

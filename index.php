@@ -3,8 +3,9 @@
 
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
 	$strSQL.= $crlf."FROM productos p";
+	$strSQL.= $crlf."INNER JOIN productosnovedades pn ON p.NumeProd = pn.NumeProd";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
-	$strSQL.= $crlf."WHERE Novedad = 1";
+	$strSQL.= $crlf."ORDER BY pn.NumeOrde";
 	$novedades = cargarTabla($strSQL);
 
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";

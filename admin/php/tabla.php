@@ -24,6 +24,7 @@ class Tabla
     public $fields;
     public $order;
 	public $orderField;
+	public $orderFieldAppend;
 
     public $paginacion;
     public $pageRows;
@@ -94,6 +95,7 @@ class Tabla
         $this->order = $order;
 		
 		$this->orderField = '';
+		$this->orderFieldAppend = true;
 
         $this->paginacion = false;
 		$this->pageRows = 25;
@@ -865,13 +867,12 @@ class Tabla
                         //Botones de la clase
                         if (count($this->btnList) > 0) {
                             for ($I = 0; $I < count($this->btnList); $I++) {
-                                $strSalida.= $crlf.'<th></th>';
+                                $strSalida.= $crlf.'<th class="text-center">'.$this->btnList[$I]["titulo"].'</th>';
                             }
                         }
 
 						//Orden
 						if ($this->orderField != '') {
-							$strSalida.= $crlf.'<th></th>';
 							$strSalida.= $crlf.'<th></th>';
 						}
 
@@ -889,7 +890,7 @@ class Tabla
                     //Botones del método
                     if (count($btnList) > 0) {
                         for ($I = 0; $I < count($btnList); $I++) {
-                            $strSalida.= $crlf.'<th></th>';
+                            $strSalida.= $crlf.'<th class="text-center">'.$btnList[$I]["titulo"].'</th>';
                         }
                     }
                     
@@ -990,7 +991,7 @@ class Tabla
                             //De clase
                             if (count($this->btnList) > 0) {
                                 for ($I = 0; $I < count($this->btnList); $I++) {
-                                    $strSalida.= $crlf.'<td class="text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $this->btnList[$I]['titulo'] .'</button></td>';
+                                    $strSalida.= $crlf.'<td class="text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$this->btnList[$I]["titulo"].'">'. $this->btnList[$I]['texto'] .'</button></td>';
                                 }
                             }
 
@@ -1014,7 +1015,7 @@ class Tabla
                         //Botones del método
                         if (count($btnList) > 0) {
                             for ($I = 0; $I < count($btnList); $I++) {
-                                $strSalida.= $crlf.'<td class="text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')">'. $btnList[$I]['titulo'] .'</button></td>';
+                                $strSalida.= $crlf.'<td class="text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$btnList[$I]["titulo"].'">'. $btnList[$I]['texto'] .'</button></td>';
                             }
                         }
 
@@ -1737,16 +1738,30 @@ class Tabla
 
 			//Registro el orden
 			if ($this->orderField != '') {
-				$strSQL = "SELECT COALESCE(MAX({$this->orderField}), 0) + 1 FROM ". $this->tabladb;
-				if (($this->masterTable != '') && ($this->masterFieldId != '') && isset($datos[$this->masterFieldId])) {
-					$strSQL.= " WHERE {$this->masterFieldId} = {$datos[$this->masterFieldId]}";
-				}
-				if ($strCampos != "") {
-					$strCampos.= ", ";
-					$strValores.= ", ";
-				}
-				$strCampos.= $this->orderField;
-				$strValores.= $config->buscarDato($strSQL);
+                if ($this->orderFieldAppend) { //Agrego el objeto al final
+                    $strSQL = "SELECT COALESCE(MAX({$this->orderField}), 0) + 1 FROM ". $this->tabladb;
+                    if (($this->masterTable != '') && ($this->masterFieldId != '') && isset($datos[$this->masterFieldId])) {
+                        $strSQL.= " WHERE {$this->masterFieldId} = {$datos[$this->masterFieldId]}";
+                    }
+                    if ($strCampos != "") {
+                        $strCampos.= ", ";
+                        $strValores.= ", ";
+                    }
+                    $strCampos.= $this->orderField;
+                    $strValores.= $config->buscarDato($strSQL);
+                }
+                else { //Agrego el objeto al principio
+                    if ($strCampos != "") {
+                        $strCampos.= ", ";
+                        $strValores.= ", ";
+                    }
+                    $strCampos.= $this->orderField;
+                    $strValores.= "1";
+
+                    $strSQL = "UPDATE ". $this->tabladb;
+                    $strSQL.= " SET ". $this->orderField ." = ". $this->orderField ." + 1";
+                    $config->ejecutarCMD($strSQL);
+                }
 			}
 
 			$strSQL = "INSERT INTO ". $this->tabladb;

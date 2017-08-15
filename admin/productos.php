@@ -141,14 +141,6 @@
             <div class="form-group form-group-sm ">
 				<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">
 					<label class="labelCheck ucase">
-						<input type="checkbox" id="Novedad"> Es Novedad?
-					</label>
-	            </div>
-            </div>
-
-            <div class="form-group form-group-sm ">
-				<div class="col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2">
-					<label class="labelCheck ucase">
 						<input type="checkbox" id="Promocion"> Es Promoción?
 					</label>
 				</div>

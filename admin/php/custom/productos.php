@@ -78,6 +78,14 @@ class Producto extends Tabla {
 		if ($resultAux["estado"] === true) {
             $numeProd = $resultAux["id"];
 
+            //Novedades
+            $datosNovedades = array(
+                "CodiIden"=> "",
+                "NumeProd"=> $numeProd
+            );
+            $novedades = $config->getTabla("productosnovedades");
+            $novedades->insertar($datosNovedades);
+
             //Categorias
             $categorias = explode(",", $datos["Categorias"]);
 
@@ -93,28 +101,33 @@ class Producto extends Tabla {
                 $numeAtri = $atri["NumeAtri"];
 
                 if ($atri["NumeTipoAtri"] != "3") {  //Si no es archivo
-                    $valor = $datos["Atri". $numeAtri];
+                    $valor = "'".$datos["Atri". $numeAtri]."'";
                 }
                 else {
-                    $temp = explode(".", $_FILES["Atri". $numeAtri]["name"]);
-                    $extension = end($temp);
-                    
-                    $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
-
-                    $archivo_viejo = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}");
-                    if ($archivo_viejo != '') {
-                        $archivo_viejo = "../". $archivo_viejo;
-                    }
-                    
-                    $archivo = $atri["NombAtri"] ."-". $strRnd .".". $extension;
-                    $val =  $atri["NombAtri"] ."/". $archivo;
+                    if (isset($_FILES["Atri". $numeAtri])) {
+                        $temp = explode(".", $_FILES["Atri". $numeAtri]["name"]);
+                        $extension = end($temp);
                         
-                    subir_archivo($_FILES["Atri". $numeAtri], "../". $atri["NombAtri"], $archivo, $archivo_viejo);
-                    
-                    $valor = $val;
+                        $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
+
+                        $archivo_viejo = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}");
+                        if ($archivo_viejo != '') {
+                            $archivo_viejo = "../". $archivo_viejo;
+                        }
+                        
+                        $archivo = $atri["NombAtri"] ."-". $strRnd .".". $extension;
+                        $val =  $atri["NombAtri"] ."/". $archivo;
+                            
+                        subir_archivo($_FILES["Atri". $numeAtri], "../". $atri["NombAtri"], $archivo, $archivo_viejo);
+                        
+                        $valor = "'".$val."'";
+                    }
+                    else {
+                        $valor = 'null';
+                    }
                 }
 
-                $strSQL = "INSERT INTO productosatributos(NumeProd, NumeAtri, Valor) VALUES({$numeProd}, {$numeAtri}, '{$valor}')";
+                $strSQL = "INSERT INTO productosatributos(NumeProd, NumeAtri, Valor) VALUES({$numeProd}, {$numeAtri}, {$valor})";
                 $config->ejecutarCMD($strSQL);
             }
             
@@ -214,6 +227,10 @@ class Producto extends Tabla {
             }
         }
         $strSQL = "DELETE FROM productosimagenes WHERE NumeProd = ". $numeProd;
+        $config->ejecutarCMD($strSQL);
+
+        //Novedades
+        $strSQL = "DELETE FROM productosnovedades WHERE NumeProd = ". $numeProd;
         $config->ejecutarCMD($strSQL);
 
         //Favoritos
