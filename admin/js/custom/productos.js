@@ -318,6 +318,8 @@ function archivoNuevo(strID) {
 }
 
 function armarEditables() {
+	$("#divDatos").prepend("<h5>Cantidad de registros: " + ($("tr").size()-1) + "</h5>");
+
 	$(".editable").click( function() {
 		var campo = this.id.substr(0, 8);
 

@@ -329,6 +329,7 @@ if (window.document.addEventListener) {
 				},
 					settings.duration
 				);
+				return false;
 			}
 			else {
 				var item = $(this);

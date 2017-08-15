@@ -40,10 +40,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php 
-        require_once 'php/linksHeader.php'; 
-        // require_once 'js/custom/productos.php';
-    ?>
+    <?php require_once 'php/linksHeader.php'; ?>
 
 	<script src="js/custom/productos.js"></script>
 	
@@ -261,7 +258,37 @@
             <span id="txtHint">Info</span>
         </div>
 
-        <?php $tabla->searchForm(); ?>
+        <?php //$tabla->searchForm(); ?>
+        <div id="searchForm">
+            <hr>
+            <h4>Buscar Productos</h4>
+            
+            <form id="frmSearchproductos" class="form-horizontal marginTop20" method="post" onsubmit="return false;" novalidate="">
+                <div class="form-group form-group-sm ">
+                    <label for="search-ISBN" class="control-label col-md-2 col-lg-2">ISBN:</label>
+                    <div class="col-md-2 col-lg-2">
+                        <input type="text" class="form-control input-sm " id="search-ISBN" required value="">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm ">
+                    <label for="search-NombProd" class="control-label col-md-2 col-lg-2">Nombre:</label>
+                    <div class="col-md-6 col-lg-6">
+                        <input type="text" class="form-control input-sm " id="search-NombProd" required size="200">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm ">
+                    <label for="search-Autor" class="control-label col-md-2 col-lg-2">Autor:</label>
+                    <div class="col-md-3 col-lg-3">
+                        <input type="text" class="form-control input-sm " id="search-Autor" required size="40" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-lg-offset-2 col-md-4 col-lg-4">
+                        <button type="submit" class="btn btn-sm btn-primary clickable" data-js="intPagina = 1; listarproductos();"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <div id="divDatos" class="marginTop40">
             <?php

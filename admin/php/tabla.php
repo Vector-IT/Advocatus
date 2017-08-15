@@ -158,7 +158,7 @@ class Tabla
         $showOnList = true,
         $value = '',
         $cssGroup = '',
-        $lookupTable = '',
+		$lookupTable = '',
         $lookupFieldID = '',
         $lookupFieldLabel = '',
         $lookupConditions = '',
@@ -173,6 +173,7 @@ class Tabla
 
         $this->fields[$name] = array (
             'name' => $name,
+            'nameAlias' => '',
             'type' => $type,
             'size' => $size,
             'label' => $label,
@@ -185,7 +186,8 @@ class Tabla
             'cssControl' => '',
             'cssList' => '',
             'cssGroup' => $cssGroup,
-            'lookupTable' => $lookupTable,
+			'lookupTable' => $lookupTable,
+			'lookupTableAlias' => '',
             'lookupFieldID' => $lookupFieldID,
             'lookupFieldLabel' => $lookupFieldLabel,
             'lookupConditions' => $lookupConditions,
@@ -224,7 +226,8 @@ class Tabla
     public function addFieldId($name, $label = "", $isHiddenInList = false, $isHiddenInForm = false)
     {
         $this->fields[$name] = array (
-            'name' => $name,
+			'name' => $name,
+			'nameAlias' => '',
             'type' => 'number',
             'size' => 0,
             'label' => $label,
@@ -237,6 +240,7 @@ class Tabla
             'cssList' => '',
             'cssGroup' => '',
             'lookupTable' => '',
+            'lookupTableAlias' => '',
             'lookupFieldID' => '',
             'lookupFieldLabel' => '',
             'lookupConditions' => '',
@@ -279,7 +283,8 @@ class Tabla
     {
     
         $this->fields[$name] = array (
-            'name' => $name,
+			'name' => $name,
+			'nameAlias' => '',
             'type' => $type,
             'size' => $size,
             'label' => $label,
@@ -292,6 +297,7 @@ class Tabla
             'cssList' => '',
             'cssGroup' => '',
             'lookupTable' => '',
+            'lookupTableAlias' => '',
             'lookupFieldID' => '',
             'lookupFieldLabel' => '',
             'lookupConditions' => '',
@@ -319,10 +325,11 @@ class Tabla
         );
     }
 
-    public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
+    public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupTableAlias, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
     {
         $this->fields[$name] = array (
-            'name' => $name,
+			'name' => $name,
+			'nameAlias' => '',
             'type' => "select",
             'size' => $size,
             'label' => $label,
@@ -336,6 +343,7 @@ class Tabla
             'cssList' => '',
             'cssGroup' => '',
             'lookupTable' => $lookupTable,
+            'lookupTableAlias' => $lookupTableAlias,
             'lookupFieldID' => $lookupFieldID,
             'lookupFieldLabel' => $lookupFieldLabel,
             'lookupConditions' => $lookupConditions,
@@ -757,24 +765,58 @@ class Tabla
                     }
 
                     if ($field['formatDb'] == '') {
-                        $strFields.= $field['name'];
+						if ($field['type'] != "select" && $field["type"] != "selectmultiple") {
+							$strFields.= $this->tabladb. "." .$field['name']. " " .$field["nameAlias"];
+						}
+						else {
+							$strFields.= $this->tabladb. "." .$field['name'];
+							$strFields.= $crlf.', ';
+
+							if ($field["lookupTableAlias"] == "") {
+								$strFields.= $field["lookupTable"]. "." .$field['lookupFieldLabel']. " " .$field["nameAlias"];
+							} else {
+								$strFields.= $field["lookupTableAlias"]. "." .$field['lookupFieldLabel']. " " .$field["nameAlias"];
+							}
+                        }
                     } else {
-                        $strFields.= $field['formatDb'];
+                        if ($field['type'] != "select" && $field["type"] != "selectmultiple") {
+							$strFields.= $this->tabladb. "." .$field['formatDb']. " " .$field["nameAlias"];
+						} else {
+							if ($field["lookupTableAlias"] == "") {
+								$strFields.= $field["lookupTable"]. "." .$field['formatDb']. " " .$field["nameAlias"];
+							} else {
+								$strFields.= $field["lookupTableAlias"]. "." .$field['formatDb']. " " .$field["nameAlias"];
+							}
+                        }
                     }
                 }
             }
 
 			if ($this->orderField != '') {
 				if ($strFields != '') {
-					$strFields.= $crlf.', '. $this->orderField;
+					$strFields.= $crlf.', '. $this->tabladb. "." .$this->orderField;
 				} else {
-					$strFields.= $crlf. $this->orderField;
+					$strFields.= $crlf. $this->tabladb. "." .$this->orderField;
 				}
 			}
 
             $strSQL.= $strFields;
 
             $strSQL.= $crlf." FROM ". $this->tabladb;
+
+            foreach ($this->fields as $field) {
+                if ($field['type'] == "select" || $field["type"] == "selectmultiple") {
+                    if ($field['lookupTableAlias'] == '') {
+						$strSQL.= $crlf." LEFT JOIN ". $field["lookupTable"] ." ON ". $this->tabladb .".". $field['name'] ." = ". $field["lookupTable"]. "." .$field['lookupFieldID'];
+                    } else {
+						$strSQL.= $crlf." LEFT JOIN ". $field["lookupTable"] ." ". $field["lookupTableAlias"] ." ON ". $this->tabladb .".". $field['name'] ." = ". $field["lookupTableAlias"]. "." .$field['lookupFieldID'];
+                    }
+
+                    if ($field["lookupConditions"] != "") {
+                        $strSQL.= $crlf." AND ".$field["lookupConditions"];
+                    }
+                }
+            }
 
             $filtro = '';
             if ($this->masterFieldId != '') {
@@ -905,22 +947,45 @@ class Tabla
                         $strSalida.= $crlf.'<tr>';
 
                         foreach ($this->fields as $field) {
+							if ($field["nameAlias"] == '') {
+								$fname = $field['name'];
+							} else {
+								$fname = $field['nameAlias'];
+							}
+
                             if ($field['showOnList']) {
                                 if ($field['isHiddenInList']) {
-                                    $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.htmlentities($fila[$field['name']]).'" />';
+                                    $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.htmlentities($fila[$fname]).'" />';
                                 } else {
                                     switch ($field["type"]) {
                                         case 'select':
                                         case 'selectmultiple':
+                                            /*
                                             $strSalida.= $crlf.'<td class="ucase text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
-                                            if ($fila[$field['name']] != '') {
-                                                $strSalida.= $crlf. $config->buscarDato("SELECT ".$field['lookupFieldLabel']." FROM ".$field['lookupTable']." WHERE ".$field['lookupFieldID']." = ".$fila[$field['name']]);
+                                            if ($fila[$fname] != '') {
+                                                $strSalida.= $crlf. $config->buscarDato("SELECT ".$field['lookupFieldLabel']." FROM ".$field['lookupTable']." WHERE ".$field['lookupFieldID']." = ".$fila[$fname]);
+                                            } else {
+												if ($field['itBlank']) {
+													$strSalida.= $crlf. $field["itBlankText"];
+												}
+                                            }
+                                            */
+											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											
+											if ($field["nameAlias"] == '') {
+												$fnameLookup = $field['lookupFieldLabel'];
+											} else {
+												$fnameLookup = $field['nameAlias'];
+											}
+
+                                            if ($fila[$fnameLookup] != '') {
+                                                $strSalida.= $crlf.$fila[$fnameLookup];
                                             } else {
 												if ($field['itBlank']) {
 													$strSalida.= $crlf. $field["itBlankText"];
 												}
 											}
-                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
+											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field["name"]].'" />';
                                             $strSalida.= $crlf.'</td>';
                                             break;
 
@@ -937,24 +1002,24 @@ class Tabla
 
                                         case 'image':
                                             $strSalida.= $crlf.'<td class="'. $field["cssList"] .'">';
-                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
-                                            if ($fila[$field['name']] != '') {
-                                                $strSalida.= $crlf.'<img src="'. $fila[$field['name']].'" class="thumbnailChico">';
+                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
+                                            if ($fila[$fname] != '') {
+                                                $strSalida.= $crlf.'<img src="'. $fila[$fname].'" class="thumbnailChico">';
                                             }
                                             $strSalida.= $crlf.'</td>';
                                             break;
                                             
                                         case 'file':
                                             $strSalida.= $crlf.'<td class="'. $field["cssList"] .'">';
-                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
-                                            $strSalida.= $crlf.$fila[$field['name']];
+                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
+                                            $strSalida.= $crlf.$fila[$fname];
                                             $strSalida.= $crlf.'</td>';
                                             break;
 
                                         case 'checkbox':
                                             $strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
-                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field['name']].'" />';
-                                            if (boolval($fila[$field['name']])) {
+                                            $strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
+                                            if (boolval($fila[$fname])) {
                                                 $strSalida.= $crlf.'<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>';
                                             } else {
                                                 $strSalida.= $crlf.'<i class="fa fa-square-o fa-fw" aria-hidden="true"></i>';
@@ -963,7 +1028,7 @@ class Tabla
                                             break;
                                             
                                         default:
-                                            $strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$field['name']].'</td>';
+                                            $strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
                                             break;
                                     }
 
@@ -972,7 +1037,7 @@ class Tabla
 
                                         switch ($this->footerFunc) {
                                             case "SUM":
-                                                $strFootValue+= floatval($fila[$field['name']]);
+                                                $strFootValue+= floatval($fila[$fname]);
                                                 break;
 
                                             case "COUNT":
@@ -1059,12 +1124,11 @@ class Tabla
         } else {
             $strSalida = "<h3>No hay datos para mostrar</h3>";
         }
-
+        
         echo $strSalida;
     }
 
-    public function searchForm()
-    {
+    public function searchForm() {
         global $crlf;
 
         $strSalida = '';
@@ -1091,8 +1155,7 @@ class Tabla
         }
     }
 
-    public function script()
-    {
+    public function script() {
         global $config, $crlf;
 
         $strSalida = '';
@@ -1722,8 +1785,7 @@ class Tabla
         echo $strSalida;
     }
 
-    public function insertar($datos)
-    {
+    public function insertar($datos) {
         try {
             global $config;
             $strCampos = "";
@@ -1803,8 +1865,7 @@ class Tabla
         }
     }
 
-    public function editar($datos)
-    {
+    public function editar($datos) {
         try {
             global $config;
             $strCampos = "";
@@ -1883,8 +1944,7 @@ class Tabla
         }
     }
 
-    public function borrar($datos, $filtro = '')
-    {
+    public function borrar($datos, $filtro = '') {
         try {
             global $config;
             $strWhere = "";
@@ -1967,8 +2027,7 @@ class Tabla
 		return json_encode($result);
 	}
 
-    public function customFunc($post)
-    {
+    public function customFunc($post) {
         return true;
     }
 }

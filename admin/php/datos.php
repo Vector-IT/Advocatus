@@ -117,9 +117,14 @@
 		array("name"=>"Autor", "operator"=>"LIKE", "join"=>"and"),
 	];
 
-	$tabla->addField("ISBN", "calcfield", 0, "ISBN");
-	
 	$tabla->addFieldId("NumeProd", "Número", true, true);
+	
+	// $tabla->addField("ISBN", "calcfield", 0, "ISBN");
+	$tabla->addFieldSelect("ISBN", 80, "ISBN", true, "", "productosatributos", "pai", "NumeProd", "Valor", "pai.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'ISBN')", "");
+	$tabla->fields["ISBN"]["name"] = 'NumeProd';
+	$tabla->fields["ISBN"]["nameAlias"] = 'ISBN';
+	$tabla->fields["ISBN"]["showOnForm"] = false;
+	
 	$tabla->addField("NombProd", "text", 200, "Nombre");
 	$tabla->addField("DescProd", "textarea", 400, "Descripción");
 	$tabla->fields["DescProd"]["isHiddenInList"] = true;
@@ -144,7 +149,11 @@
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
 	$tabla->fields["Destacado"]["txtAlign"] = "center";
 
-	$tabla->addField("Autor", "calcfield", 40, "Autor");
+	// $tabla->addField("Autor", "calcfield", 40, "Autor");
+	$tabla->addFieldSelect("Autor", 80, "Autor", true, "", "productosatributos", "paa", "NumeProd", "Valor", "paa.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')", "");
+	$tabla->fields["Autor"]["name"] = "NumeProd";
+	$tabla->fields["Autor"]["nameAlias"] = "AUTOR";
+	$tabla->fields["Autor"]["showOnForm"] = false;
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
@@ -220,7 +229,7 @@
 
 	$tabla->addFieldId("NumeCate", "Número");
 	$tabla->addField("NombCate", "text", 80, "Nombre");
-	$tabla->addFieldSelect("NumePadr", 80, "Categoría Padre", true, "", "categorias", "NumeCate", "NombCate", "NumePadr IS NULL", "NombCate", true, "SIN PADRE");
+	$tabla->addFieldSelect("NumePadr", 80, "Categoría Padre", true, "", "categorias", "", "NumeCate", "NombCate", "NumePadr IS NULL", "NombCate", true, "SIN PADRE");
 
 	$config->tablas["categorias"] = $tabla;
 
@@ -263,7 +272,7 @@
 	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
 	$tabla->fields["NumeOrde"]["showOnForm"] = false;
 
-	$tabla->addFieldSelect("NumeProd", 80, "Producto", true, "", "productos", "NumeProd", "NombProd", "NumeProd NOT IN (SELECT NumeProd FROM productosnovedades)", "NombProd");
+	$tabla->addFieldSelect("NumeProd", 80, "Producto", true, "", "productos", "", "NumeProd", "NombProd", "NumeProd NOT IN (SELECT NumeProd FROM productosnovedades)", "NombProd");
 	$tabla->addField("FechNove", "datetime", 0, "Fecha");
 	$tabla->fields["FechNove"]["showOnForm"] = false;
 

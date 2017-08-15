@@ -70,7 +70,7 @@ class Producto extends Tabla {
     public function insertar($datos) {
 		global $config, $crlf;
 
-        $datosProducto = array_slice($datos, 0, 10);
+        $datosProducto = array_slice($datos, 0, 9);
         
         $result = parent::insertar($datosProducto);
 		$resultAux = json_decode($result, true);
@@ -138,7 +138,7 @@ class Producto extends Tabla {
     public function editar($datos) {
 		global $config, $crlf;
 
-        $datosProducto = array_slice($datos, 0, 10);
+        $datosProducto = array_slice($datos, 0, 9);
         
         $result = parent::editar($datosProducto);
 		$resultAux = json_decode($result, true);
@@ -164,25 +164,30 @@ class Producto extends Tabla {
                 $numeAtri = $atri["NumeAtri"];
 
                 if ($atri["NumeTipoAtri"] != "3") {  //Si no es archivo
-                    $valor = $datos["Atri". $numeAtri];
+                    $valor = "'".$datos["Atri". $numeAtri]."'";
                 }
                 else {
-                    $temp = explode(".", $_FILES["Atri". $numeAtri]["name"]);
-                    $extension = end($temp);
-                    
-                    $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
-
-                    $archivo_viejo = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}");
-                    if ($archivo_viejo != '') {
-                        $archivo_viejo = "../". $archivo_viejo;
-                    }
-                    
-                    $archivo = $atri["NombAtri"] ."-". $strRnd .".". $extension;
-                    $val =  $atri["NombAtri"] ."/". $archivo;
+                    if (isset($_FILES["Atri". $numeAtri])) {
+                        $temp = explode(".", $_FILES["Atri". $numeAtri]["name"]);
+                        $extension = end($temp);
                         
-                    subir_archivo($_FILES["Atri". $numeAtri], "../". $atri["NombAtri"], $archivo, $archivo_viejo);
-                    
-                    $valor = $val;
+                        $strRnd = $config->get_random_string("abcdefghijklmnopqrstuvwxyz1234567890", 5);
+
+                        $archivo_viejo = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}");
+                        if ($archivo_viejo != '') {
+                            $archivo_viejo = "../". $archivo_viejo;
+                        }
+                        
+                        $archivo = $atri["NombAtri"] ."-". $strRnd .".". $extension;
+                        $val =  $atri["NombAtri"] ."/". $archivo;
+                            
+                        subir_archivo($_FILES["Atri". $numeAtri], "../". $atri["NombAtri"], $archivo, $archivo_viejo);
+                        
+                        $valor = "'".$val."'";
+                    }
+                    else {
+                        $valor = "null";
+                    }
                 }
                 
                 $strSQL = "DELETE FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}";
@@ -243,7 +248,7 @@ class Producto extends Tabla {
     public function listar($strFiltro = "", $conBotones = true, $btnList = [], $order = '', $pagina = 1) {
         if ($strFiltro != "") {
             if (isset($strFiltro["ISBN"])) {
-                $strFiltro["NumeProd"] = array(
+                $strFiltro["productos.NumeProd"] = array(
                     "type"=>"number",
                     "operator"=>"in",
                     "join"=>"and",
@@ -254,11 +259,11 @@ class Producto extends Tabla {
             }
 
             if (isset($strFiltro["Autor"])) {
-                if (isset($strFiltro["NumeProd"])) {
-                    $strFiltro["NumeProd"]["value"].= " AND NumeProd IN (SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')";
+                if (isset($strFiltro["productos.NumeProd"])) {
+                    $strFiltro["productos.NumeProd"]["value"].= " AND productos.NumeProd IN (SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')";
                 }
                 else {
-                    $strFiltro["NumeProd"] = array(
+                    $strFiltro["productos.NumeProd"] = array(
                         "type"=>"number",
                         "operator"=>"in",
                         "join"=>"and",
