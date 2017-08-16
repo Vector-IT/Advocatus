@@ -193,7 +193,7 @@ class Producto extends Tabla {
                 $strSQL = "DELETE FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}";
                 $config->ejecutarCMD($strSQL);
 
-                $strSQL = "INSERT INTO productosatributos(NumeProd, NumeAtri, Valor) VALUES({$numeProd}, {$numeAtri}, '{$valor}')";
+                $strSQL = "INSERT INTO productosatributos(NumeProd, NumeAtri, Valor) VALUES({$numeProd}, {$numeAtri}, {$valor})";
                 $config->ejecutarCMD($strSQL);
             }
 

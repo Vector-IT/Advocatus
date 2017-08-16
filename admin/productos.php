@@ -89,13 +89,7 @@
         <form id="frmproductos" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">
             <input type="hidden" id="hdnTabla" value="productos" />
             <input type="hidden" id="hdnOperacion" value="0" />
-
-            <div class="form-group form-group-sm ">
-                <label for="NumeProd" class="control-label col-md-2 col-lg-2">Número:</label>
-                <div class="col-md-2 col-lg-2">
-                    <input type="number" step="1" class="form-control input-sm " id="NumeProd" disabled   readonly  />
-                </div>
-            </div>
+            <input type="hidden" id="NumeProd" />
 
             <div class="form-group form-group-sm ">
 	            <label for="NombProd" class="control-label col-md-2 col-lg-2">Nombre:</label>

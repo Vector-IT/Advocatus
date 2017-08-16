@@ -113,7 +113,7 @@ function editarproductos(strID){
 			blnEdit = true;
 
 			$("#frmproductos").find(".form-control[type!='hidden'][disabled!=disabled][readonly!=readonly]:first").focus()
-			$("#NumeProd").val($("#NumeProd" + strID).text());
+			$("#NumeProd").val($("#NumeProd" + strID).val());
 			$("#NombProd").val($("#NombProd" + strID).text());
 			$("#DescProd").val($("#DescProd" + strID).val());
 			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
