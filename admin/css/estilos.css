@@ -118,7 +118,7 @@
 		padding: 0;
 	}
 
-	form, .menuVector, .btnMenu, .jumbotron, button {display:none !important;}
+	form, .menuVector, .btnMenu, .jumbotron, button, .thBtn {display:none !important;}
 
 	.container-fluid {padding-left: 15px;}
 

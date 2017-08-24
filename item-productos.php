@@ -113,11 +113,11 @@
                     <?php
                         while ($fila = $atributos->fetch_assoc()) {
                             switch ($fila["NumeTipoAtri"]) {
-                                case "3":
+                                case "3": //Archivo
                                     $valor = '<a href="admin/'. $fila["Valor"] .'" target="_blank">DESCARGA</a>';
                                     break;
                                 
-                                case "7":
+                                case "7": //Lista
                                     $numeAtriOpci = buscarDato("SELECT Valor FROM productosatributos WHERE NumeAtri = {$fila["NumeAtri"]} AND NumeProd = {$numeProd}");
                                     $valor = buscarDato("SELECT ao.Valor FROM atributosopciones ao WHERE NumeAtriOpci = ". $numeAtriOpci);
                                     break;
@@ -126,7 +126,9 @@
                                     $valor = $fila["Valor"];
                             }
                     ?>
+                    <?php if ($valor != "") {?>
                         <p><span class="ucase"><?php echo $fila["NombAtri"]?>:</span> <?php echo $valor?></p>
+                    <?php }?>	
                     <?php }?>	
                         <div>
                             <div class="section">

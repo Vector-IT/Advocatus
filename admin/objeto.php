@@ -66,6 +66,11 @@
         }
         
         require_once 'php/header.php';
+
+        for ($I = 0; $I < count($tabla->headerFiles); $I++) {
+            require_once $tabla->headerFiles[$I];
+        }
+            
     ?>
     
     <div class="container-fluid">

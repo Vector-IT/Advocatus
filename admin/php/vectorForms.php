@@ -126,48 +126,48 @@ class VectorForms {
 	}
 
 	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...')
-    {
-        global $crlf;
+	{
+		global $crlf;
 
-        $strSQL = "SELECT ". $CampoNumero;
-        if ($CampoTexto != "") {
-            $strSQL.= ",". $CampoTexto;
-        }
-        $strSQL.= " FROM ". $tabla;
+		$strSQL = "SELECT ". $CampoNumero;
+		if ($CampoTexto != "") {
+			$strSQL.= ",". $CampoTexto;
+		}
+		$strSQL.= " FROM ". $tabla;
 
-        if ($filtro != "") {
-            $strSQL.= " WHERE $filtro";
-        }
+		if ($filtro != "") {
+			$strSQL.= " WHERE $filtro";
+		}
 
-        if ($orden != "") {
-            $strSQL.= " ORDER BY $orden";
-        }
+		if ($orden != "") {
+			$strSQL.= " ORDER BY $orden";
+		}
 
-        $tabla = $this->cargarTabla($strSQL);
+		$tabla = $this->cargarTabla($strSQL);
 
-        $strSalida = "";
-        if ($itBlank) {
-            $strSalida.= $crlf.'<option value="">'.$itBlankText.'</option>';
-        }
+		$strSalida = "";
+		if ($itBlank) {
+			$strSalida.= $crlf.'<option value="">'.$itBlankText.'</option>';
+		}
 
-        while ($fila = $tabla->fetch_assoc()) {
-            if ($CampoTexto != "") {
-                if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'">'.htmlentities($fila[$CampoTexto]).'</option>';
-                } else {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected>'.htmlentities($fila[$CampoTexto]).'</option>';
-                }
-            } else {
-                if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" />';
-                } else {
-                    $strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected />';
-                }
-            }
-        }
+		while ($fila = $tabla->fetch_assoc()) {
+			if ($CampoTexto != "") {
+				if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'">'.htmlentities($fila[$CampoTexto]).'</option>';
+				} else {
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected>'.htmlentities($fila[$CampoTexto]).'</option>';
+				}
+			} else {
+				if (strcmp($fila[$CampoNumero], $seleccion) != "0") {
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" />';
+				} else {
+					$strSalida.= $crlf.'<option value="'.$fila[$CampoNumero].'" selected />';
+				}
+			}
+		}
 
-        return $strSalida;
-    }
+		return $strSalida;
+	}
 
 	/**
 	 * Ejecutar query en la BD y devolver el resultado

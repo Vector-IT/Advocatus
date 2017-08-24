@@ -117,6 +117,7 @@ function editarproductos(strID){
 			$("#NombProd").val($("#NombProd" + strID).text());
 			$("#DescProd").val($("#DescProd" + strID).val());
 			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+			$("#Peso").val($("#Peso" + strID).text());
 			$("#CantProd").val($("#CantProd" + strID).text());
 			$("#ImpoComp").val($("#ImpoComp" + strID).text());
 			$("#ImpoVent").val($("#ImpoVent" + strID).text());
@@ -193,6 +194,7 @@ function editarproductos(strID){
 		$("#NombProd").val("");
 		$("#DescProd").val("");
 		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
+		$("#Peso").val("");
 		$("#CantProd").val("");
 		$("#ImpoComp").val("");
 		$("#ImpoVent").val("");
@@ -230,6 +232,7 @@ function aceptarproductos(){
 	frmData.append("NumeProd", $("#NumeProd").val());
 	frmData.append("NombProd", $("#NombProd").val());
 	frmData.append("DescProd", $("#DescProd").val());
+	frmData.append("Peso", $("#Peso").val());
 	frmData.append("CantProd", $("#CantProd").val());
 	frmData.append("ImpoComp", $("#ImpoComp").val());
 	frmData.append("ImpoVent", $("#ImpoVent").val());
@@ -251,8 +254,14 @@ function aceptarproductos(){
 			frmData.append(element.id, $(element).val());
 		}
 		else {		
-			if ($(element).get(0).files[0] != null)
+			if ($(element).get(0).files[0] != null) {
 				frmData.append(element.id, $(element).get(0).files[0]);
+			}
+			else {
+				if (!$(element).attr("required")) {
+					frmData.append(element.id + "Clear", $("#hdn" + element.id + "Clear").val());
+				}
+			}
 		}
 	}, this);
 	

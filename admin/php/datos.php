@@ -129,6 +129,10 @@
 	$tabla->addField("DescProd", "textarea", 400, "Descripción");
 	$tabla->fields["DescProd"]["isHiddenInList"] = true;
 
+	$tabla->addField("Peso", "number", 0, "Peso");
+	$tabla->fields["Peso"]["step"] = "0.0001";
+	$tabla->fields["Peso"]["txtAlign"] = "right";
+	
 	$tabla->addField("CantProd", "number", 0, "Cantidad");
 	$tabla->fields["CantProd"]["step"] = "0.1";
 	$tabla->fields["CantProd"]["txtAlign"] = "right";
@@ -272,7 +276,7 @@
 	$tabla->addField('NumeOrde', 'number', 0, 'Orden');
 	$tabla->fields["NumeOrde"]["showOnForm"] = false;
 
-	$tabla->addFieldSelect("NumeProd", 80, "Producto", true, "", "productos", "", "NumeProd", "NombProd", "NumeProd NOT IN (SELECT NumeProd FROM productosnovedades)", "NombProd");
+	$tabla->addFieldSelect("NumeProd", 80, "Producto", true, "", "productos", "", "NumeProd", "NombProd", "", "NombProd");
 	$tabla->addField("FechNove", "datetime", 0, "Fecha");
 	$tabla->fields["FechNove"]["showOnForm"] = false;
 

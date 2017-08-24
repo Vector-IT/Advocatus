@@ -70,7 +70,7 @@ class Producto extends Tabla {
     public function insertar($datos) {
 		global $config, $crlf;
 
-        $datosProducto = array_slice($datos, 0, 9);
+        $datosProducto = array_slice($datos, 0, 10);
         
         $result = parent::insertar($datosProducto);
 		$resultAux = json_decode($result, true);
@@ -138,7 +138,7 @@ class Producto extends Tabla {
     public function editar($datos) {
 		global $config, $crlf;
 
-        $datosProducto = array_slice($datos, 0, 9);
+        $datosProducto = array_slice($datos, 0, 10);
         
         $result = parent::editar($datosProducto);
 		$resultAux = json_decode($result, true);
@@ -186,7 +186,22 @@ class Producto extends Tabla {
                         $valor = "'".$val."'";
                     }
                     else {
-                        $valor = "null";
+                        if (isset($datos["Atri". $numeAtri ."Clear"])) {
+                            if ($datos["Atri". $numeAtri ."Clear"] == "1") {
+                                $valor = "null";
+
+                                $archivo_viejo = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = {$numeAtri}");
+                                if (file_exists($archivo_viejo)) {
+                                    unlink($archivo_viejo);
+                                }
+                            }
+                            else {
+                                continue;
+                            }
+                        }
+                        else {
+                            continue;
+                        }
                     }
                 }
                 

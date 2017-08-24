@@ -109,6 +109,13 @@
             </div>
 
             <div class="form-group form-group-sm ">
+				<label for="Peso" class="control-label col-md-2 col-lg-2">Peso:</label>
+				<div class="col-md-2 col-lg-2">
+					<input type="number" step="0.0001" class="form-control input-sm " id="Peso"  required    />
+				</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
 				<label for="CantProd" class="control-label col-md-2 col-lg-2">Cantidad:</label>
 				<div class="col-md-2 col-lg-2">
 					<input type="number" step="0.1" class="form-control input-sm " id="CantProd"  required    />
