@@ -508,7 +508,7 @@ function ordenar(colNueva, obj) {
 			selector:'td:nth-of-type('+(tableHeaderIndex+1)+')'
 			,order: order
 			,data: 'valor'
-			,natural: true
+			,charOrder: 'a[á][Á]c{ch}{CH}e[é][É]i[í][Í]l{ll}{LL}nñÑo[ó][Ó]u[ú][Ú]y[ý][Ý]'
 		}
 	);
 
