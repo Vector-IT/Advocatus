@@ -94,6 +94,8 @@
 	$tabla = new Producto("productos", "productos", "Productos", "el producto", true, "productos.php", "fa-paper-plane");
 	$tabla->labelField = "NombProd";
 	$tabla->order = "NombProd";
+	$tabla->orderColumns = true;
+	
 	$tabla->isSubMenu = true;
 	// $tabla->paginacion = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];

@@ -482,3 +482,48 @@ function editarImpoVent(numeProd) {
 		);
 	}
 }
+
+function ordenar(colNueva, obj) {
+	var colVieja = parseInt(document.getElementById('hdnColOrden').value);
+
+	var table = document.getElementById('tblproductos')
+    ,tableHead = table.querySelector('thead')
+    ,tableHeaders = tableHead.querySelectorAll('th')
+	,tableBody = table.querySelector('tbody');
+
+	var tableHeader = obj
+	,textContent = tableHeader.textContent
+	,tableHeaderIndex,isAscending,order;
+
+	while (tableHeader.nodeName!=='TH') {
+		tableHeader = tableHeader.parentNode;
+	}
+	tableHeaderIndex = Array.prototype.indexOf.call(tableHeaders,tableHeader);
+	isAscending = tableHeader.getAttribute('data-order')==='asc';
+	order = isAscending?'desc':'asc';
+	tableHeader.setAttribute('data-order',order);
+	tinysort(
+		tableBody.querySelectorAll('tr')
+		,{
+			selector:'td:nth-of-type('+(tableHeaderIndex+1)+')'
+			,order: order
+			,data: 'valor'
+			,natural: true
+		}
+	);
+
+	if (colVieja > -1) {
+		var strAux = table.rows[0].cells[colVieja].innerHTML;
+		//Elimino los caracteres de orden y la imagen
+		strAux = strAux.substr(0,strAux.indexOf("<"))
+		table.rows[0].cells[colVieja].innerHTML = strAux;
+	}
+
+	//Agrego caracteres para marcar la columna
+	if (order == 'desc')
+		table.rows[0].cells[colNueva].innerHTML+= '<i class="fa fa-caret-down fa-fw" aria-hidden="true"></i>';
+	else
+		table.rows[0].cells[colNueva].innerHTML+= '<i class="fa fa-caret-up fa-fw" aria-hidden="true"></i>'; 
+
+	document.getElementById('hdnColOrden').value = colNueva;
+}

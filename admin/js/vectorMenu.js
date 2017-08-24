@@ -88,6 +88,47 @@ function callkeydownhandler(evnt) {
 	}
 }
 
+//Ordenar tablas
+function sortTable(tabla, columna, cantFilasHeader, cantFilasFooter, desc){
+    var tbl = document.getElementById(tabla);
+    var cantFilas = tbl.rows.length;
+    var store = [];
+    var esNumero = true;
+    
+    for (var i = cantFilasHeader; i < (cantFilas - cantFilasFooter); i++){
+    		var row = tbl.rows[i];
+    		
+    		if (isNaN(row.cells[columna].textContent))
+    			esNumero = false;
+
+    		var sortnr = row.cells[columna].textContent;
+
+    		store.push([sortnr, row]);
+    }
+
+    if (esNumero) {
+    	store.sort(function(x,y){
+    		if (!desc)
+    			return x[0] - y[0];
+    		else
+    			return y[0] - x[0];
+    	});
+    }
+    else
+    	store.sort();
+    
+    for (var i=0, len=store.length; i<len; i++){
+        tbl.appendChild(store[i][1]);
+    }
+    
+    store = null;
+    
+    for (var i = cantFilasHeader; i < (cantFilasHeader + cantFilasFooter); i++){
+    	var row = tbl.rows[i];
+    	tbl.appendChild(row);
+    }
+}
+
 if (window.document.addEventListener) {
    window.document.addEventListener("keydown", callkeydownhandler, false);
 } else {

@@ -45,6 +45,8 @@
 	<script src="js/custom/productos.js"></script>
 	
 	<link rel="stylesheet" href="css/equal-height-columns.css">
+
+	<script src="js/tinysort.js"></script>
 </head>
 <body>
     <?php

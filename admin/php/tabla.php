@@ -25,6 +25,7 @@ class Tabla
 	public $icono;
 	public $fields;
 	public $order;
+	public $orderColumns;
 	public $orderField;
 	public $orderFieldAppend;
 
@@ -97,6 +98,7 @@ class Tabla
 		$this->url = $url;
 		$this->icono = $icono;
 		$this->order = $order;
+		$this->orderColumns = false;
 		
 		$this->orderField = '';
 		$this->orderFieldAppend = true;
@@ -912,12 +914,19 @@ class Tabla
 						$strSalida.= $crlf.'</ul>';
 					}
 
-					$strSalida.= $crlf.'<table class="table table-striped table-bordered table-hover table-condensed table-responsive">';
+					$strSalida.= $crlf.'<input type="hidden" id="hdnColOrden">';
+
+					$strSalida.= $crlf.'<table id="tbl'.$this->name.'" class="table table-striped table-bordered table-hover table-condensed table-responsive'. ($this->orderColumns? ' sortable': '') .'">';
+					$strSalida.= $crlf.'<thead>';
 					$strSalida.= $crlf.'<tr>';
+					$I = 0;
 					foreach ($this->fields as $field) {
 						if ($field['showOnList']) {
 							if (!$field['isHiddenInList']) {
-								$strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'">'. $field['label'] .'</th>';
+								$strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] . ($this->orderColumns? ' clickable': '') .'" '. ($this->orderColumns? 'onclick="ordenar('.$I.', this);"': '') .'>'. $field['label'] .'</th>';
+								// $strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'" '. ($this->orderColumns? 'data-sortcolumn="'.$I.'" data-sortkey="'.$I.'"': '') .'>'. $field['label'] .'</th>';
+								// $strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'" >'. $field['label'] .'</th>';
+								$I++;
 							}
 						}
 					}
@@ -953,7 +962,9 @@ class Tabla
 						}
 					}
 					
+					$strSalida.= $crlf.'</thead>';
 					$strSalida.= $crlf.'</tr>';
+					$strSalida.= $crlf.'<tbody>';
 
 					$strFootValue = 0;
 					$colFooter = 0;
@@ -987,8 +998,6 @@ class Tabla
 												}
 											}
 											*/
-											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
-											
 											if ($field["nameAlias"] == '') {
 												$fnameLookup = $field['lookupFieldLabel'];
 											} else {
@@ -996,23 +1005,28 @@ class Tabla
 											}
 
 											if ($fila[$fnameLookup] != '') {
-												$strSalida.= $crlf.$fila[$fnameLookup];
-											} else {
-												if ($field['itBlank']) {
-													$strSalida.= $crlf. $field["itBlankText"];
-												}
+												$dato = $fila[$fnameLookup];
+											} 
+											elseif ($field['itBlank']) {
+												$dato = $field["itBlankText"];
 											}
+											else {
+												$dato = '';
+											}
+
+											$strSalida.= $crlf.'<td data-valor="'. $dato .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											$strSalida.= $crlf.$dato;
+
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field["name"]].'" />';
 											$strSalida.= $crlf.'</td>';
 											break;
 
 										case 'calcfield':
-											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
-
 											$post['field'] = $field['name'];
 											$post['dato'] = $fila[$this->IDField];
 											$dato = $this->customFunc($post);
-
+		
+											$strSalida.= $crlf.'<td data-valor="'. $dato .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
 											$strSalida.= $crlf. $dato;
 											$strSalida.= $crlf.'</td>';
 											break;
@@ -1034,7 +1048,8 @@ class Tabla
 											break;
 
 										case 'checkbox':
-											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
+											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
+
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											if (boolval($fila[$fname])) {
 												$strSalida.= $crlf.'<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>';
@@ -1045,13 +1060,13 @@ class Tabla
 											break;
 
 										case 'textarea':
-											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
+											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
 											$strSalida.= $crlf. str_replace($crlf, "<br>", $fila[$fname]);
 											$strSalida.= $crlf.'</td>';
 											break;
 											
 										default:
-											$strSalida.= $crlf.'<td class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
+											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
 											break;
 									}
 
@@ -1109,6 +1124,7 @@ class Tabla
 
 						$strSalida.= $crlf.'</tr>';
 					}
+					$strSalida.= $crlf.'</tbody>';
 
 					if ($this->footerField != '') {
 						$strSalida.= $crlf.'<tfoot><tr>';
