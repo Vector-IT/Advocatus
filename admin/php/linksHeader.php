@@ -50,6 +50,12 @@
 	<!-- Moments.js -->
 	<script src="<?php echo $config->raiz ?>admin/js/moment-with-locales.min.js"></script>
 
+	<?php
+		if  ($tabla->orderColumns) {
+			echo '	<script src="'. $config->raiz .'admin/js/tinysort.js"></script>';
+		}
+	?>
+
 	<link rel="stylesheet" type="text/css" href="<?php echo $config->raiz ?>admin/css/estilos.css">
 
 	<?php

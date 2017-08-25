@@ -125,7 +125,7 @@ class VectorForms {
 		return $strSalida;
 	}
 
-	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...')
+	public function cargarCombo($tabla, $CampoNumero, $CampoTexto, $filtro = "", $orden = "", $seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...', $tablaAlias = "")
 	{
 		global $crlf;
 
@@ -133,7 +133,7 @@ class VectorForms {
 		if ($CampoTexto != "") {
 			$strSQL.= ",". $CampoTexto;
 		}
-		$strSQL.= " FROM ". $tabla;
+		$strSQL.= " FROM ". $tabla ." ". $tablaAlias;
 
 		if ($filtro != "") {
 			$strSQL.= " WHERE $filtro";

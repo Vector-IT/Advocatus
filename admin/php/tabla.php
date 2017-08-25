@@ -98,7 +98,7 @@ class Tabla
 		$this->url = $url;
 		$this->icono = $icono;
 		$this->order = $order;
-		$this->orderColumns = false;
+		$this->orderColumns = true;
 		
 		$this->orderField = '';
 		$this->orderFieldAppend = true;
@@ -197,6 +197,7 @@ class Tabla
 			'lookupFieldID' => $lookupFieldID,
 			'lookupFieldLabel' => $lookupFieldLabel,
 			'lookupConditions' => $lookupConditions,
+			'joinConditions' => '',
 			'lookupOrder' => $lookupOrder,
 			'isHiddenInForm' => $isHiddenInForm,
 			'isHiddenInList' => $isHiddenInList,
@@ -250,6 +251,7 @@ class Tabla
 			'lookupFieldID' => '',
 			'lookupFieldLabel' => '',
 			'lookupConditions' => '',
+			'joinConditions' => '',
 			'lookupOrder' => '',
 			'isHiddenInForm' => $isHiddenInForm,
 			'isHiddenInList' => $isHiddenInList,
@@ -307,6 +309,7 @@ class Tabla
 			'lookupFieldID' => '',
 			'lookupFieldLabel' => '',
 			'lookupConditions' => '',
+			'joinConditions' => '',
 			'lookupOrder' => '',
 			'isHiddenInForm' => false,
 			'isHiddenInList' => $isHiddenInList,
@@ -331,7 +334,7 @@ class Tabla
 		);
 	}
 
-	public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupTableAlias, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
+	public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupTableAlias, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $joinConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
 	{
 		$this->fields[$name] = array (
 			'name' => $name,
@@ -353,6 +356,7 @@ class Tabla
 			'lookupFieldID' => $lookupFieldID,
 			'lookupFieldLabel' => $lookupFieldLabel,
 			'lookupConditions' => $lookupConditions,
+			'joinConditions' => $joinConditions,
 			'lookupOrder' => $lookupOrder,
 			'isHiddenInForm' => '',
 			'isHiddenInList' => '',
@@ -508,14 +512,14 @@ class Tabla
 					case 'select':
 						$strSalida.= $crlf.'<select class="form-control input-sm ucase '.$field['cssControl'].'" id="'.$fname.'" '. ($field['required']?'required':'') .' '. ($field['readOnly']?'readonly disabled':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
 						if ($field['lookupTable'] != '') {
-							$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], ($prefix == ''? $field['itBlank']: true), $field['itBlankText']);
+							$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], ($prefix == ''? $field['itBlank']: true), $field['itBlankText'], $field['lookupTableAlias']);
 						}
 						$strSalida.= $crlf.'</select>';
 						break;
 
 					case 'selectmultiple':
 						$strSalida.= $crlf.'<select class="form-control input-sm ucase selectpicker '.$field['cssControl'].'" multiple id="'.$fname.'" '. ($field['required']?'required':'') .' title="SELECCIONE" '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'>';
-						$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank'], $field['itBlankText']);
+						$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldID'], $field['lookupFieldLabel'], $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank'], $field['itBlankText'], $field['lookupTableAlias']);
 						$strSalida.= $crlf.'</select>';
 						$strSalida.= $crlf.'<script type="text/javascript">';
 						$strSalida.= $crlf.'$("#'.$fname.'").selectpicker({
@@ -529,7 +533,7 @@ class Tabla
 					case 'datalist':
 						$strSalida.= $crlf.'<input class="form-control input-sm '.$field['cssControl'].'" list="lst-'.$fname.'" id="'.$fname.'" '. ($field['isID']?'disabled':'') .' '. ($field['required']?'required':'') .' '. ($field['size'] > 0?'size="'.$field['size'].'"':'') .' '. ($field['readOnly']?'readonly':'') .' '. ($field['onChange'] !=''?'onchange="'.$field['onChange'].'"':'') .'/>';
 						$strSalida.= $crlf.'<datalist id="lst-'.$fname.'">';
-						$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldLabel'], '', $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank'], $field['itBlankText']);
+						$strSalida.= $crlf. $config->cargarCombo($field['lookupTable'], $field['lookupFieldLabel'], '', $field['lookupConditions'], $field['lookupOrder'], $field['value'], $field['itBlank'], $field['itBlankText'], $field['lookupTableAlias']);
 						$strSalida.= $crlf.'</datalist>';
 						break;
 
@@ -825,8 +829,8 @@ class Tabla
 						$strSQL.= $crlf." LEFT JOIN ". $field["lookupTable"] ." ". $field["lookupTableAlias"] ." ON ". $this->tabladb .".". $field['name'] ." = ". $field["lookupTableAlias"]. "." .$field['lookupFieldID'];
 					}
 
-					if ($field["lookupConditions"] != "") {
-						$strSQL.= $crlf." AND ".$field["lookupConditions"];
+					if ($field["joinConditions"] != "") {
+						$strSQL.= $crlf." AND ".$field["joinConditions"];
 					}
 				}
 			}
@@ -1014,7 +1018,7 @@ class Tabla
 												$dato = '';
 											}
 
-											$strSalida.= $crlf.'<td data-valor="'. $dato .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
 											$strSalida.= $crlf.$dato;
 
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field["name"]].'" />';
@@ -1026,7 +1030,7 @@ class Tabla
 											$post['dato'] = $fila[$this->IDField];
 											$dato = $this->customFunc($post);
 		
-											$strSalida.= $crlf.'<td data-valor="'. $dato .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
 											$strSalida.= $crlf. $dato;
 											$strSalida.= $crlf.'</td>';
 											break;
@@ -1048,7 +1052,7 @@ class Tabla
 											break;
 
 										case 'checkbox':
-											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
 
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											if (boolval($fila[$fname])) {
@@ -1060,13 +1064,13 @@ class Tabla
 											break;
 
 										case 'textarea':
-											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
 											$strSalida.= $crlf. str_replace($crlf, "<br>", $fila[$fname]);
 											$strSalida.= $crlf.'</td>';
 											break;
 											
 										default:
-											$strSalida.= $crlf.'<td data-valor="'. $fila[$fname]. '" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
 											break;
 									}
 
