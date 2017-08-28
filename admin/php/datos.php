@@ -63,7 +63,7 @@
 
 	$tabla->addField("NombPass", "password", 0, "Contraseña", true, false, false, false);
 	$tabla->fields["NombPass"]['isMD5'] = true;
-	$tabla->addField("NumeCarg", "select", 0, "Cargo", true, false, false, true, '', '', 'cargos', 'NumeCarg', 'NombCarg', '', 'NombCarg');
+	$tabla->addField("NumeCarg", "select", 0, "Cargo", true, false, false, true, '', '', 'cargos', 'NumeCarg', 'NombCarg', 'NumeEsta = 1', 'NombCarg');
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';

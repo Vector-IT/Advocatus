@@ -44,6 +44,9 @@ class Tabla
 	public $masterFieldName;
 
 	public $numeCarg;
+	public $numeCargNew;
+	public $numeCargEdit;
+	public $numeCargDelete;
 
 	public $jsFiles;
 	public $jsOnLoad;
@@ -111,6 +114,9 @@ class Tabla
 		$this->allowDelete = $allowDelete;
 
 		$this->numeCarg = '';
+		$this->numeCargNew = PHP_INT_MAX;
+		$this->numeCargEdit = PHP_INT_MAX;
+		$this->numeCargDelete = PHP_INT_MAX;
 
 		$this->jsFiles = [];
 		$this->jsOnLoad = '';
@@ -382,12 +388,14 @@ class Tabla
 	
 	public function createForm()
 	{
-		global $crlf;
+		global $config, $crlf;
 
+		$numeCarg = intval($config->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]));
+		
 		$strSalida = '';
 
 		if (isset($this->fields)) {
-			if ($this->allowNew) {
+			if ($this->allowNew && $this->numeCargNew >= $numeCarg) {
 				$strSalida.= $crlf.'<button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editar'. $this->tabladb .'(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>';
 			}
 			//Botones opcionales
@@ -762,6 +770,8 @@ class Tabla
 	{
 		global $config, $crlf;
 
+		$numeCarg = intval($config->buscarDato("SELECT NumeCarg FROM ".$config->tbLogin." WHERE NumeUser = ". $_SESSION["NumeUser"]));
+
 		$strSalida = '';
 
 		if (isset($this->fields)) {
@@ -949,12 +959,12 @@ class Tabla
 						}
 
 						//Editar
-						if ($this->allowEdit) {
+						if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
 							$strSalida.= $crlf.'<th class="thBtn"></th>';
 						}
 
 						//Borrar
-						if ($this->allowDelete) {
+						if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
 							$strSalida.= $crlf.'<th class="thBtn"></th>';
 						}
 					}
@@ -1110,11 +1120,11 @@ class Tabla
 							}
 
 							//Editar
-							if ($this->allowEdit) {
+							if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
 								$strSalida.= $crlf.'<td class="thBtn text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
 							}
 							//Borrar
-							if ($this->allowDelete) {
+							if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
 								$strSalida.= $crlf.'<td class="thBtn text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
 							}
 						}
@@ -1543,8 +1553,8 @@ class Tabla
 				$strSalida.= $crlf.'			});';
 			} else {
 				$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
-				$strSalida.= $crlf.'				'. $this->jsOnNew;
 				$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled][readonly!=readonly]:first").focus()';
+				$strSalida.= $crlf.'				'. $this->jsOnNew;
 				$strSalida.= $crlf.'			});';
 			}
 
