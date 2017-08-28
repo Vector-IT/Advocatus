@@ -29,6 +29,25 @@
 	 */
 
 	/**
+	* CONFIGURACIONES
+	*/
+	$tabla = new Tabla("configuraciones", "configuraciones", "Configuraciones", "la configuración", true, "objeto/configuraciones", "fa-cogs");
+	$tabla->labelField = "NombConf";
+	$tabla->numeCarg = 1;
+	$tabla->numeCargNew = 0;
+	$tabla->numeCargDelete = 0;
+
+	$tabla->isSubItem = true;
+	$tabla->jsOnNew = '$("#NombConf").attr("readonly", false);';
+	$tabla->jsOnEdit = '$("#NombConf").attr("readonly", true);';
+
+	$tabla->addFieldId("NumeConf", "Número");
+	$tabla->addField("NombConf", "text", 60, "Nombre", true, true);
+	$tabla->addField("ValoConf", "text", 200, "Valor");
+	
+	$config->tablas["configuraciones"] = $tabla;
+
+	/**
 	 * USUARIOS
 	 */
 	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");

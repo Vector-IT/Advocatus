@@ -1543,6 +1543,7 @@ class Tabla
 				$strSalida.= $crlf.'			});';
 			} else {
 				$strSalida.= $crlf.'			$("#frm'. $this->tabladb .'").fadeIn(function() {';
+				$strSalida.= $crlf.'				'. $this->jsOnNew;
 				$strSalida.= $crlf.'				$("#frm'. $this->tabladb .'").find(".form-control[type!=\'hidden\'][disabled!=disabled][readonly!=readonly]:first").focus()';
 				$strSalida.= $crlf.'			});';
 			}
