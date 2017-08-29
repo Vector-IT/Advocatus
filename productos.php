@@ -14,6 +14,33 @@
 	<meta name="author" content="">
 	<title>Productos - ADVOCATUS | Editorial · Librería</title>
 	<?php include 'php/links-header.php'; ?>
+
+	<link rel="stylesheet" href="css/equal-height-columns.css">
+
+	<script>
+		function cargarCategoria(strID) {
+			$.post("php/tablaHandler.php", { 
+				operacion: "100",
+				tabla: "productos",
+				field: "NumeCate",
+				data: strID
+				},
+				function (data) {
+					if (data.valor === true) {
+						$("#txtHint").html(nombProd + "<br>Nueva cantidad: " + cantProd);
+						$("#divMsj").removeClass("alert-danger");
+						$("#divMsj").addClass("alert-success");
+					}
+					else {
+						$("#txtHint").html(nombProd + "<br>Error al actualizar cantidad.");
+						$("#divMsj").addClass("alert-danger");
+						$("#divMsj").removeClass("alert-success");
+					}
+					$("#divMsj").show();
+				}
+			);
+		}
+	</script>
 </head>
 <body>
 	<?php include 'php/header.php'; ?>
@@ -38,12 +65,6 @@
 						}
 						$categorias->data_seek(0);
 					?>
-						<!-- <li><a href="#lectura-general" data-toggle="tab">Lectura General</a></li>
-						<li><a href="#derecho" data-toggle="tab">Derecho</a></li>
-						<li><a href="#adm-eco-cont" data-toggle="tab">Administración, Contabilidad y Economía</a></li>
-						<li><a href="#practica-profesional" data-toggle="tab">Práctica Profesional</a></li>
-						<li><a href="#jurisprudencia" data-toggle="tab">Jurisprudencia</a></li>
-						<li><a href="#tec-arq-ing" data-toggle="tab">Técnicos, Arquitectura e Ingeniería</a></li> -->
 					</ul>
 					<div class="tab-content clearfix">
 					<?php
@@ -55,185 +76,75 @@
 							} else {
 								$salida.= $crlf.'<div class="tab-pane" id="tab'.$fila["NumeCate"].'">';
 							}
-							$salida.= $crlf.'<div class="col-sm-6">';
-							$salida.= $crlf.'	<nav class="breadcrumb">';
-							$salida.= $crlf.'		<a class="breadcrumb-item active" href="#">'.$fila["NombCate"].'</a>';
-							//$salida.= $crlf.'		<span class="breadcrumb-item active">Derecho Penal</span>';
-							$salida.= $crlf.'	</nav>';
-							$salida.= $crlf.'</div>';
-							$salida.= $crlf.'<div class="col-sm-6 text-right">';
-							$salida.= $crlf.'	<div class="dropdown show" style="float: right; margin-left: 10px;">';
-							$salida.= $crlf.'		<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-							$salida.= $crlf.'			Nombre';
-							$salida.= $crlf.'		</a>';
-							$salida.= $crlf.'		<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
-							$salida.= $crlf.'			<a class="dropdown-item" href="#">Nombre</a><br>';
-							$salida.= $crlf.'			<a class="dropdown-item" href="#">Menor precio</a><br>';
-							$salida.= $crlf.'			<a class="dropdown-item" href="#">Mayor precio</a><br>';
-							$salida.= $crlf.'			<a class="dropdown-item" href="#">Más visto</a><br>';
-							$salida.= $crlf.'			<a class="dropdown-item" href="#">Más vendido</a>';
-							$salida.= $crlf.'		</div>';
-							$salida.= $crlf.'	</div>';
-							$salida.= $crlf.'	<span class="filtro">Ordenar por</span>';
-
-							// $salida.= $crlf.'	<div class="col-sm-5">';
-							// $salida.= $crlf.'		<p class="filtro">Ordenar por</p>';
-							// $salida.= $crlf.'	</div>';
-							// $salida.= $crlf.'	<div id="filtros1" class="col-sm-7">';
-							// $salida.= $crlf.'		<div class="dropdown show">';
-							// $salida.= $crlf.'			<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-							// $salida.= $crlf.'			Nombre';
-							// $salida.= $crlf.'			</a>';
-							// $salida.= $crlf.'			<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
-							// $salida.= $crlf.'				<a class="dropdown-item" href="#">Nombre</a>';
-							// $salida.= $crlf.'				<a class="dropdown-item" href="#">Menor precio</a>';
-							// $salida.= $crlf.'				<a class="dropdown-item" href="#">Mayor precio</a>';
-							// $salida.= $crlf.'				<a class="dropdown-item" href="#">Más visto</a>';
-							// $salida.= $crlf.'				<a class="dropdown-item" href="#">Más vendido</a>';
-							// $salida.= $crlf.'			</div>';
-							// $salida.= $crlf.'		</div>';
-							// $salida.= $crlf.'	</div>';
-							$salida.= $crlf.'</div>';
 							$salida.= $crlf.'<div class="row">';
+							$salida.= $crlf.'	<div class="col-sm-6">';
+							$salida.= $crlf.'		<nav class="breadcrumb">';
+							$salida.= $crlf.'			<a class="breadcrumb-item active" href="javascript:void(0);">'.$fila["NombCate"].'</a>';
+							$salida.= $crlf.'		</nav>';
+							$salida.= $crlf.'	</div>';
+							$salida.= $crlf.'	<div class="col-sm-6 text-right">';
+							$salida.= $crlf.'		<div class="dropdown show" style="float: right; margin-left: 10px;">';
+							$salida.= $crlf.'			<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+							$salida.= $crlf.'				Nombre';
+							$salida.= $crlf.'			</a>';
+							$salida.= $crlf.'			<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+							$salida.= $crlf.'				<a class="dropdown-item" href="#">Nombre</a><br>';
+							$salida.= $crlf.'				<a class="dropdown-item" href="#">Menor precio</a><br>';
+							$salida.= $crlf.'				<a class="dropdown-item" href="#">Mayor precio</a><br>';
+							$salida.= $crlf.'				<a class="dropdown-item" href="#">Más visto</a><br>';
+							$salida.= $crlf.'				<a class="dropdown-item" href="#">Más vendido</a>';
+							$salida.= $crlf.'			</div>';
+							$salida.= $crlf.'		</div>';
+							$salida.= $crlf.'		<span class="filtro">Ordenar por</span>';
+							$salida.= $crlf.'	</div>';
+							$salida.= $crlf.'</div>';
 
 
 							$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
 							$strSQL.= $crlf."FROM productos p";
 							$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
-							$strSQL.= $crlf."WHERE NumeEsta = 1";
+							$strSQL.= $crlf."WHERE p.NumeEsta = 1";
+							$strSQL.= $crlf."AND p.NumeProd IN (SELECT NumeProd FROM productoscategorias WHERE NumeCate = {$fila["NumeCate"]})";
 							$productos = cargarTabla($strSQL);
 
-							while ($prod = $productos->fetch_assoc()) {
-								$salida.= $crlf.'<div class="col-sm-3">';
-								$salida.= $crlf.'	<div class="producto">';
-								$salida.= $crlf.'		<a href="item-productos.php?NumeProd='.$prod["NumeProd"].'" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
-								$salida.= $crlf.'		<a class="titulo-producto">';
-								$salida.= $crlf.'			'.$prod["NombProd"].'<br>';
-								$salida.= $crlf.'			<p class="precio-producto">$ '.$prod["ImpoVent"].'</p>';
-								$salida.= $crlf.'		</a>';
-								$salida.= $crlf.'	</div>';
+							if ($productos->num_rows > 0) {
+								$I = 0;
+								while ($prod = $productos->fetch_assoc()) {
+									if ($I == 0) {
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$I = 1;
+									}
+									elseif ($I == 5) {
+										$salida.= $crlf.'</div>';
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$I = 1;
+									}
+									$salida.= $crlf.'<div class="col-sm-3">';
+									$salida.= $crlf.'	<div class="producto">';
+									$salida.= $crlf.'		<a href="item-productos.php?NumeProd='.$prod["NumeProd"].'" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
+									$salida.= $crlf.'		<a class="titulo-producto">';
+									$salida.= $crlf.'			'.$prod["NombProd"].'<br>';
+									$salida.= $crlf.'			<p class="precio-producto">$ '.$prod["ImpoVent"].'</p>';
+									$salida.= $crlf.'		</a>';
+									$salida.= $crlf.'	</div>';
+									$salida.= $crlf.'</div>';
+
+									$I++;
+								}
 								$salida.= $crlf.'</div>';
 							}
-							$salida.= $crlf.'</div>';
+							else {
+								$salida.= $crlf.'<div class="row row-eq-height">';
+								$salida.= $crlf.'<h4>No hay productos</h4>';	
+								$salida.= $crlf.'</div>';
+							}
+							
 							$salida.= $crlf.'</div>';
 
 							$I++;
 						}
 						echo $salida;
 					?>
-						<!-- <div class="tab-pane active" id="derecho">
-							<div class="col-sm-6">
-								<nav class="breadcrumb">
-									<a class="breadcrumb-item" href="#">Derecho</a>
-									<span class="breadcrumb-item active">Derecho Penal</span>
-								</nav>
-							</div>
-							<div class="col-sm-6 text-right">
-								<div class="col-sm-5">
-									<p class="filtro">Ordenar por</p>
-								</div>
-								<div id="filtros1" class="col-sm-7">
-									<div class="dropdown show">
-										<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										Derecho Penal
-										</a>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-											<a class="dropdown-item" href="#">Derecho Penal</a>
-											<a class="dropdown-item" href="#">Derecho Penal</a>
-											<a class="dropdown-item" href="#">Derecho Penal</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-										<p class="tag-nuevo inactivo">Nuevo</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-										<p class="tag-nuevo inactivo">Nuevo</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="producto">
-										<a href="item-productos.html" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-										<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-										<p class="descripcion-producto">• DOCTRINA Y JURISPRUDENCIA VIGENTES<br/>
-											• REFERENCIAS AL ANTEPROYECTO
-										</p>
-										<p class="precio-producto">$ 579</p>
-										<p class="tag-nuevo inactivo">Nuevo</p>
-									</div>
-								</div>
-							</div>
-						</div> -->
 					</div>
 				</div>
 			</div>

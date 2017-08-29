@@ -184,52 +184,12 @@
 							<!-- /.row -->
 						</div>
 						<?php }?>
-						<!-- <div class="tab-pane" id="packs">
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="producto">
-									<div class="acciones-producto">
-										<p class="cantidad-favorito">85</p>
-										<a href="#" class="favorito activo"></a>
-										<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
-									</div>
-									<a href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-									<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-									<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="producto">
-									<div class="acciones-producto">
-										<p class="cantidad-favorito">85</p>
-										<a href="#" class="favorito"></a>
-										<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
-									</div>
-									<a href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-									<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-									<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="producto">
-									<div class="acciones-producto">
-										<p class="cantidad-favorito">85</p>
-										<a href="#" class="favorito  activo"></a>
-										<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
-									</div>
-									<a href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>" class="img-producto"><img class="img-center" src="./img/productos/producto.jpg" alt=""></a>
-									<a class="titulo-producto">Delitos contra la propiedad:hurto, abigeato, robo</a>
-									<p class="precio-producto">$ 579</p>
-									</div>
-								</div>
-							</div>
-						</div> -->
 						<?php if ($promociones->num_rows > 0) {?>
 						<div class="tab-pane" id="promociones">
 							<div class="row">
 							<?php 
 								while ($fila = $promociones->fetch_assoc()) {
-									$cantFav = buscarDato("SELECT COUNT(*) FROM productosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
+									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
 							?>
 								<div class="col-sm-4">
 									<div class="producto">
