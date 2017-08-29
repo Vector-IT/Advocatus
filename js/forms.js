@@ -1,12 +1,12 @@
 $(function() {
-    
     var $formLogin = $('#login-form');
     var $formLost = $('#lost-form');
     var $formRegister = $('#register-form');
     var $divForms = $('#div-forms');
+
     var $modalAnimateTime = 300;
     var $msgAnimateTime = 150;
-    var $msgShowTime = 2000;
+    var $msgShowTime = 3000;
 
     $("form").submit(function () {
         switch(this.id) {
@@ -18,8 +18,8 @@ $(function() {
                 } else {
                     msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login OK");
                 }
-                return false;
                 break;
+
             case "lost-form":
                 var $ls_email=$('#lost_email').val();
                 if ($ls_email == "ERROR") {
@@ -27,21 +27,18 @@ $(function() {
                 } else {
                     msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
                 }
-                return false;
                 break;
+
             case "register-form":
-                var $rg_username=$('#register_username').val();
-                var $rg_email=$('#register_email').val();
-                var $rg_password=$('#register_password').val();
-                if ($rg_username == "ERROR") {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "Register error");
+                var nombPers = $("#NombPers").val().trim().replace("'", "");
+                var valor = "ERROR";
+
+                if (valor == "ERROR") {
+                    msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", "Register error", $("#login-modal"), false);
                 } else {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", "Register OK");
+                    msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", "Usuario registrado", $("#login-modal"), true);
                 }
-                return false;
                 break;
-            default:
-                return false;
         }
         return false;
     });
@@ -70,17 +67,22 @@ $(function() {
         });
     }
     
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText) {
-        var $msgOld = $divTag.text();
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, close) {
+        var $msgOld = "";
         msgFade($textTag, $msgText);
-        $divTag.addClass($divClass);
-        $iconTag.removeClass("glyphicon-chevron-right");
-        $iconTag.addClass($iconClass + " " + $divClass);
+        
+        $divTag.addClass("alert " + $divClass);
+        
+        $iconTag.addClass("glyphicon " + $iconClass);
+        
         setTimeout(function() {
-            msgFade($textTag, $msgOld);
-            $divTag.removeClass($divClass);
-            $iconTag.addClass("glyphicon-chevron-right");
-            $iconTag.removeClass($iconClass + " " + $divClass);
+            $divTag.removeClass();
+            $iconTag.removeClass();
+            $textTag.text($msgOld);
+
+            if (close) {
+                $modal.modal('hide');
+            }
   		}, $msgShowTime);
     }
 });

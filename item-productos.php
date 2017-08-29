@@ -31,22 +31,6 @@
 	$strSQL.= $crlf."WHERE NumeProd = ". $numeProd;
 	$strSQL.= $crlf."ORDER BY NumeOrde";
 	$imagenes = cargarTabla($strSQL);
-
-	//Carrito
-	if (isset($_SESSION["NumeUser"])) {
-		$strSQL = $crlf."SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
-		$strSQL.= $crlf."FROM carritos c";
-		$strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag";
-		$strSQL.= $crlf."			FROM carritosdetalles cd";
-		$strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
-		$strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
-		$strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
-		$strSQL.= $crlf."WHERE c.NumeUser = ". $_SESSION["NumeUser"];
-		$carrito = cargarTabla($strSQL);
-	}
-	else {
-		$carrito = false;
-	}
 ?>
 <!doctype html>
 <html>
@@ -56,6 +40,74 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link href="css/sidebar.css" rel="stylesheet">
+
+	<script>
+		var isClosed = false;
+		var trigger;
+
+		$(document).ready(function () {
+			trigger = $('.hamburger');
+		
+			trigger.click(function () {
+				hamburger_cross();
+			});
+		
+			$('[data-toggle="offcanvas"]').click(function () {
+				$('#wrapper').toggleClass('toggled');
+			});  
+		});
+
+		function hamburger_cross() {
+			var overlay = $('.overlay');
+
+			if (isClosed == true) {		  
+				overlay.hide();
+				trigger.removeClass('is-open');
+				trigger.addClass('is-closed');
+				isClosed = false;
+			} else {   
+				overlay.show();
+				trigger.removeClass('is-closed');
+				trigger.addClass('is-open');
+				isClosed = true;
+			}
+		}
+
+		function agregarProd() {
+			$.post("php/carritos.php", { 
+				"operacion": "1",
+				"NumeProd": <?php echo $numeProd?>,
+				"CantProd": $("#CantProd").val()
+				},
+				function (data) {
+					if (data.estado === true) {
+						$("#divCarrito").html(data.html);
+						$("#subtotal").html(data.subtotal);
+						$("#bonificacion").html(data.bonificacion);
+						$("#total").html(data.total);
+
+						hamburger_cross();
+					}
+				}
+			);
+		}
+
+		function quitarProd(strID) {
+			$.post("php/carritos.php", { 
+				"operacion": "2",
+				"NumeProd": strID,
+				},
+				function (data) {
+					if (data.estado === true) {
+						$("#divCarrito").html(data.html);
+						$("#subtotal").html(data.subtotal);
+						$("#bonificacion").html(data.bonificacion);
+						$("#total").html(data.total);
+					}
+				}
+			);
+		}
+	</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -155,11 +207,11 @@
 									<p class="cantidad">Cantidad</p>
 									<div id="cantidad">
 									<div class="btn-minus"><span class="glyphicon glyphicon-minus"></span></div>
-									<input value="1" />
+									<input id="CantProd" value="1" readonly />
 									<div class="btn-plus"><span class="glyphicon glyphicon-plus"></span></div>
 									</div>
 								</div>
-								<button type="button" onclick="alert('hola');" class="hamburger animated fadeInLeft btn-bordo" data-toggle="offcanvas">Agregar a carro de compras</button>
+								<button type="button" onclick="agregarProd()" class="animated fadeInLeft btn-bordo" data-toggle="offcanvas">Agregar a carro de compras</button>
 								&nbsp;
 								<button type="button" class="btn-bordo" data-toggle="modal" data-target="#consultar">Consultar</button> 
 								<!-- Modal -->
@@ -268,41 +320,42 @@
 				<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-bottom"></span> </button>
 				<h1>Carrito de Compras</h1>
 				<?php 
-					$strSalida = "";
-					$subtotal = 0;
-					$bonificacion = 0;
-					$total = 0;
+					// $strSalida = "";
+					// $subtotal = 0;
+					// $bonificacion = 0;
+					// $total = 0;
 
-					if ($carrito) {
-						while ($fila = $carrito->fetch_assoc()) {
-							$strSalida.= $crlf.'<article>';
-							$strSalida.= $crlf.'	<div class="row">';
-							$strSalida.= $crlf.'		<div class="col-lg-5">';
-							$strSalida.= $crlf.'			<img class="img-center" alt="" src="admin/'. $fila["RutaImag"] .'">';
-							$strSalida.= $crlf.'			<a href="#" class="quitar">Quitar</a>';
-							$strSalida.= $crlf.'		</div>';
-							$strSalida.= $crlf.'		<div class="col-lg-6">';
-							$strSalida.= $crlf.'			<p class="titulo">'. $fila["NombProd"] .'</p>';
-							$strSalida.= $crlf.'			<p class="cantidad">Cantidad: <span>'. $fila["CantProd"] .'</span></p>';
-							$strSalida.= $crlf.'			<p class="precio">$ <span>'. $fila["ImpoUnit"] .'</span></p>';
-							$strSalida.= $crlf.'		</div>';
-							$strSalida.= $crlf.'	</div>';
-							$strSalida.= $crlf.'</article>';
+					// if ($carrito) {
+					// 	while ($fila = $carrito->fetch_assoc()) {
+					// 		$strSalida.= $crlf.'<article>';
+					// 		$strSalida.= $crlf.'	<div class="row">';
+					// 		$strSalida.= $crlf.'		<div class="col-lg-5">';
+					// 		$strSalida.= $crlf.'			<img class="img-center" alt="" src="admin/'. $fila["RutaImag"] .'">';
+					// 		$strSalida.= $crlf.'			<a href="javascript:void(0);" class="quitar" onclick="quitarProd('. $fila["NumeProd"] .')">Quitar</a>';
+					// 		$strSalida.= $crlf.'		</div>';
+					// 		$strSalida.= $crlf.'		<div class="col-lg-6">';
+					// 		$strSalida.= $crlf.'			<p class="titulo">'. $fila["NombProd"] .'</p>';
+					// 		$strSalida.= $crlf.'			<p class="cantidad">Cantidad: <span>'. $fila["CantProd"] .'</span></p>';
+					// 		$strSalida.= $crlf.'			<p class="precio">$ <span>'. $fila["ImpoUnit"] .'</span></p>';
+					// 		$strSalida.= $crlf.'		</div>';
+					// 		$strSalida.= $crlf.'	</div>';
+					// 		$strSalida.= $crlf.'</article>';
 
-							$subtotal+= floatval($fila["ImpoTota"]);
-						}
-					}
-					else {
-						$strSalida.= $crlf."<h4>Tu carrito está vacío</h4>";
-						$strSalida.= $crlf."<br><br><br>";
-					}
-					echo $strSalida;
+					// 		$subtotal+= floatval($fila["ImpoTota"]);
+					// 	}
+					// }
+					// else {
+					// 	$strSalida.= $crlf."<h4>Tu carrito está vacío</h4>";
+					// 	$strSalida.= $crlf."<br><br><br>";
+					// }
+					// echo $strSalida;
 
-					$total = $subtotal - $bonificacion;
+					// $total = $subtotal - $bonificacion;
 				?>
-				<p class="subtotal">Subtotal: $ <span><?php echo $subtotal?></span></p>
-				<p class="bonificacion">Bonificación: <span><?php echo $bonificacion?></span></p>
-				<p class="total">Total: $ <span><?php echo $total?></span></p>
+				<div id="divCarrito"></div>
+				<p class="subtotal">Subtotal: $ <span id="subtotal">0</span></p>
+				<p class="bonificacion">Bonificación: <span id="bonificacion">0</span></p>
+				<p class="total">Total: $ <span id="total">0</span></p>
 				<a href="#" class="btn-carrito-negro">Comprar</a>  
 			</ul>
 		 </nav>
@@ -324,37 +377,6 @@
 		
 	</script>
 
-	<script>
-		$(document).ready(function () {
-		var trigger = $('.hamburger'),
-			overlay = $('.overlay'),
-			isClosed = false;
-		
-			trigger.click(function () {
-			hamburger_cross();	  
-			});
-		
-			function hamburger_cross() {
-		
-			if (isClosed == true) {		  
-				overlay.hide();
-				trigger.removeClass('is-open');
-				trigger.addClass('is-closed');
-				isClosed = false;
-			} else {   
-				overlay.show();
-				trigger.removeClass('is-closed');
-				trigger.addClass('is-open');
-				isClosed = true;
-			}
-		}
-		
-		$('[data-toggle="offcanvas"]').click(function () {
-				$('#wrapper').toggleClass('toggled');
-		});  
-		});
-	</script>
-	
 	<script>
 		$(document).ready(function(){
 		

@@ -5,7 +5,7 @@
         <div class="links-header">
           <div class="row noMargin">
             <div class="col-lg-12">
-              <a class="lista-precios pull-right" href="#">Lista de Precios</a>
+              <a class="lista-precios pull-right" href="<?php echo $raiz?>descargas/Lista Advocatus  Nacional Agosto 2017 - Nº 46  - Revisada, Ordenada - 08 de Agosto 2017.xls">Lista de Precios</a>
               <a class="mis-compras pull-right" href="mi-carrito.php"> Mis Compras</a>
               <div class="logueo pull-right"><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
             </div>
@@ -174,53 +174,40 @@
             <form id="register-form" style="display:none;">
              <h4 class="modal-title" style="">Registrarse</h4>
               <div class="modal-body">
-                <div id="div-register-msg" class="form-group">
-                  <p style="color: #fff !important; font-size: 12px; padding-left: 15px; line-height: 16px !important;"></p>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <label for="nombreAgencia">Datos de la Agencia </label>  
-                      <input type="text" class="form-control form-custom" id="nombreAgencia" name="name" placeholder="Nombre Comercial de la Agencia *" required>
-                      <label for="direccion"> </label>
-                      <input type="text" class="form-control form-custom" id="direccion" name="name" placeholder="Dirección Completa *" required>
-                      <label for="telefonoAgencia"> </label>
-                      <input type="text" class="form-control form-custom" id="telefonoAgencia" name="name" placeholder="Teléfono *" required>
-                      <label for="paginaWeb"> </label>
-                      <input type="text" class="form-control form-custom" id="paginaWeb" name="name" placeholder="Página Web">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="NombPers">Nombre completo *</label>
+                    <input type="text" class="form-control form-custom" id="NombPers" placeholder="Nombre Completo *" required>
+                    <label for="TeleUser">Teléfono *</label>
+                    <input type="text" class="form-control form-custom" id="TeleUser" placeholder="Teléfono *" required>
+                    <label for="MailUser">Mail *</label>   
+                    <input type="email" class="form-control form-custom" id="MailUser" placeholder="Correo Electrónico *" required>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <label for="DireUser">Dirección</label>
+                        <input type="text" class="form-control form-custom" id="DireUser" placeholder="Dirección *" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="CodiPost">Código Postal</label>
+                        <input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal">
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      <label for="razonSocial"> </label>
-                      <input type="text" class="form-control form-custom" id="razonSocial" name="name" placeholder="Razón Social de la Agencia *" required>
-                      <label for="iata"> </label>
-                      <input type="text" class="form-control form-custom" id="iata" name="name" placeholder="IATA">
-                      <label for="numeroSectur"> </label>
-                      <input type="text" class="form-control form-custom" id="numeroSectur" name="name" placeholder="Número de alta en SECTUR">
-                    </div>
+                    <label for="NumeProv">Provincia *</label>
+                    <select class="form-control form-custom" id="NumeProv">
+                      <?php echo cargarCombo("SELECT NumeProv, NombProv FROM provincias ORDER BY NombProv", "NumeProv", "NombProv");?>
+                    </select>
+                    <label for="NombUser">Usuario *</label>
+                    <input type="text" class="form-control form-custom" id="NombUser" placeholder="Usuario *" required>
+                    <label for="NombPass">Contraseña *</label>
+                    <input type="password" class="form-control form-custom" id="NombPass" placeholder="Contraseña *" required>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <br>
-                      <label for="nombreAdmin">Datos del Contacto Administrativo</label>
-                      <input type="text" class="form-control form-custom" id="nombreAdmin" name="name" placeholder="Nombre Completo *" required>
-                      <label for="telefonoAdmin"> </label>
-                      <input type="text" class="form-control form-custom" id="telefonoAdmin" name="name" placeholder="Teléfono *" required>
-                      <label for="emailAdmin"> </label>   
-                      <input type="email" class="form-control form-custom" id="emailAdmin" placeholder="Correo Electrónico *" required>
-                    </div>
-                    <div class="col-md-6">
-                      <br> 
-                      <label for="nombreVentas">Datos del Contacto de Ventas</label>
-                      <input type="text" class="form-control form-custom" id="nombreVentas" name="name" placeholder="Nombre Completo *" required>
-                      <label for="telefonoVentas"> </label>
-                      <input type="text" class="form-control form-custom" id="telefonoVentas" name="name" placeholder="Teléfono *" required>
-                      <label for="emailVentas"> </label>   
-                      <input type="email" class="form-control form-custom" id="emailVentas" placeholder="Correo Electrónico *" required>
-                    </div>
-                  </div>
-                  <br>
-                  <button type="submit" class="btn btn-small center-block"><span style="font-size: 12px;">Registrarse</span></button>  
-                  <br>
-                  <p>Ya eres un usuario registrado? <button id="register_login_btn" type="button" class="btn btn-link">Iniciar sesión</button>	</p>
                 </div>
+                <div id="divRegisterMsg" class="" role="alert">
+                  <span id="iconRegister" class="" aria-hidden="true"></span>&nbsp;<span id="txtRegisterMsg"></span>
+                </div>
+                <button type="submit" class="btn btn-small center-block"><span style="font-size: 12px;">Registrarse</span></button>  
+                <br>
+                <p>Ya eres un usuario registrado? <button id="register_login_btn" type="button" class="btn btn-link">Iniciar sesión</button>	</p>
               </div>
             </form>
             <!-- End | Register Form -->

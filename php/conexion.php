@@ -2,24 +2,28 @@
 	ini_set("log_errors", 1);
 	ini_set("error_log", "php-error.log");
 
-	require_once 'admin/php/datosdb.php';
+	require_once __DIR__.'/../admin/php/datosdb.php';
 
-	function ejecutarCMD($strSQL) {
+	function ejecutarCMD($strSQL, $returnID = false) {
 		global $dbhost, $dbuser, $dbpass, $dbschema, $crlf;
 		
 		$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbschema);
 		$conn->set_charset("utf8");
 	
 		$strError = "";
+		$blnEstado = true;
 	
-		if (!$conn->query($strSQL))
+		if (!$conn->query($strSQL)) {
+			$blnEstado = false;
 			$strError = $conn->error;
+		}
+
+		if ($strError == "" && $returnID) {
+			$strError = $conn->insert_id;
+		}
 		$conn->close();
 	
-		if ($strError == "")
-			return true;
-		else
-			return $strError;
+		return array("estado"=>true, "msg"=>$strError);
 	}
 	
 	function buscarDato($strSQL) {
