@@ -452,9 +452,9 @@ span#text-lost-msg {
 }
 
 .nav-pills > li.active {
-    line-height: 18px;
+    line-height: 11px;
     display: inline-block !important;
-    top: 11px;
+    top: 0px;
     max-height: 30px;
     display: inline-table;
 }
@@ -553,18 +553,18 @@ span#text-lost-msg {
 
 .titulo-producto {
     font-family: 'Open Sans';
-    font-size: 15px;
+    font-size: 13.5px;
     color: #000;
     padding: 10px 15px;
     display: block;
     cursor: pointer;
-    min-height: 80px;
+    min-height: 60px;
     font-weight: bold;
 }
 
 .precio-producto {
     font-family: 'Open Sans';
-    font-size: 20px;
+    font-size: 18px !important;
     color: #a94442;
     padding: 0px 15px;
     font-weight: 600;
@@ -584,7 +584,7 @@ span#text-lost-msg {
     text-align: center;
     margin-bottom: 0px;
     font-family: 'MyriadPro-Regular';
-    font-size: 40px;
+    font-size: 28px;
 }
 
 .tel p span {
@@ -647,15 +647,15 @@ span#text-lost-msg {
     color: #000;
     text-align: center;
     font-weight: bold;
-    font-size: 32px;
-    line-height: 45px;
+    font-size: 28px;
+    line-height: 35px;
 }
 
 #productos-destacados p {
     font-family: 'MyriadPro-Light';
     color: #000;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 25px;
 }
 
@@ -685,14 +685,14 @@ span#text-lost-msg {
     color: rgba(0,0,0,0.5);
     text-align: center;
     font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .precio-destacados {
     color: #d6615e;
     font-family: 'Open Sans';
-    font-size: 22px;
+    font-size: 18px;
     text-align: center;
 }
 
@@ -725,7 +725,7 @@ span#text-lost-msg {
 
 .advocatus h1 {
     font-family: 'MyriadPro-Light';
-    font-size: 45px;
+    font-size: 38px;
     color: #000;
     margin-top: 100px;
     margin-bottom: 45px;
@@ -733,7 +733,7 @@ span#text-lost-msg {
 
 .advocatus p {
     font-family: 'MyriadPro-Light';
-    font-size: 20px;
+    font-size: 18px;
     color: #000;
     margin-bottom: 100px;
 }
@@ -747,13 +747,13 @@ span#text-lost-msg {
 
 .mision-vision h2 {
     text-align: center;
-    font-size: 34px;
+    font-size: 28px;
     margin-bottom: 40px;
 }
 
 .mision-vision p {
     font-family: 'MyriadPro-Light';
-    font-size: 20px;
+    font-size: 18px;
     color: #000;
     margin-bottom: 45px;
 }
@@ -770,8 +770,8 @@ span#text-lost-msg {
     font-family: 'BentonSans-Regular';
     color: rgba(0,0,0,0.5);
     text-align: center;
-    font-size: 26px;
-    margin-top: 60px;
+    font-size: 24px;
+    margin-top: 40px;
 }
 
 .cantidad-productos-carrito {
@@ -791,9 +791,9 @@ span#text-lost-msg {
 
 #grid-productos .nav-pills > li {
     border-bottom: none;
-    padding: 0px 25px 0px !important;
+    padding: 0px 15px 0px !important;
     max-width: 300px;
-    font-size: 13px;
+    font-size: 11px;
     height: 40px;
 }
 
@@ -815,7 +815,7 @@ span#text-lost-msg {
 }
 
 #grid-productos .nav-pills > li.active > a {
-    color: #7B202A;
+    color: #d6615e;
 }
 
 .breadcrumb {
@@ -931,7 +931,7 @@ span#text-lost-msg {
 }
 
 #grid-productos .titulo-producto {
-    font-size: 14px;
+    font-size: 13px;
     padding: 20px 15px 5px;
     text-align: center;
     /* min-height: 170px; */
@@ -943,7 +943,7 @@ span#text-lost-msg {
     text-align: center;
     color: #a94442;
     font-family: 'Open Sans';
-    font-size: 20px;
+    font-size: 16px;
     margin-top: 10px;
 }
 
@@ -1053,7 +1053,7 @@ span#text-lost-msg {
 
 .info-producto h1 {
     font-family: 'BentonSans-Bold';
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
 }
@@ -1109,7 +1109,7 @@ span#text-lost-msg {
 .info-producto p {
     color: #777777;
     font-family: 'BentonSans-Light';
-    font-size: 15px;
+    font-size: 13px;
     margin-bottom: 0px;
 }
 
@@ -1128,7 +1128,7 @@ div.section {
 p.precio {
     color: #1D1D1D;
     font-family: 'Roboto-Medium';
-    font-size: 25px;
+    font-size: 20px;
     border-bottom: 2px dotted rgba(0,0,0,0.5);
     padding-bottom: 5px;
     margin-bottom: 10px;
