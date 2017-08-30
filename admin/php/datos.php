@@ -21,6 +21,7 @@
 			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
 			new MenuItem("Productos", 'productos.php', '', 'fa-paper-plane', 2, false, true),
 			new MenuItem("Reportes", 'reportes.php', '', 'fa-slideshare', '', false, false),
+			new MenuItem("Ir al sitio", $raiz, '', 'fa-bookmark', '', false, false),
 			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, false)
 	];
 
@@ -153,6 +154,9 @@
 	$tabla->fields["ISBN"]["showOnForm"] = false;
 	
 	$tabla->addField("NombProd", "text", 200, "Nombre");
+	$tabla->addField("SlugProd", "text", 200, "Slug");
+	$tabla->fields["SlugProd"]["isHiddenInList"] = true;
+
 	$tabla->addField("DescProd", "textarea", 400, "Descripción");
 	$tabla->fields["DescProd"]["isHiddenInList"] = true;
 

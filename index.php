@@ -36,7 +36,7 @@
         <div class="container-full">
           <div class="row noMargin">
             <div class="col-lg-12  noPadding noMargin">
-                <a class="descargar-catalogo pull-right" href="#">Catálogo de Productos</a>
+                <a class="descargar-catalogo pull-right" href="descargas/Catalogo General Advocatus 2017.pdf" target="_blank">Catálogo de Productos</a>
                 <!-- SLIDER INTRO -->
                 <div class="container-full noMargin">
                 <div class="row noMargin">

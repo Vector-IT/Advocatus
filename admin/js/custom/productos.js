@@ -115,6 +115,7 @@ function editarproductos(strID){
 			$("#frmproductos").find(".form-control[type!='hidden'][disabled!=disabled][readonly!=readonly]:first").focus()
 			$("#NumeProd").val($("#NumeProd" + strID).val());
 			$("#NombProd").val($("#NombProd" + strID).text());
+			$("#SlugProd").val($("#SlugProd" + strID).val());
 			$("#DescProd").val($("#DescProd" + strID).val());
 			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
 			$("#Peso").val($("#Peso" + strID).text());
@@ -192,6 +193,7 @@ function editarproductos(strID){
 		$(".divPreview").html("");
 		$("#NumeProd").val("");
 		$("#NombProd").val("");
+		$("#SlugProd").val("");
 		$("#DescProd").val("");
 		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
 		$("#Peso").val("");
@@ -231,6 +233,7 @@ function aceptarproductos(){
 	frmData.append("tabla", "productos");
 	frmData.append("NumeProd", $("#NumeProd").val());
 	frmData.append("NombProd", $("#NombProd").val());
+	frmData.append("SlugProd", $("#SlugProd").val());
 	frmData.append("DescProd", $("#DescProd").val());
 	frmData.append("Peso", $("#Peso").val());
 	frmData.append("CantProd", $("#CantProd").val());

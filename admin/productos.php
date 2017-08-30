@@ -101,6 +101,13 @@
             </div>
 
             <div class="form-group form-group-sm ">
+	            <label for="SlugProd" class="control-label col-md-2 col-lg-2">Slug:</label>
+    	        <div class="col-md-6 col-lg-6">
+        		    <input type="text" class="form-control input-sm " id="SlugProd"  required size="200"   />
+            	</div>
+            </div>
+
+            <div class="form-group form-group-sm ">
 	            <label for="DescProd" class="control-label col-md-2 col-lg-2">Descripción:</label>
     	        <div class="col-md-10 col-lg-10">
         		    <textarea class="form-control input-sm autogrow " id="DescProd" required ></textarea>
