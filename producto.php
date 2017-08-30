@@ -1,14 +1,13 @@
 <?php
+	session_start();
 	require_once 'php/conexion.php';
 
-	if (!isset($_REQUEST["NumeProd"])) {
-		header("Location: index.php");
+	if (!isset($_REQUEST["slug"])) {
+		header("Location: ". $raiz ."index.php");
 		die();
 	}
 
-	session_start();
-
-	$numeProd = $_REQUEST["NumeProd"];
+	$numeProd = buscarDato("SELECT NumeProd FROM productos WHERE SlugProd = '". $_REQUEST["slug"] . "'");
 
 	//Producto
 	$strSQL = "SELECT NombProd, DescProd, ImpoVent";
@@ -74,26 +73,32 @@
 		}
 
 		function agregarProd() {
-			$.post("php/carritos.php", { 
-				"operacion": "1",
-				"NumeProd": <?php echo $numeProd?>,
-				"CantProd": $("#CantProd").val()
-				},
-				function (data) {
-					if (data.estado === true) {
-						$("#divCarrito").html(data.html);
-						$("#subtotal").html(data.subtotal);
-						$("#bonificacion").html(data.bonificacion);
-						$("#total").html(data.total);
+			if ($("#divLogin").css("display") == "none") {
+				$.post("php/carritosProcesar.php", { 
+					"operacion": "1",
+					"NumeProd": <?php echo $numeProd?>,
+					"CantProd": $("#CantProd").val()
+					},
+					function (data) {
+						if (data.estado === true) {
+							$("#divCarrito").html(data.html);
+							$("#subtotal").html(data.subtotal);
+							$("#bonificacion").html(data.bonificacion);
+							$("#total").html(data.total);
 
-						hamburger_cross();
+							$('#wrapper').toggleClass('toggled');
+							hamburger_cross();
+						}
 					}
-				}
-			);
+				);
+			}
+			else {
+				$("#login-modal").modal("show");
+			}
 		}
 
 		function quitarProd(strID) {
-			$.post("php/carritos.php", { 
+			$.post("php/carritosProcesar.php", { 
 				"operacion": "2",
 				"NumeProd": strID,
 				},
@@ -211,7 +216,7 @@
 									<div class="btn-plus"><span class="glyphicon glyphicon-plus"></span></div>
 									</div>
 								</div>
-								<button type="button" onclick="agregarProd()" class="animated fadeInLeft btn-bordo" data-toggle="offcanvas">Agregar a carro de compras</button>
+								<button type="button" onclick="agregarProd()" class="animated fadeInLeft btn-bordo" >Agregar a carro de compras</button>
 								&nbsp;
 								<button type="button" class="btn-bordo" data-toggle="modal" data-target="#consultar">Consultar</button> 
 								<!-- Modal -->
@@ -319,44 +324,13 @@
 			<ul class="nav sidebar-nav">
 				<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-bottom"></span> </button>
 				<h1>Carrito de Compras</h1>
-				<?php 
-					// $strSalida = "";
-					// $subtotal = 0;
-					// $bonificacion = 0;
-					// $total = 0;
 
-					// if ($carrito) {
-					// 	while ($fila = $carrito->fetch_assoc()) {
-					// 		$strSalida.= $crlf.'<article>';
-					// 		$strSalida.= $crlf.'	<div class="row">';
-					// 		$strSalida.= $crlf.'		<div class="col-lg-5">';
-					// 		$strSalida.= $crlf.'			<img class="img-center" alt="" src="admin/'. $fila["RutaImag"] .'">';
-					// 		$strSalida.= $crlf.'			<a href="javascript:void(0);" class="quitar" onclick="quitarProd('. $fila["NumeProd"] .')">Quitar</a>';
-					// 		$strSalida.= $crlf.'		</div>';
-					// 		$strSalida.= $crlf.'		<div class="col-lg-6">';
-					// 		$strSalida.= $crlf.'			<p class="titulo">'. $fila["NombProd"] .'</p>';
-					// 		$strSalida.= $crlf.'			<p class="cantidad">Cantidad: <span>'. $fila["CantProd"] .'</span></p>';
-					// 		$strSalida.= $crlf.'			<p class="precio">$ <span>'. $fila["ImpoUnit"] .'</span></p>';
-					// 		$strSalida.= $crlf.'		</div>';
-					// 		$strSalida.= $crlf.'	</div>';
-					// 		$strSalida.= $crlf.'</article>';
-
-					// 		$subtotal+= floatval($fila["ImpoTota"]);
-					// 	}
-					// }
-					// else {
-					// 	$strSalida.= $crlf."<h4>Tu carrito está vacío</h4>";
-					// 	$strSalida.= $crlf."<br><br><br>";
-					// }
-					// echo $strSalida;
-
-					// $total = $subtotal - $bonificacion;
-				?>
 				<div id="divCarrito"></div>
+
 				<p class="subtotal">Subtotal: $ <span id="subtotal">0</span></p>
 				<p class="bonificacion">Bonificación: <span id="bonificacion">0</span></p>
 				<p class="total">Total: $ <span id="total">0</span></p>
-				<a href="#" class="btn-carrito-negro">Comprar</a>  
+				<a href="mi-carrito.php" class="btn-carrito-negro">Comprar</a>  
 			</ul>
 		 </nav>
 		 <!-- /#sidebar-wrapper --> 

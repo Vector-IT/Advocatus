@@ -27,6 +27,10 @@ body {
   padding-right: 0px !important;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .portada {
     height: 70vh;
    -webkit-background-size: cover !important;
@@ -1309,16 +1313,18 @@ ul.redes-sociales li  {
     display: inline-block;
 }
 
-.eliminar-item a {
+.eliminar-item {
     font-family: 'BentonSans-Medium' !important;
     color: #000;
     font-size: 13px;
     margin-bottom: 30px;
     text-transform: uppercase;
     border-bottom: 2px solid #000;
-    width: 100%;
-    display: block;
     text-align: right;
+}
+
+.eliminar-item span {
+    display: inline-block;
 }
 
 #mi-carrito .envios {

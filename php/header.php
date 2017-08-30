@@ -6,8 +6,9 @@
           <div class="row noMargin">
             <div class="col-lg-12">
               <a class="lista-precios pull-right" href="<?php echo $raiz?>descargas/Lista Advocatus  Nacional Agosto 2017 - Nº 46  - Revisada, Ordenada - 08 de Agosto 2017.xls">Lista de Precios</a>
-              <a class="mis-compras pull-right" href="mi-carrito.php"> Mis Compras</a>
-              <div class="logueo pull-right"><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
+              <a class="mis-compras pull-right" href="mi-carrito.php"> Mi Carrito</a>
+              <div id="divLogin" class="logueo pull-right" <?php echo (isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
+              <div id="divLogout" class="logueo pull-right" <?php echo (!isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="php/logout.php" class="navbar-link clickable" title="Cerrar sesión"><?php echo (isset($_SESSION['is_logged_in'])? $_SESSION["NombPers"]: '')?></a></div>
             </div>
           </div>
         </div>
@@ -128,15 +129,18 @@
           <!-- Begin # DIV Form -->
           <div id="div-forms">
             <!-- Begin # Login Form -->
-            <form id="login-form">
+            <form id="login-form" method="post">
               <h4 class="modal-title">Iniciar Sesión</h4>
               <div class="modal-body">
-                <input id="login_username" class="form-control" type="text" placeholder="Usuario" required style="text-transform: none !important;">
-                <input id="login_password" class="form-control" type="password" placeholder="Contraseña" required style="text-transform: none !important;">
+                <input class="form-control" id="nombUser" type="text" placeholder="Usuario" required style="text-transform: none !important;">
+                <input class="form-control" id="nombPass" type="password" placeholder="Contraseña" required style="text-transform: none !important;">
                 <div class="checkbox">
                   <label>
                   <input type="checkbox"> Recordarme
                   </label>
+                </div>
+                <div id="divLoginMsg" class="" role="alert">
+                  <span id="iconLogin" class="" aria-hidden="true"></span>&nbsp;<span id="txtLoginMsg"></span>
                 </div>
               </div>
               <div class="modal-footer" style="border-top: none !important;">
@@ -189,11 +193,11 @@
                       </div>
                       <div class="col-md-4">
                         <label for="CodiPost">Código Postal</label>
-                        <input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal">
+                        <input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal" required>
                       </div>
                     </div>
                     <label for="NumeProv">Provincia *</label>
-                    <select class="form-control form-custom" id="NumeProv">
+                    <select class="form-control form-custom" id="NumeProv" required>
                       <?php echo cargarCombo("SELECT NumeProv, NombProv FROM provincias ORDER BY NombProv", "NumeProv", "NombProv");?>
                     </select>
                     <label for="NombUser">Usuario *</label>

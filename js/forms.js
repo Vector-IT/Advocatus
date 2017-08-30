@@ -11,13 +11,24 @@ $(function() {
     $("form").submit(function () {
         switch(this.id) {
             case "login-form":
-                var $lg_username=$('#login_username').val();
-                var $lg_password=$('#login_password').val();
-                if ($lg_username == "ERROR") {
-                    msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", "Login error");
-                } else {
-                    msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login OK");
-                }
+                $.post("php/usuariosProcesar.php", {
+                        operacion: "1",
+                        usuario: $("#nombUser").val().trim(),
+                        password: $("#nombPass").val().trim(),
+                    },
+                    function (data) {
+                        if (data.estado === true) {
+                            msgChange($('#divLoginMsg'), $('#iconLogin'), $('#txtLoginMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                            $("#divLogin").fadeOut(function () {
+                                $("#divLogout > a").html(data.nombPers);
+                                $("#divLogout").fadeIn();
+                            });
+                        }
+                        else {
+                            msgChange($('#divLoginMsg'), $('#iconLogin'), $('#txtLoginMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                        }
+                    }
+                );
                 break;
 
             case "lost-form":
@@ -30,14 +41,26 @@ $(function() {
                 break;
 
             case "register-form":
-                var nombPers = $("#NombPers").val().trim().replace("'", "");
-                var valor = "ERROR";
-
-                if (valor == "ERROR") {
-                    msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", "Register error", $("#login-modal"), false);
-                } else {
-                    msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", "Usuario registrado", $("#login-modal"), true);
-                }
+                $.post("php/usuariosProcesar.php", {
+                        operacion: "2",
+                        NombPers: $("#NombPers").val().trim().replace("'", ""),
+                        TeleUser: $("#TeleUser").val().trim().replace("'", ""),
+                        MailUser: $("#MailUser").val().trim().replace("'", ""),
+                        DireUser: $("#DireUser").val().trim().replace("'", ""),
+                        CodiPost: $("#CodiPost").val().trim().replace("'", ""),
+                        NumeProv: $("#NumeProv").val(),
+                        NombUser: $("#NombUser").val().trim().replace("'", ""),
+                        NombPass: $("#NombPass").val().trim().replace("'", "")
+                    },
+                    function (data) {
+                        if (data.estado === true) {
+                            msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                        }
+                        else {
+                            msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                        }
+                    }
+                );
                 break;
         }
         return false;
@@ -63,7 +86,7 @@ $(function() {
     
     function msgFade ($msgId, $msgText) {
         $msgId.fadeOut($msgAnimateTime, function() {
-            $(this).text($msgText).fadeIn($msgAnimateTime);
+            $(this).html($msgText).fadeIn($msgAnimateTime);
         });
     }
     
@@ -78,7 +101,7 @@ $(function() {
         setTimeout(function() {
             $divTag.removeClass();
             $iconTag.removeClass();
-            $textTag.text($msgOld);
+            $textTag.html($msgOld);
 
             if (close) {
                 $modal.modal('hide');

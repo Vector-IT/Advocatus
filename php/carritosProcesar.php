@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($numeCarr == "") {
                 //Creo un carrito nuevo
                 $strSQL = $crlf."INSERT INTO carritos(FechCarr, NumeUser, NumeProm)";
-                $strSQL.= $crlf."VALUES(SYSDTE(), {$numeUser}, null);";
+                $strSQL.= $crlf."VALUES(SYSDATE(), {$numeUser}, null);";
 
                 $result = ejecutarCMD($strSQL, true);
 

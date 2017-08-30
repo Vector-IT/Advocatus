@@ -37,8 +37,8 @@
 
 @font-face {
   font-family: 'BentonSans-Light';
-  src: url('../fuentes/BentonSans-Light.eot?#iefix') format('embedded-opentype'),  url('../fuentes/BentonSans-Light.otf')  format('opentype'),
-	     url('../fuentes/BentonSans-Light.woff') format('woff'), url('../fuentes/BentonSans-Light.ttf')  format('truetype'), url('../fuentes/BentonSans-Light.svg#BentonSans-Light') format('svg');
+	src: url('../fuentes/BentonSans-Light.eot?#iefix') format('embedded-opentype'),  url('../fuentes/BentonSans-Light.woff') format('woff'), 
+		url('../fuentes/BentonSans-Light.ttf')  format('truetype'), url('../fuentes/BentonSans-Light.svg#BentonSans-Light') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -48,7 +48,6 @@
 	font-family:'MyriadPro-Bold';
 	src: url('../fuentes/MyriadPro-Bold_gdi.eot');
 	src: url('../fuentes/MyriadPro-Bold_gdi.eot?#iefix') format('embedded-opentype'),
-		url('../fuentes/fonts/MyriadPro-Bold_gdi.woff') format('woff'),
 		url('../fuentes/MyriadPro-Bold_gdi.ttf') format('truetype'),
 		url('../fuentes/MyriadPro-Bold_gdi.svg#MyriadPro-Bold') format('svg');
 	font-weight: 700;

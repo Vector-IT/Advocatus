@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	require_once 'php/conexion.php';
 
 	$strSQL = "SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL";
@@ -100,7 +101,7 @@
 							$salida.= $crlf.'</div>';
 
 
-							$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
+							$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 							$strSQL.= $crlf."FROM productos p";
 							$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 							$strSQL.= $crlf."WHERE p.NumeEsta = 1";
@@ -121,7 +122,7 @@
 									}
 									$salida.= $crlf.'<div class="col-sm-3">';
 									$salida.= $crlf.'	<div class="producto">';
-									$salida.= $crlf.'		<a href="item-productos.php?NumeProd='.$prod["NumeProd"].'" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
+									$salida.= $crlf.'		<a href="producto/'.$prod["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
 									$salida.= $crlf.'		<a class="titulo-producto">';
 									$salida.= $crlf.'			'.$prod["NombProd"].'<br>';
 									$salida.= $crlf.'			<p class="precio-producto">$ '.$prod["ImpoVent"].'</p>';

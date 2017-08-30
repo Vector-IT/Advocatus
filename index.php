@@ -1,20 +1,21 @@
 <?php
+	session_start();
 	require_once 'php/conexion.php';
 
-	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
+	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."INNER JOIN productosnovedades pn ON p.NumeProd = pn.NumeProd";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."ORDER BY pn.NumeOrde";
 	$novedades = cargarTabla($strSQL);
 
-	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
+	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Promocion = 1";
 	$promociones = cargarTabla($strSQL);
 
-	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag";
+	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Destacado = 1";
@@ -174,7 +175,7 @@
 											<a href="#" class="favorito activo_"></a>
 											<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
 										</div>
-										<a href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
+										<a href="producto/<?php echo $fila["SlugProd"]?>.php" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
 										<a class="titulo-producto"><?php echo $fila["NombProd"]?></a>
 										<p class="precio-producto">$ <?php echo $fila["ImpoVent"]?></p>
 									</div>
@@ -198,7 +199,7 @@
 											<a href="#" class="favorito activo_"></a>
 											<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
 										</div>
-										<a href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
+										<a href="producto/<?php echo $fila["SlugProd"]?>.php" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
 										<a class="titulo-producto"><?php echo $fila["NombProd"]?></a>
 										<p class="precio-producto">$ <?php echo $fila["ImpoVent"]?></p>
 									</div>
@@ -282,7 +283,7 @@
 		<div class="col-sm-4">
 			<div class="box-circulo">
 				<img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 60%;">
-				<a class="info" href="item-productos.php?NumeProd=<?php echo $fila["NumeProd"]?>">Más info</a>
+				<a class="info" href="producto/<?php echo $fila["SlugProd"]?>.php">Más info</a>
 			</div>
 			<h2 class="titulo-destacados"><?php echo $fila["NombProd"]?></h2>
 			<p class="precio-destacados">$ <?php echo $fila["ImpoVent"]?></p>

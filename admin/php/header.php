@@ -16,7 +16,7 @@
 		<div class="absolute top5 right5 ucase">
 			<small>
 			<?php
-				echo $_SESSION["NombUsua"];
+				echo $_SESSION["NombPers"];
 			?>
 			</small>
 			<button class="btn btn-default btn-xs" onclick="location.href='logout.php';" data-toggle="tooltip" data-placement="bottom" title="Salir del sistema"><i class="fa fa-sign-out fa-fw"></i></button>

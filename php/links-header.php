@@ -1,4 +1,6 @@
-	<meta charset="utf-8">
+
+    <base href="<?php echo $raiz?>" />
+    <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
@@ -22,4 +24,8 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Login Modal JavaScript -->
     <script src="js/forms.js" type="text/javascript"></script>
-    
+    <script src="js/publicos.js" type="text/javascript"></script>
+
+    <!-- <script>
+        var raiz = "<?php echo $raiz?>";
+    </script> -->

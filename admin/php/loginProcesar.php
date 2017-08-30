@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$fila = $tabla->fetch_array();
 		$_SESSION['is_logged_in'] = 1;
 		$_SESSION['NumeUser'] = $fila['NumeUser'];
-		$_SESSION['NombUsua'] = $fila['NombPers'];
+		$_SESSION['NombPers'] = $fila['NombPers'];
 		if (isset($_POST['theme'])) {
 			$_SESSION['DarkTheme'] = $_POST['theme'];
 		}
