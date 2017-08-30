@@ -2,17 +2,22 @@
 	session_start();
 	require_once 'php/conexion.php';
 
+	$cantNovedades = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD NOVEDADES HOME'");
+
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."INNER JOIN productosnovedades pn ON p.NumeProd = pn.NumeProd";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."ORDER BY pn.NumeOrde";
+	$strSQL.= $crlf."LIMIT ". $cantNovedades;
 	$novedades = cargarTabla($strSQL);
 
+	$cantPromociones = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD PROMOCIONES HOME'");
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Promocion = 1";
+	$strSQL.= $crlf."LIMIT ". $cantPromociones;
 	$promociones = cargarTabla($strSQL);
 
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
@@ -20,6 +25,12 @@
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Destacado = 1";
 	$destacados = cargarTabla($strSQL);
+
+	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 1";
+	$slider1 = cargarTabla($strSQL);
+
+	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 2";
+	$slider2 = cargarTabla($strSQL);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -32,7 +43,7 @@
 	<?php include 'php/header.php'; ?>
 
       <!-- PORTADA -->
-      <header class="">
+      <header class="sombra">
         <div class="container-full">
           <div class="row noMargin">
             <div class="col-lg-12  noPadding noMargin">
@@ -44,15 +55,22 @@
                   <div id="intro" class="carousel slide noPadding noMargin" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
-                    <div class="item active">
-                      <img src="./img/home/portada-home.jpg" alt="">
-                    </div>
-                    <div class="item">
-                      <img src="./img/home/portada-home.jpg" alt="">
-                    </div>
-                    <div class="item">
-                      <img src="./img/home/portada-home.jpg" alt="">
-                    </div>
+					<?php
+						$strSalida = "";
+						$I = 0;
+						while ($fila = $slider1->fetch_assoc()) {
+							if ($I == 0) {
+								$I++;
+								$strSalida.= $crlf.'<div class="item active">';
+							}
+							else {
+								$strSalida.= $crlf.'<div class="item">';
+							}
+							$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+							$strSalida.= $crlf.'</div>';
+						}
+						echo $strSalida;
+					?>
                     </div>
                     <!-- Left and right controls -->
                     <a class="left carousel-control" href="#intro" data-slide="prev">
@@ -74,76 +92,6 @@
       </header>
       <!-- /.PORTADA -->
 	  
-	<!-- Buscador -->
-	<div id="buscador-portada">
-		<div class="row noMargin">
-			<div class="col-md-3">
-				<img style="padding-top: 20px;" class="img-responsive img-center" src="./img/home/logo-buscador.jpg" alt="">
-			</div>
-			<div class="buscador col-md-8">
-				<div class="input-group" id="adv-search">
-					<input type="text" class="form-control busqueda" placeholder="" />
-					<div class="input-group-btn">
-						<div class="btn-group" role="group">
-							<div class="dropdown dropdown-lg">
-								<button type="submit" class="btn btn-primary">Buscar</button>
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
-								<div class="dropdown-menu dropdown-menu-right" role="menu">
-                    <form class="form-horizontal" role="form">
-                      <div class="form-group">
-                          <label for="filter">Filtrar por</label>
-                          <select class="form-control">
-                            <option value="0" selected>Todos</option>
-                            <option value="1">Destacados</option>
-                            <option value="2">Promociones</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="filter">Filtrar por Editorial</label>
-                          <select class="form-control">
-                            <option value="0" selected>Advocatus Ediciones</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="filter">Filtrar por Categoría</label>
-                          <select class="form-control">
-                            <option value="0" selected>Catálogo</option>
-                            <option value="1">Derecho</option>
-                            <option value="2">Administración, Contabilidad y Economía</option>
-                            <option value="3">Práctica Profesional</option>
-                            <option value="4">Jurisprudencia</option>
-                            <option value="5">Técnicos, Arquitectura e Ingeniería</option>
-                            <option value="6">Códigos y Leyes</option>
-                            <option value="7">Otros Productos</option>
-                            <option value="8">Lectura General</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="contain">Autor</label>
-                          <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                          <label for="contain">Año</label>
-                          <input class="form-control" type="text" />
-                        </div>
-                        <div class="form-group">
-                          <label for="contain">Contiene las palabras</label>
-                        <input class="form-control" type="text" />
-                        </div>
-                      <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                    </form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-1"></div>
-		</div>
-	</div>
-	<!-- /.Buscador -->
 	<!-- TABS PRODUCTOS -->
 	<div id="productos" class="container">
 		<div class="row">
@@ -233,21 +181,40 @@
 		<div id="promos" class="carousel slide" data-ride="carousel">
 			<!-- Indicators -->
 			<ol class="carousel-indicators">
-			<li data-target="#promos" data-slide-to="0" class="active"></li>
-			<li data-target="#promos" data-slide-to="1"></li>
-			<li data-target="#promos" data-slide-to="2"></li>
+			<?php
+				$strSalida = "";
+				$I = 0;
+				while ($fila = $slider2->fetch_assoc()) {
+					if ($I == 0) {
+						$strSalida.= $crlf.'<li data-target="#promos" data-slide-to="'.$I.'" class="active"></li>';
+					}
+					else {
+						$strSalida.= $crlf.'<li data-target="#promos" data-slide-to="'.$I.'"></li>';
+					}
+					$I++;
+				}
+				echo $strSalida;
+			?>
 			</ol>
 			<!-- Wrapper for slides -->
 			<div class="carousel-inner">
-			<div class="item active">
-				<img src="./img/home/banner-1.jpg" alt="">
-			</div>
-			<div class="item">
-				<img src="./img/home/banner-1.jpg" alt="">
-			</div>
-			<div class="item">
-				<img src="./img/home/banner-1.jpg" alt="">
-			</div>
+			<?php
+				$strSalida = "";
+				$I = 0;
+				$slider2->data_seek(0);
+				while ($fila = $slider2->fetch_assoc()) {
+					if ($I == 0) {
+						$I++;
+						$strSalida.= $crlf.'<div class="item active">';
+					}
+					else {
+						$strSalida.= $crlf.'<div class="item">';
+					}
+					$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+					$strSalida.= $crlf.'</div>';
+				}
+				echo $strSalida;
+			?>
 			</div>
 			<!-- Left and right controls -->
 			<a class="left carousel-control" href="#promos" data-slide="prev">

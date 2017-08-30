@@ -7,6 +7,7 @@
 	require_once 'datosdb.php';
 	require_once 'vectorForms.php';
 	require_once 'custom/productos.php';
+	require_once 'custom/categorias.php';
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
@@ -34,9 +35,9 @@
 	*/
 	$tabla = new Tabla("configuraciones", "configuraciones", "Configuraciones", "la configuración", true, "objeto/configuraciones", "fa-cogs");
 	$tabla->labelField = "NombConf";
-	$tabla->numeCarg = 1;
-	$tabla->numeCargNew = 0;
-	$tabla->numeCargDelete = 0;
+	$tabla->numeCarg = 2;
+	$tabla->numeCargNew = 1;
+	$tabla->numeCargDelete = 1;
 
 	$tabla->isSubItem = true;
 	$tabla->jsOnNew = '$("#NombConf").attr("readonly", false);';
@@ -44,16 +45,16 @@
 
 	$tabla->addFieldId("NumeConf", "Número");
 	$tabla->addField("NombConf", "text", 60, "Nombre", true, true);
-	$tabla->addField("ValoConf", "text", 200, "Valor");
+	$tabla->addField("ValoConf", "text", 200, "Valor", false);
 	
 	$config->tablas["configuraciones"] = $tabla;
 
 	/**
-	 * USUARIOS
-	 */
+	* USUARIOS
+	*/
 	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");
 	$tabla->labelField = "NombPers";
-	$tabla->numeCarg = 1;
+	$tabla->numeCarg = 2;
 	$tabla->isSubItem = true;
 
 	$tabla->addField("NumeUser", "number", 0, "Número", false, true, true);
@@ -77,6 +78,69 @@
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["usuarios"] = $tabla;
+
+	/**
+	* SLIDERS
+	*/
+	$tabla = new Tabla("sliders", "sliders", "Sliders", "el Slider", true, "objeto/sliders", "fa-picture-o");
+	$tabla->labelField = "NombSlid";
+	$tabla->isSubItem = true;
+	$tabla->numeCargNew = 1;
+	$tabla->numeCargEdit = 1;
+	$tabla->numeCargDelete = 1;
+	
+	$tabla->jsFiles = ["admin/js/custom/sliders.js"];
+
+	$tabla->btnList = [
+		array(
+			'id'=> 'btnImg',
+			'titulo'=> 'Imágenes',
+			'texto'=> '<i class="fa fa-image fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-primary',
+			'onclick'=> 'verImagenes'
+		)
+	];
+
+	$tabla->addFieldId("NumeSlid", "Número");
+	$tabla->addField("NombSlid", "text", 50, "Nombre");
+
+	$config->tablas["sliders"] = $tabla;
+
+	/**
+	* SLIDERS IMAGENES
+	*/
+	$tabla = new Tabla("slidersimagenes", "slidersimagenes", "Imágenes del Slider", "la Imagen", false, "objeto/slidersimagenes", "fa-picture-o");
+	$tabla->masterTable = "sliders";
+	$tabla->masterFieldId = "NumeSlid";
+	$tabla->masterFieldName = "NombSlid";
+	$tabla->orderField = "NumeOrde";
+
+	$tabla->addFieldId("NumeImag", "Número", true, true);
+	$tabla->addField("NumeSlid", "number", 0, "Slider");
+	$tabla->fields["NumeSlid"]["isHiddenInList"] = true;
+	$tabla->fields["NumeSlid"]["isHiddenInForm"] = true;
+	
+	$tabla->addField("NumeOrde", "number", 0, "Orden");
+	$tabla->fields["NumeOrde"]["showOnForm"] = false;
+
+	$tabla->addFieldFileImage("RutaImag", "Imagen", "imgSliders");
+
+	$config->tablas["slidersimagenes"] = $tabla;
+
+	/**
+	* CARGOS
+	*/
+	$tabla = new Tabla("cargos", "cargos", "Cargos", "el Cargo", false);
+	$tabla->labelField = "NombCarg";
+	$tabla->order = "NumeCarg";
+
+	$tabla->addFieldId("NumeCarg", "Número");
+	$tabla->addField("NombCarg", "text", 50, "Nombre");
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
+
+	$config->tablas["cargos"] = $tabla;
 
 	/**
 	* PAISES
@@ -257,14 +321,14 @@
 	/**
 	* CATEGORIAS
 	*/
-	$tabla = new Tabla("categorias", "categorias", "Categorías", "la categoría", true, "objeto/categorias/", "fa-code");
+	$tabla = new Categoria("categorias", "categorias", "Categorías", "la categoría", true, "objeto/categorias/", "fa-code");
 	$tabla->isSubItem = true;
 	$tabla->labelField = "NombCate";
 	$tabla->order = "categorias.NumePadr, categorias.NombCate";
 
 	$tabla->addFieldId("NumeCate", "Número");
 	$tabla->addField("NombCate", "text", 80, "Nombre");
-	$tabla->addFieldSelect("NumePadr", 80, "Categoría Padre", true, "", "categorias", "cate", "NumeCate", "NombCate", "cate.NumePadr IS NULL", "", "NombCate", true, "SIN PADRE");
+	$tabla->addFieldSelect("NumePadr", 80, "Categoría Padre", false, "", "categorias", "cate", "NumeCate", "NombCate", "cate.NumePadr IS NULL", "", "NombCate", true, "SIN PADRE");
 	$tabla->fields["NumePadr"]["nameAlias"] = "NombCate2";
 
 	$config->tablas["categorias"] = $tabla;

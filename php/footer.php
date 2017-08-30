@@ -7,11 +7,18 @@
           <div class="col-sm-10">
             <div class="col-sm-4">
               <a href="#"><img src="./img/home/logo-footer.png" alt="" style="margin-bottom: 25px;"></a>
-              <div class="redes-sociales">
-                <a href=""><img class="img-center" src="./img/home/social_fb.png" alt=""></a>
-                <a href=""><img class="img-center" src="./img/home/social_tw.png" alt=""></a>
-                <a href=""><img class="img-center" src="./img/home/social_inst.png" alt=""></a>
-                <a href=""><img class="img-center" src="./img/home/social_g.png" alt=""></a>
+              <div class="col-sm-9 redes-sociales">
+                <?php 
+                if ($face != '') echo $crlf.'<a href="'. $face .'" target="_blank"><img class="img-center" src="./img/home/social_fb.png" alt=""></a>';
+                if ($twit != '') echo $crlf.'<a href="'. $twit .'" target="_blank"><img class="img-center" src="./img/home/social_tw.png" alt=""></a>';
+                if ($inst != '') echo $crlf.'<a href="'. $inst .'" target="_blank"><img class="img-center" src="./img/home/social_inst.png" alt=""></a>';
+                if ($goog != '') echo $crlf.'<a href="'. $goog .'" target="_blank"><img class="img-center" src="./img/home/social_g.png" alt=""></a>';
+                ?>
+              </div>
+              <div class="col-sm-3">
+                <a href="http://qr.afip.gob.ar/?qr=pFPVKyHQXZNOU1w81V302A,," target="_blank">
+                  <img class="img-responsive" src="./img/afip-dataweb.jpg" alt="">
+                </a>
               </div> 
             </div>
             <div class="col-sm-4">

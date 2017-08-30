@@ -422,6 +422,12 @@ span#text-lost-msg {
     color: #fff;
 }
 
+.sombra {
+    -webkit-box-shadow: 0px 6px 5px 0px rgba(50, 50, 50, 0.19);
+    -moz-box-shadow:    0px 6px 5px 0px rgba(50, 50, 50, 0.19);
+    box-shadow:         0px 6px 5px 0px rgba(50, 50, 50, 0.19);
+}
+
 #buscador-portada {
     -webkit-box-shadow: 0px 6px 5px 0px rgba(50, 50, 50, 0.19);
     -moz-box-shadow:    0px 6px 5px 0px rgba(50, 50, 50, 0.19);
@@ -484,6 +490,7 @@ span#text-lost-msg {
 #productos {
     background: #ECECEC;
     padding: 40px 20px;
+    margin-top: 20px;
 }
 
 #productos .col-sm-11  {
