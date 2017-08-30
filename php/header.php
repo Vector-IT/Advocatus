@@ -82,7 +82,7 @@
 									<input class="form-control" type="text" />
 								</div>
 								<div class="form-group">
-									<label for="contain">Año</label>
+									<label for="contain">Fecha de edición</label>
 									<input class="form-control" type="text" />
 								</div>
 								<div class="form-group">

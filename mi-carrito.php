@@ -12,6 +12,10 @@
         $strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
         $strSQL.= $crlf."WHERE c.NumeUser = ". $_SESSION["NumeUser"];
         $carrito = cargarTabla($strSQL);    
+
+        if ($carrito->num_rows == 0) {
+            $carrito = false;
+        }
     }
     else {
         $carrito = false;
