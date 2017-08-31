@@ -61,9 +61,9 @@ a {
     background-color: #7D1D28;
     border-color: #7D1D28;
     font-family: 'Roboto-Regular';
-    font-size: 12px;
+    font-size: 10px;
     font-weight: normal;
-    padding: 7px 35px;
+    padding: 5px 25px;
 }
 
 .btn-default {
@@ -71,9 +71,9 @@ a {
     background-color: #AAAAAA;
     border-color: #AAAAAA;
     font-family: 'Roboto-Regular';
-    font-size: 12px;
+    font-size: 10px;
     font-weight: normal;
-    padding: 7px 35px;
+    padding: 5px 25px;
 }
 
 a:focus, a:hover {
@@ -221,12 +221,12 @@ span#text-lost-msg {
     color: #7D1D27 !important;
     font-family: 'BentonSans-Regular';
     text-transform: uppercase;
-    font-size: 13px !important;
+    font-size: 11px !important;
     text-decoration: none !important;
     -webkit-transition: all 0.3s ease-in-out;
-   -moz-transition: all 0.3s ease-in-out;
-   -o-transition: all 0.3s ease-in-out;
-   transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .logueo a:hover {
@@ -268,7 +268,7 @@ span#text-lost-msg {
     color: #646464;
     font-family: 'MyriadPro-Semibold';
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover {
@@ -287,8 +287,8 @@ span#text-lost-msg {
 .navbar-nav > li {
     text-align: center;
     border-right: 1px solid #CECEBF;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 15px;
 }
 
 .navbar-nav > li:last-child {
@@ -300,8 +300,9 @@ span#text-lost-msg {
 }
 
 #menu-principal .redes-sociales img {
-    width: 35px;
+    width: 30px!important;
     padding: 6px;
+    margin-top: 5px !important;
 }
 
 @media all and (min-width: 768px) {
@@ -323,6 +324,8 @@ span#text-lost-msg {
 .buscador .form-control {
     border: 1px solid #E2E2E2 !important;
     border-radius: 0px !important;
+    height: 27px;
+    font-size: 12px;
 }
 
 .busqueda {
@@ -467,14 +470,15 @@ span#text-lost-msg {
     top: 0px;
     max-height: 30px;
     display: inline-table;
+    padding-top: 16px;
 }
 
 .nav > li > a {
     font-family: 'BentonSans-Regular';
     text-transform: uppercase;
     color: rgba(0,0,0,0.6);
-    min-height: 40px;
-    padding: 10px 15px 10px !important;
+    min-height: 20px;
+    padding: 5px 15px 5px !important;
     border-radius: 0px;
 }
 
@@ -1106,7 +1110,7 @@ span#text-lost-msg {
 .clasificacion {
     display: inline;
     position: absolute;
-    color: #777777 !important;
+    color: #212020 !important;
     font-family: 'Roboto-Light' !important;
     font-size: 10px !important;
 }
@@ -1118,10 +1122,11 @@ span#text-lost-msg {
 }
 
 .info-producto p {
-    color: #777777;
-    font-family: 'BentonSans-Light';
+    color: #545454;
+    font-family: 'BentonSans-Regular';
     font-size: 13px;
     margin-bottom: 0px;
+
 }
 
 .info-producto p span {
@@ -1270,19 +1275,19 @@ ul.redes-sociales li  {
 #mi-carrito h1 {
     font-family: 'BentonSans-Medium' !important;
     color: #000;
-    font-size: 24px;
+    font-size: 16px;
     text-transform: uppercase;
 }
 
 #mi-carrito h2 {
     font-family: 'BentonSans-Medium' !important;
     color: #000;
-    font-size: 18px;
+    font-size: 12px;
     text-transform: uppercase;
     border-top: 2px solid #000;
-    padding-top: 20px;
+    padding-top: 15px;
     border-bottom: 2px solid #000;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     margin-bottom: 20px;
     padding-left: 25px;
 }
@@ -1290,21 +1295,21 @@ ul.redes-sociales li  {
 #mi-carrito h3 {
     font-family: 'BentonSans-Medium' !important;
     color: #000;
-    font-size: 16px;
-    text-transform: uppercase;  
+    font-size: 12.5px;
+    text-transform: uppercase;
 }
 
 #mi-carrito h4 {
     font-family: 'BentonSans-Medium' !important;
     color: #000;
-    font-size: 17px;
+    font-size: 13px;
     margin-top: 30px;
 }
 
 #mi-carrito .info-producto {
     font-family: 'BentonSans-Medium' !important;
-    color: rgba(0,0,0,.5);
-    font-size: 15px;
+    color: #545454;
+    font-size: 12px;
     text-transform: uppercase;
     padding-top: 60px;
     padding-left: 15px;
@@ -1312,11 +1317,11 @@ ul.redes-sociales li  {
 }
 
 .codigo-bonificacion {
-    padding: 3.8px 10px 6px;
+    padding: 0px 10px 0px;
     width: 250px;
     font-family: 'BentonSans-Light';
     font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
     display: inline-block;
 }
 
@@ -1341,22 +1346,22 @@ ul.redes-sociales li  {
     padding: 0px 0px 0px 50px;
     font-family: 'BentonSans-Regular' !important;
     color: #000;
-    font-size: 13px;
+    font-size: 11px;
     text-transform: uppercase;
     font-weight: bold;
     font-weight: bold;
-    margin-top: 35px;
+    margin-top: 18px;
 }
-
 
 .btn-carrito-negro {
     font-family: 'BentonSans-Medium' !important;
     color: #fff !important;
-    font-size: 17px;
+    font-size: 11px;
     text-transform: uppercase;
     background: #000;
-    padding: 10px 40px 0px;
+    padding: 8px 30px 0px;
     display: inline-block;
+    vertical-align: top;
 }
 
 .btn-carrito-negro:hover, .btn-carrito-negro:focus {
