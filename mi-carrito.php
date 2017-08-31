@@ -33,7 +33,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Promociones - ADVOCATUS | Editorial · Librería</title>
+    <title>Mis Compras - ADVOCATUS | Editorial · Librería</title>
 
     <?php include 'php/links-header.php'; ?>
 
@@ -156,7 +156,7 @@
                 <div class="col-lg-3">
                     <p class="envios">Envíos a todo el país</p>
                 </div>
-                <div class="col-lg-9"><img class="img-center" src="./img/mi-carrito/formas-de-pago.png" alt=""></div>
+                <div class="col-lg-9"><img class="img-center" src="./img/mi-carrito/formas-de-pago.png" alt="" style="max-width: 500px;"></div>
             </div>
         </div>
         <div class="col-lg-1"></div>
