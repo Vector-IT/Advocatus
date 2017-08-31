@@ -97,7 +97,7 @@
 		<!-- </form> -->
 	</div>
 	<!-- Menú -->
-	<div class="col-md-10 pull-right collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	<div class="col-sm-12 col-md-10 pull-right collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav">
 			<li>
 				<a href="index.php">Home</a>

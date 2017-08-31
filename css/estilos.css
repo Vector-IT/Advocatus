@@ -458,19 +458,19 @@ span#text-lost-msg {
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     color: #7B202A;
     background-color: transparent;
-    font-family: 'BentonSans-Medium';
+    font-family: 'BentonSans-Regular';
     border-bottom: 3px solid #7B202A;
     padding: 5px 15px !important;
     display: inline-table;
 }
 
 .nav-pills > li.active {
-    line-height: 11px;
+    line-height: 15px;
     display: inline-block !important;
     top: 0px;
     max-height: 30px;
-    display: inline-table;
-    padding-top: 16px;
+    min-height: 20px;
+    font-weight: 600;
 }
 
 .nav > li > a {
@@ -480,6 +480,11 @@ span#text-lost-msg {
     min-height: 20px;
     padding: 5px 15px 5px !important;
     border-radius: 0px;
+    line-height: 15px;
+}
+
+.carousel-inner {
+    max-height: 60vh;
 }
 
 .carousel-inner > .item > img {
@@ -586,7 +591,6 @@ span#text-lost-msg {
 }
 
 #consultanos {
-    background: #aaa;
     padding: 20px;
     margin-top: 20px;
     margin-bottom: 25px;
@@ -594,16 +598,18 @@ span#text-lost-msg {
 
 .tel p {
     background: #7D1D28;
-    padding: 20px;
     color: #fff;
     text-align: center;
-    margin-bottom: 0px;
-    font-family: 'MyriadPro-Regular';
-    font-size: 28px;
+    margin: 0px auto;
+    font-family: 'OpenSans-Bold';
+    padding: 8px 30px;
+    font-size: 16px;
+    line-height: 26px;
+    display: table;
 }
 
 .tel p span {
-    font-family: 'MyriadPro-Bold';
+    
 }
 
 .descargas {
@@ -1668,3 +1674,67 @@ footer .redes-sociales img {
 }
 
 .ucase { text-transform: uppercase; }
+
+
+@media all and (max-width: 768px) {
+    .mis-compras, .lista-precios {
+        padding: 6px 0px 6px 25px !important;
+        float: unset !important;
+    }
+    .logueo {
+        padding-top: 0px;
+        float: unset !important;
+        display: inline-block;
+    }
+    .logueo a {
+        padding: 6px 10px 6px 25px !important;
+    }
+    .navbar-brand > img {
+        max-width: 150px;
+        margin-top: 30px;
+    }
+    .navbar-toggle {
+        margin-top: 55px;
+        margin-right: 5px;
+        background-color: #7d1d28;
+        border: none !important;
+    }
+    #menu-principal .redes-sociales {
+        position: absolute;
+        top: 15px;
+        right: 5px;
+    }
+    .buscador {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    #adv-search .btn-default, #adv-search .btn-primary {
+        padding: 5px;
+    }
+    .dropdown-menu {
+        overflow-y: scroll;
+        max-height: 280px;
+        width: 278px;
+    }
+    .navbar-collapse {
+        width: 100%;
+    }
+    .navbar-nav {
+        margin: 0px auto;
+    }
+    .navbar-nav > li {
+        border-right: none;
+        margin: 3px auto !important;
+        border-bottom: 1px solid #CECEBF;   
+    }    
+    .navbar-nav > li:last-child {
+        margin-bottom: 5px !important;
+        border-bottom: none  !important;  
+    }
+    .navbar-inverse .navbar-collapse {
+        border-color: #7d1d28;  
+    }
+    .subfooter img {
+        max-width: 290px !important;
+    }
+}
