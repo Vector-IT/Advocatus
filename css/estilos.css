@@ -872,7 +872,7 @@ span#text-lost-msg {
     float: right;
 }
 
-#dropdownMenuLink {
+#dropdownSubcategorias, #dropdownMenuLink {
     color: rgba(0,0,0,0.4);
     font-family: 'BentonSans-Regular';
     text-transform: uppercase;
@@ -883,6 +883,10 @@ span#text-lost-msg {
     width: 160px;
     padding: 6px 20px;
     text-align: left;
+}
+
+#dropdownSubcategorias {
+    width: auto;
 }
 
 #filtros1 .dropdown-toggle:after, #filtros2 .dropdown-toggle:after {

@@ -3,6 +3,9 @@
 	$twit = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'TWITTER'");
 	$inst = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'INSTAGRAM'");
 	$goog = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'GOOGLE+'");
+
+	if (!isset($orden)) $orden = "1";
+	if (!isset($subcat)) $subcat = "";
 ?>
 <!-- HEADER -->
 <nav id="menu-principal" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -47,42 +50,45 @@
 							<button type="submit" class="btn btn-primary" onclick="busqSimple()";>Buscar</button>
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
 							<div class="dropdown-menu dropdown-menu-right" role="menu">
-							<form id="frmBusqueda" class="form-horizontal" role="form" action="productos.php">
-								<div class="form-group">
-									<label for="filter">Filtrar por</label>
-									<select class="form-control" name="tipo" id="bsqTipo">
-										<option value="" value="<?php echo (isset($_REQUEST["tipo"])? 'selected': '')?>">Todos</option>
-										<option value="1">Destacados</option>
-										<option value="2">Promociones</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="filter">Filtrar por Editorial</label>
-									<select class="form-control" name="editorial" id="bsqEditorial">
-										<?php echo cargarCombo("SELECT NumeAtriOpci, Valor FROM atributosopciones WHERE NumeAtri = 81 ORDER BY Valor", "NumeAtriOpci", "Valor", "", true, "Seleccione...", "")?>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="filter">Filtrar por Categoría</label>
-									<select class="form-control" name="categoria" id="bsqCategoria">
-										<?php echo cargarCombo("SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL ORDER BY NombCate", "NumeCate", "NombCate", "", true, "Seleccione...", "")?>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="contain">Autor</label>
-									<input class="form-control" type="text" name="autor" id="bsqAutor" />
-								</div>
-								<div class="form-group">
-									<label for="contain">Fecha de edición</label>
-									<input class="form-control" type="text" name="fecha" id="bsqFecha" />
-								</div>
-								<div class="form-group">
-									<label for="contain">Contiene las palabras</label>
-									<input class="form-control" type="text" name="texto" id="bsqTexto" />
-								</div>
-								<input type="hidden" name="orden" value="nombre" />
-								<button type="submit" class="btn btn-primary" onclick="busqAvanzada();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-							</form>
+								<form id="frmBusqueda" class="form-horizontal" role="form" action="productos.php">
+									<input type="hidden" name="buscar" id="bsqBuscar" value="1" />
+									<div class="form-group">
+										<label for="filter">Filtrar por</label>
+										<select class="form-control" name="tipo" id="bsqTipo">
+											<option value="" <?php echo (isset($_REQUEST["tipo"]) && $_REQUEST["tipo"] == ""? 'selected': '')?>>Todos</option>
+											<option value="1" <?php echo (isset($_REQUEST["tipo"]) && $_REQUEST["tipo"] == "1"? 'selected': '')?>>Destacados</option>
+											<option value="2" <?php echo (isset($_REQUEST["tipo"]) && $_REQUEST["tipo"] == "2"? 'selected': '')?>>Promociones</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="filter">Filtrar por Editorial</label>
+										<select class="form-control" name="editorial" id="bsqEditorial">
+											<?php echo cargarCombo("SELECT NumeAtriOpci, Valor FROM atributosopciones WHERE NumeAtri = 81 ORDER BY Valor", "NumeAtriOpci", "Valor", (isset($_REQUEST["editorial"])? $_REQUEST["editorial"]: ""), true, "Seleccione...", "")?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="filter">Filtrar por Categoría</label>
+										<select class="form-control" name="categoria" id="bsqCategoria">
+											<?php echo cargarCombo("SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL ORDER BY NombCate", "NumeCate", "NombCate", (isset($_REQUEST["categoria"])? $_REQUEST["categoria"]: ""), true, "Seleccione...", "")?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="contain">Autor</label>
+										<input class="form-control" type="text" name="autor" id="bsqAutor" value="<?php echo (isset($_REQUEST["autor"])? $_REQUEST["autor"]: '')?>" />
+									</div>
+									<div class="form-group">
+										<label for="contain">Fecha de edición</label>
+										<input class="form-control" type="text" name="fecha" id="bsqFecha" value="<?php echo (isset($_REQUEST["fecha"])? $_REQUEST["fecha"]: '')?>" />
+									</div>
+									<div class="form-group">
+										<label for="contain">Contiene las palabras</label>
+										<input class="form-control" type="text" name="texto" id="bsqTexto" value="<?php echo (isset($_REQUEST["texto"])? $_REQUEST["texto"]: '')?>" />
+									</div>
+									<input type="hidden" name="orden" id="bsqOrden" value="<?php echo $orden?>" />
+									<input type="hidden" name="subcat" id="bsqSubcat" value="<?php echo $subcat?>" />
+									<input type="hidden" name="cate" id="bsqCate" value="" />
+									<button type="submit" class="btn btn-primary" onclick="busqAvanzada();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+								</form>
 							</div>
 						</div>
 					</div>

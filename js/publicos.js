@@ -26,10 +26,11 @@ function busqSimple() {
 	$("#bsqAutor").val("");
 	$("#bsqFecha").val("");
 	$("#bsqTexto").val($("#bsqTexto1").val());
+	$("#bsqSubcat").val("");
 
 	$("#frmBusqueda").submit();
 }
 
 function busqAvanzada() {
-	$("#bsqTexto1").val("");
+	$("#bsqSubcat").val("");
 }
