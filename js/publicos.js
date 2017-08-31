@@ -18,3 +18,18 @@ $(document).ready(function () {
 	});
 
 });
+
+function busqSimple() {
+	$("#bsqTipo").val("");
+	$("#bsqEditorial").val("");
+	$("#bsqCategoria").val("");
+	$("#bsqAutor").val("");
+	$("#bsqFecha").val("");
+	$("#bsqTexto").val($("#bsqTexto1").val());
+
+	$("#frmBusqueda").submit();
+}
+
+function busqAvanzada() {
+	$("#bsqTexto1").val("");
+}

@@ -76,7 +76,7 @@
 		return $tabla;
 	}
 	
-	function cargarCombo($strSQL, $CampoNumero, $CampoTexto, $Seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...') {
+	function cargarCombo($strSQL, $CampoNumero, $CampoTexto, $Seleccion = "", $itBlank = false, $itBlankText = 'Seleccione...', $itBlankValue = "-1") {
 		global $dbhost, $dbuser, $dbpass, $dbschema, $crlf;
 		
 		$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbschema);
@@ -88,7 +88,7 @@
 		
 		$strSalida = "";
 		if ($itBlank)
-			$strSalida.= $crlf.'<option value="-1">'.$itBlankText.'</option>';
+			$strSalida.= $crlf.'<option value="'.$itBlankValue.'">'.$itBlankText.'</option>';
 		
 		while ($fila = $tabla->fetch_array()) {
 			if ($CampoTexto != "") {

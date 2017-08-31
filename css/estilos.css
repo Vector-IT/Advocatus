@@ -729,7 +729,7 @@ span#text-lost-msg {
    background: url('../img/quienes-somos/bg-lineas.png') top left no-repeat scroll;
    -webkit-background-size: cover !important;
    -moz-background-size: cover !important;
-   background-size: cover !importantinherit;
+   background-size: cover !important;
    -o-background-size: cover !important;
    min-height:70vh;
 }
@@ -838,7 +838,7 @@ span#text-lost-msg {
 }
 
 .breadcrumb-item {
-    color: rgba(0,0,0,0.4) !imporant;
+    color: rgba(0,0,0,0.4) !important;
     float: left;
     font-family: 'BentonSans-Regular';
     text-transform: uppercase;
@@ -876,6 +876,9 @@ span#text-lost-msg {
     font-weight: bold;
     border: 1px solid rgba(0,0,0,0.4);
     border-radius: 0px;
+    width: 160px;
+    padding: 6px 20px;
+    text-align: left;
 }
 
 #filtros1 .dropdown-toggle:after, #filtros2 .dropdown-toggle:after {
@@ -1475,7 +1478,7 @@ img.img-producto-carrito {
     height: 75vh;
    -webkit-background-size: cover !important;
    -moz-background-size: cover !important;
-   background-size: cover !importantinherit;
+   background-size: cover !important;
    -o-background-size: cover !important;
 }
 

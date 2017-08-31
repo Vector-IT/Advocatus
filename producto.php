@@ -9,6 +9,8 @@
 
 	$numeProd = buscarDato("SELECT NumeProd FROM productos WHERE SlugProd = '". $_REQUEST["slug"] . "'");
 
+	ejecutarCMD("UPDATE productos SET Vistas = Vistas + 1 WHERE NumeProd = ". $numeProd);
+	
 	//Producto
 	$strSQL = "SELECT NombProd, DescProd, ImpoVent";
 	$strSQL.= $crlf."FROM productos";
@@ -54,6 +56,11 @@
 			$('[data-toggle="offcanvas"]').click(function () {
 				$('#wrapper').toggleClass('toggled');
 			});  
+
+			$(".overlay").click(function() {
+				$('#wrapper').toggleClass('toggled');
+				hamburger_cross();
+			});
 		});
 
 		function hamburger_cross() {

@@ -38,64 +38,57 @@
 	</div>
 	<!-- Buscador -->
 	<div class="buscador col-md-7">
-		<div class="input-group" id="adv-search">
-			<input type="text" class="form-control busqueda" placeholder="" />
-			<div class="input-group-btn">
-				<div class="btn-group" role="group">
-					<div class="dropdown dropdown-lg">
-						<button type="submit" class="btn btn-primary">Buscar</button>
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
-						<div class="dropdown-menu dropdown-menu-right" role="menu">
-							<form class="form-horizontal" role="form">
+		<!-- <form id="frmBusqueda" class="form-horizontal" role="form"> -->
+			<div class="input-group" id="adv-search">
+				<input type="text" name="texto1" id="bsqTexto1" class="form-control busqueda" placeholder="" value="<?php echo (isset($_REQUEST["texto"])? $_REQUEST["texto"]: '')?>" />
+				<div class="input-group-btn">
+					<div class="btn-group" role="group">
+						<div class="dropdown dropdown-lg">
+							<button type="submit" class="btn btn-primary" onclick="busqSimple()";>Buscar</button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
+							<div class="dropdown-menu dropdown-menu-right" role="menu">
+							<form id="frmBusqueda" class="form-horizontal" role="form" action="productos.php">
 								<div class="form-group">
 									<label for="filter">Filtrar por</label>
-									<select class="form-control">
-										<option value="0" selected>Todos</option>
+									<select class="form-control" name="tipo" id="bsqTipo">
+										<option value="" value="<?php echo (isset($_REQUEST["tipo"])? 'selected': '')?>">Todos</option>
 										<option value="1">Destacados</option>
 										<option value="2">Promociones</option>
 									</select>
 								</div>
 								<div class="form-group">
 									<label for="filter">Filtrar por Editorial</label>
-									<select class="form-control">
-										<option value="0" selected>Advocatus Ediciones</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
+									<select class="form-control" name="editorial" id="bsqEditorial">
+										<?php echo cargarCombo("SELECT NumeAtriOpci, Valor FROM atributosopciones WHERE NumeAtri = 81 ORDER BY Valor", "NumeAtriOpci", "Valor", "", true, "Seleccione...", "")?>
 									</select>
 								</div>
 								<div class="form-group">
 									<label for="filter">Filtrar por Categoría</label>
-									<select class="form-control">
-										<option value="0" selected>Catálogo</option>
-										<option value="1">Derecho</option>
-										<option value="2">Administración, Contabilidad y Economía</option>
-										<option value="3">Práctica Profesional</option>
-										<option value="4">Jurisprudencia</option>
-										<option value="5">Técnicos, Arquitectura e Ingeniería</option>
-										<option value="6">Códigos y Leyes</option>
-										<option value="7">Otros Productos</option>
-										<option value="8">Lectura General</option>
+									<select class="form-control" name="categoria" id="bsqCategoria">
+										<?php echo cargarCombo("SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL ORDER BY NombCate", "NumeCate", "NombCate", "", true, "Seleccione...", "")?>
 									</select>
 								</div>
 								<div class="form-group">
 									<label for="contain">Autor</label>
-									<input class="form-control" type="text" />
+									<input class="form-control" type="text" name="autor" id="bsqAutor" />
 								</div>
 								<div class="form-group">
 									<label for="contain">Fecha de edición</label>
-									<input class="form-control" type="text" />
+									<input class="form-control" type="text" name="fecha" id="bsqFecha" />
 								</div>
 								<div class="form-group">
 									<label for="contain">Contiene las palabras</label>
-									<input class="form-control" type="text" />
+									<input class="form-control" type="text" name="texto" id="bsqTexto" />
 								</div>
-								<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+								<input type="hidden" name="orden" value="nombre" />
+								<button type="submit" class="btn btn-primary" onclick="busqAvanzada();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 							</form>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		<!-- </form> -->
 	</div>
 	<!-- Menú -->
 	<div class="col-md-10 pull-right collapse navbar-collapse" id="bs-example-navbar-collapse-1">
