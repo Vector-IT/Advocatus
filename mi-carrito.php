@@ -38,7 +38,7 @@
     <?php include 'php/links-header.php'; ?>
 
     <script>
-        function quitarProd(strID) {
+        function quitarProd1(strID) {
             $.post("php/carritosProcesar.php", { 
                 "operacion": "2",
                 "NumeProd": strID,
@@ -103,22 +103,22 @@
                 $strHTML.= $crlf.'    </div>';
                 $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
                 $strHTML.= $crlf.'        <article id="1">';
-                $strHTML.= $crlf.'            <p class="info-producto">'. $fila["CantProd"] .'</p>';
+                $strHTML.= $crlf.'            <p class="info-producto text-right">'. $fila["CantProd"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
                 $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
                 $strHTML.= $crlf.'        <article id="1">';
-                $strHTML.= $crlf.'            <p class="info-producto">$ '. $fila["ImpoUnit"] .'</p>';
+                $strHTML.= $crlf.'            <p class="info-producto text-right">$ '. $fila["ImpoUnit"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
                 $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
                 $strHTML.= $crlf.'        <article id="1">';
-                $strHTML.= $crlf.'            <p class="info-producto">$ '. $fila["ImpoTota"] .'</p>';
+                $strHTML.= $crlf.'            <p class="info-producto text-right">$ '. $fila["ImpoTota"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
                 $strHTML.= $crlf.'</div>';
                 $strHTML.= $crlf.'<div class="row">';
-                $strHTML.= $crlf.'    <div class="eliminar-item"><span class="clickable" data-js="quitarProd('. $fila["NumeProd"] .');">ELIMINAR ITEM X</span></div>';
+                $strHTML.= $crlf.'    <div class="eliminar-item"><span class="clickable" data-js="quitarProd1('. $fila["NumeProd"] .');">ELIMINAR ITEM X</span></div>';
                 $strHTML.= $crlf.'</div>';
             }
             echo $strHTML;

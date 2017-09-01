@@ -250,10 +250,10 @@
 											$salida.= $crlf.'<div class="row row-eq-height">';
 											$J = 1;
 										}
-										$salida.= $crlf.'<div class="col-sm-3">';
-										$salida.= $crlf.'	<div class="producto">';
+										$salida.= $crlf.'<div class="col-sm-3 producto">';
+										$salida.= $crlf.'	<div class="">';
 										$salida.= $crlf.'		<a href="producto/'.$prod["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
-										$salida.= $crlf.'		<a class="titulo-producto">';
+										$salida.= $crlf.'		<a href="producto/'.$prod["SlugProd"].'.php" class="titulo-producto">';
 										$salida.= $crlf.'			'.$prod["NombProd"].'<br>';
 										$salida.= $crlf.'			<p class="precio-producto">$ '.$prod["ImpoVent"].'</p>';
 										$salida.= $crlf.'		</a>';
@@ -317,10 +317,10 @@
 										$salida.= $crlf.'<div class="row row-eq-height">';
 										$I = 1;
 									}
-									$salida.= $crlf.'<div class="col-sm-3">';
-									$salida.= $crlf.'	<div class="producto">';
+									$salida.= $crlf.'<div class="col-sm-3 producto">';
+									$salida.= $crlf.'	<div class="">';
 									$salida.= $crlf.'		<a href="producto/'.$prod["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$prod["RutaImag"].'" alt="" style="height: 215px;"></a>';
-									$salida.= $crlf.'		<a class="titulo-producto">';
+									$salida.= $crlf.'		<a href="producto/'.$prod["SlugProd"].'.php" class="titulo-producto">';
 									$salida.= $crlf.'			'.$prod["NombProd"].'<br>';
 									$salida.= $crlf.'			<p class="precio-producto">$ '.$prod["ImpoVent"].'</p>';
 									$salida.= $crlf.'		</a>';

@@ -23,6 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['NumeUser'] = $usuario["NumeUser"];
                 $_SESSION['NombPers'] = $usuario['NombPers'];
 
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $usuario["NumeUser"]);
+                if ($numeCarr != "") {
+                    $_SESSION["NumeCarr"] = $numeCarr;
+                }
+
                 $salida = array(
                     "estado"=>true,
                     "msg"=>"Login exitoso!",

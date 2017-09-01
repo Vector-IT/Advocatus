@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             else {
                 $cantProdOld = buscarDato("SELECT COALESCE(CantProd, 0) FROM carritosdetalles WHERE NumeCarr = ". $numeCarr ." AND NumeProd = ". $numeProd);
             }
+            $_SESSION["NumeCarr"] = $numeCarr;
 
             if (intval($cantProdOld) == 0) {
                 $impoTota = $cantProd * $impoUnit;

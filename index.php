@@ -37,8 +37,14 @@
 <head>
 	<?php include 'php/links-header.php'; ?>
 
+	<link rel="stylesheet" href="css/equal-height-columns.css">
+	<link href="css/sidebar.css" rel="stylesheet">
 </head>
 <body>
+<div id="wrapper">
+		<div class="overlay"></div>
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
 
 	<?php include 'php/header.php'; ?>
 
@@ -111,48 +117,78 @@
 					<div class="tab-content clearfix">
 						<?php if ($novedades->num_rows > 0) {?>
 						<div class="tab-pane active" id="novedades">
-							<div class="row">
 							<?php 
+								$J = 0;
+								$salida = '';
 								while ($fila = $novedades->fetch_assoc()) {
 									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
+
+									if ($J == 0) {
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$J = 1;
+									}
+									elseif ($J == 5) {
+										$salida.= $crlf.'</div>';
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$J = 1;
+									}
+									
+									$salida.= $crlf.'<div class="col-sm-3 producto">';
+									$salida.= $crlf.'	<div class="">';
+									$salida.= $crlf.'		<div class="acciones-producto">';
+									$salida.= $crlf.'			<p class="cantidad-favorito">'.$cantFav.'</p>';
+									$salida.= $crlf.'			<a href="javascript:void(0);" class="favorito activo_"></a>';
+									$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									$salida.= $crlf.'		</div>';
+									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
+									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
+									$salida.= $crlf.'		<p class="precio-producto">$ '.$fila["ImpoVent"].'</p>';
+									$salida.= $crlf.'	</div>';
+									$salida.= $crlf.'</div>';
+
+									$J++;
+								}
+								echo $salida;
 							?>
-								<div class="col-sm-4">
-									<div class="producto">
-										<div class="acciones-producto">
-											<p class="cantidad-favorito"><?php echo $cantFav?></p>
-											<a href="#" class="favorito activo_"></a>
-											<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
-										</div>
-										<a href="producto/<?php echo $fila["SlugProd"]?>.php" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
-										<a class="titulo-producto"><?php echo $fila["NombProd"]?></a>
-										<p class="precio-producto">$ <?php echo $fila["ImpoVent"]?></p>
-									</div>
-								</div>
-							<?php }?>
 							</div>
 							<!-- /.row -->
 						</div>
 						<?php }?>
 						<?php if ($promociones->num_rows > 0) {?>
 						<div class="tab-pane" id="promociones">
-							<div class="row">
 							<?php 
+								$J = 0;
+								$salida = '';
 								while ($fila = $promociones->fetch_assoc()) {
 									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
+
+									if ($J == 0) {
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$J = 1;
+									}
+									elseif ($J == 5) {
+										$salida.= $crlf.'</div>';
+										$salida.= $crlf.'<div class="row row-eq-height">';
+										$J = 1;
+									}
+
+									$salida.= $crlf.'<div class="col-sm-3 producto">';
+									$salida.= $crlf.'	<div class="">';
+									$salida.= $crlf.'		<div class="acciones-producto">';
+									$salida.= $crlf.'			<p class="cantidad-favorito">'.$cantFav.'</p>';
+									$salida.= $crlf.'			<a href="javascript:void(0);" class="favorito activo_"></a>';
+									$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									$salida.= $crlf.'		</div>';
+									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
+									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
+									$salida.= $crlf.'		<p class="precio-producto">$ '.$fila["ImpoVent"].'</p>';
+									$salida.= $crlf.'	</div>';
+									$salida.= $crlf.'</div>';
+
+									$J++;
+								}
+								echo $salida;
 							?>
-								<div class="col-sm-4">
-									<div class="producto">
-										<div class="acciones-producto">
-											<p class="cantidad-favorito"><?php echo $cantFav?></p>
-											<a href="#" class="favorito activo_"></a>
-											<a href="#" class="carrito"><img src="./img/home/carrito.png" alt=""></a>
-										</div>
-										<a href="producto/<?php echo $fila["SlugProd"]?>.php" class="img-producto"><img class="img-center" src="admin/<?php echo $fila["RutaImag"]?>" alt="" style="width: 150px; height: 219px;"></a>
-										<a class="titulo-producto"><?php echo $fila["NombProd"]?></a>
-										<p class="precio-producto">$ <?php echo $fila["ImpoVent"]?></p>
-									</div>
-								</div>
-							<?php  }?>
 							</div>
 							<!-- /.row -->
 						</div>
@@ -274,7 +310,28 @@
 	<!-- /.SUSCRIBIRSE -->      
 
 	<?php include 'php/footer.php'; ?>
-	<?php include 'php/scripts-footer.php'; ?>
+
+	</div>
+	<!-- /#page-content-wrapper --> 
+
+	<!-- Sidebar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+	<ul class="nav sidebar-nav">
+		<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-bottom"></span> </button>
+		<h1>Carrito de Compras</h1>
+
+		<div id="divCarrito"></div>
+
+		<p class="subtotal">Subtotal: $ <span id="subtotal">0</span></p>
+		<p class="bonificacion">Bonificación: <span id="bonificacion">0</span></p>
+		<p class="total">Total: $ <span id="total">0</span></p>
+		<a href="mi-carrito.php" class="btn-carrito-negro">Comprar</a>  
+	</ul>
+	</nav>
+	<!-- /#sidebar-wrapper --> 
+
+</div>
+<?php include 'php/scripts-footer.php'; ?>
 
 </body>
 </html>
