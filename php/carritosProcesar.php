@@ -12,16 +12,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case "1": //Agregar
             $numeProd = $_POST["NumeProd"];
             $cantProd = $_POST["CantProd"];
-            $numeUser = $_SESSION["NumeUser"];
+            if (isset($_SESSION["NumeUser"])) {
+                $numeUser = $_SESSION["NumeUser"];
+                $numeInvi = 'null';
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $numeUser);
+            }
+            else {
+                $params = session_get_cookie_params();
+                
+                $numeUser = 'null';
+
+                if (!isset($_SESSION["NumeInvi"])) {
+                    $numeCook = get_random_string('abcdefghijklmnopqrstuvwxyz0123456789', 20);
+                    $_SESSION["NumeInvi"] = crearInvitado($numeCook);
+                    
+                    setcookie("v-commerce_numeInvi", $_SESSION["NumeInvi"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+                }
+                $numeInvi = $_SESSION["NumeInvi"];
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeInvi = ". $numeInvi);
+                setcookie("v-commerce_numeInvi", $_SESSION["NumeInvi"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+            }
+            
             $impoUnit = buscarDato("SELECT ImpoVent FROM productos WHERE NumeProd = ". $numeProd);
             $cantProdOld = 0;
 
-            $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $numeUser);
-
+            
             if ($numeCarr == "") {
                 //Creo un carrito nuevo
-                $strSQL = $crlf."INSERT INTO carritos(FechCarr, NumeUser, NumeProm)";
-                $strSQL.= $crlf."VALUES(SYSDATE(), {$numeUser}, null);";
+                $strSQL = $crlf."INSERT INTO carritos(FechCarr, NumeUser, NumeInvi, ImpoSubt, ImpoShip, ImpoDesc, ImpoTota, NumeEstaCarr)";
+                $strSQL.= $crlf."VALUES(SYSDATE(), {$numeUser}, {$numeInvi}, 0, 0, 0, 0, 1);";
 
                 $result = ejecutarCMD($strSQL, true);
 
@@ -54,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = ejecutarCMD($strSQL);
 
             if ($result["estado"]) {
-                $salida = carrito($numeUser);
+                $salida = carrito();
             }
             else {
                 $salida = array("estado"=>false, "html"=>"Error al agregar producto!");
@@ -63,14 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case "2": //Quitar
             $numeProd = $_POST["NumeProd"];
-            $numeUser = $_SESSION["NumeUser"];
-            $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $numeUser);
+            $numeCarr = $_SESSION["NumeCarr"];
 
             $strSQL = "DELETE FROM carritosdetalles WHERE NumeCarr = {$numeCarr} AND NumeProd = {$numeProd}";
             $result = ejecutarCMD($strSQL);
 
             if ($result["estado"]) {
-                $salida = carrito($numeUser);
+                $salida = carrito();
             }
             else {
                 $salida = array("estado"=>false, "html"=>"Error al quitar producto!");
@@ -82,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode($salida);
 }
 
-function carrito($numeUser) {
+function carrito() {
     global $crlf;
 
     $strSQL = $crlf."SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
@@ -92,7 +110,7 @@ function carrito($numeUser) {
     $strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
     $strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
     $strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
-    $strSQL.= $crlf."WHERE c.NumeUser = ". $_SESSION["NumeUser"];
+    $strSQL.= $crlf."WHERE c.NumeCarr = ". $_SESSION["NumeCarr"];
     $carrito = cargarTabla($strSQL);
 
     $strHTML = "";
@@ -130,7 +148,8 @@ function carrito($numeUser) {
         "html"=>$strHTML,
         "subtotal"=>$subtotal,
         "bonificacion"=>$bonificacion,
-        "total"=>$total
+        "total"=>$total,
+        "cantProds"=>$carrito->num_rows
     );
 
     return $salida;

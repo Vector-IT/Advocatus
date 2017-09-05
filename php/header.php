@@ -6,6 +6,24 @@
 
 	if (!isset($orden)) $orden = "1";
 	if (!isset($subcat)) $subcat = "";
+	
+	$numeUser = isset($_COOKIE["v-commerce_numeUser"])? $_COOKIE["v-commerce_numeUser"]: '';
+	if ($numeUser != '') {
+		cargarUsuario($numeUser);
+	} else {
+		if(isset($_COOKIE["v-commerce_numeInvi"])) {
+			$_SESSION["NumeInvi"] = $_COOKIE["v-commerce_numeInvi"];
+			$_SESSION["NumeCarr"] = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeInvi = ". $_SESSION["NumeInvi"]);
+		}
+	}
+
+	if (isset($_SESSION["NumeCarr"])) {
+		$cantCarrito = buscarDato("SELECT COUNT(*) FROM carritosdetalles WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
+	}
+	else {
+		$cantCarrito = 0;
+	}
+
 ?>
 <!-- HEADER -->
 <nav id="menu-principal" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -15,7 +33,7 @@
 		<div class="row noMargin">
 			<div class="col-lg-12">
 				<a class="lista-precios pull-right" href="<?php echo $raiz?>descargas/Lista Advocatus  Nacional Agosto 2017 - Nº 46  - Revisada, Ordenada - 08 de Agosto 2017.xls">Lista de Precios</a>
-				<a class="mis-compras pull-right" href="mi-carrito.php"> Mi Carrito</a>
+				<a class="mis-compras pull-right" href="mi-carrito.php">Mi Carrito(<span class="cantProds"><?php echo $cantCarrito?></span>)</a>
 				<div id="divLogin" class="logueo pull-right" <?php echo (isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
 				<div id="divLogout" class="logueo pull-right" <?php echo (!isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="php/logout.php" class="navbar-link clickable" title="Cerrar sesión"><?php echo (isset($_SESSION['is_logged_in'])? $_SESSION["NombPers"]: '')?></a></div>
 			</div>
@@ -143,7 +161,7 @@
 					<input class="form-control" id="nombPass" type="password" placeholder="Contraseña" required style="text-transform: none !important;">
 					<div class="checkbox">
 						<label>
-						<input type="checkbox"> Recordarme
+						<input type="checkbox" id="chkRemember"> Recordarme
 						</label>
 					</div>
 					<div id="divLoginMsg" class="" role="alert">

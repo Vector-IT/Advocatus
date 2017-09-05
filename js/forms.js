@@ -6,7 +6,7 @@ $(function() {
 
     var $modalAnimateTime = 300;
     var $msgAnimateTime = 150;
-    var $msgShowTime = 3000;
+    var $msgShowTime = 2000;
 
     $("form").submit(function () {
         switch(this.id) {
@@ -15,14 +15,11 @@ $(function() {
                         operacion: "1",
                         usuario: $("#nombUser").val().trim(),
                         password: $("#nombPass").val().trim(),
+                        remember: ($("#chkRemember").prop("checked") ? 1 : 0),
                     },
                     function (data) {
                         if (data.estado === true) {
-                            msgChange($('#divLoginMsg'), $('#iconLogin'), $('#txtLoginMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
-                            $("#divLogin").fadeOut(function () {
-                                $("#divLogout > a").html(data.nombPers);
-                                $("#divLogout").fadeIn();
-                            });
+                            msgChange($('#divLoginMsg'), $('#iconLogin'), $('#txtLoginMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), false, true);
                         }
                         else {
                             msgChange($('#divLoginMsg'), $('#iconLogin'), $('#txtLoginMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
@@ -93,7 +90,7 @@ $(function() {
         });
     }
     
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, close) {
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, close = true, reload = false) {
         var $msgOld = "";
         msgFade($textTag, $msgText);
         
@@ -108,6 +105,10 @@ $(function() {
 
             if (close) {
                 $modal.modal('hide');
+            }
+
+            if (reload) {
+                location.reload();
             }
   		}, $msgShowTime);
     }

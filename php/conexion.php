@@ -23,7 +23,7 @@
 		}
 		$conn->close();
 	
-		return array("estado"=>true, "msg"=>$strError);
+		return array("estado"=>$blnEstado, "msg"=>$strError);
 	}
 	
 	function buscarDato($strSQL) {
@@ -108,6 +108,23 @@
 		return $strSalida;
 	}
 	
+	function cargarUsuario($numeUser) {
+		$_SESSION["is_logged_in"] = "1";
+		$_SESSION['NumeUser'] = $numeUser;
+		$_SESSION['NombPers'] = buscarDato("SELECT NombPers FROM usuarios WHERE NumeUser = ". $numeUser);
+		$_SESSION["remember"] = "1";
+
+		$numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeUser = ". $numeUser);
+		if ($numeCarr != "") {
+			$_SESSION["NumeCarr"] = $numeCarr;
+		}
+	}
+
+	function crearInvitado($numeCook) {
+		$result = ejecutarCMD("INSERT INTO invitados(NumeCook) VALUES('".$numeCook."')", true);
+		return $result["msg"];
+	}
+
 	function get_random_string($valid_chars, $length)
 	{
 		// start with an empty random string

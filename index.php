@@ -1,7 +1,8 @@
 <?php
 	session_start();
-	require_once 'php/conexion.php';
 
+	require_once 'php/conexion.php';
+	
 	$cantNovedades = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD NOVEDADES HOME'");
 
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";

@@ -2,15 +2,16 @@
     session_start();
     require_once 'php/conexion.php';
 
-    if (isset($_SESSION["NumeUser"])) {
-        $strSQL = $crlf."SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd";
+    if (isset($_SESSION["NumeCarr"])) {
+        $strSQL = $crlf."SELECT c.NumeCarr, cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd";
         $strSQL.= $crlf."FROM carritos c";
         $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag, p.SlugProd";
         $strSQL.= $crlf."			FROM carritosdetalles cd";
         $strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
         $strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
         $strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
-        $strSQL.= $crlf."WHERE c.NumeUser = ". $_SESSION["NumeUser"];
+        $strSQL.= $crlf."WHERE c.NumeCarr = ". $_SESSION["NumeCarr"];
+
         $carrito = cargarTabla($strSQL);    
 
         if ($carrito->num_rows == 0) {
@@ -23,6 +24,42 @@
     $subtotal = 0;
     $bonificacion = 0;
     $total = 0;
+
+    //Mercado pago
+    require_once "admin/mercadopago/mercadopago.php";
+    
+    $mpClientID = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_ID'");
+    $mpClientSecret = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_SECRET'");
+    
+    $mp = new MP($mpClientID, $mpClientSecret);
+    
+    if ($carrito) {
+        while ($fila = $carrito->fetch_assoc()) {
+            $subtotal+= floatval($fila["ImpoTota"]);
+        }
+
+        if ($subtotal > 0) {
+            $preference_data = array(
+                "items" => array(
+                    array(
+                        "title" => "Advocatus",
+                        "currency_id" => "ARS",
+                        "category_id" => "Libro",
+                        "picture_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."img/logo_transparente.png",
+                        "quantity" => 1,
+                        "unit_price" => $subtotal
+                    )
+                    ),
+                    "external_reference" => $_SESSION["NumeCarr"],
+                    "notification_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."admin/mercadopago/notifications.php"
+            );
+            
+            $preference = $mp->create_preference($preference_data);
+        }
+
+        $subtotal = 0;
+        $carrito->data_seek(0);
+    }
 
 ?>
 <!DOCTYPE html>
@@ -62,7 +99,10 @@
             <div class="col-lg-6">
                 <h1>Mi carrito de compras</h1>
             </div>
-            <div class="col-lg-6"><a href="#" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+            
+            <?php if (isset($preference)) {?>
+                <div class="col-lg-6"><a href="<?php echo $preference["response"]["sandbox_init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+            <?php }?>
         </div>
         <div class="row">
             <div class="col-lg-3 noPadding">
@@ -138,17 +178,19 @@
                     <h3>TOTAL:</h3>
                 </div>
                 <div class="col-xs-6">
-                    <h3 class="alignRight">$ <?php echo $subtotal?></h3>
+                    <h3 class="alignRight">$ <?php echo number_format($subtotal, 2)?></h3>
                     <h3 class="alignRight">GRATIS</h3>
-                    <h3 class="alignRight">$ <?php echo $bonificacion?></h3>
-                    <h3 class="alignRight">$ <?php echo $total?></h3>
+                    <h3 class="alignRight">$ <?php echo number_format($bonificacion, 2)?></h3>
+                    <h3 class="alignRight">$ <?php echo number_format($total, 2)?></h3>
                 </div>
             </div>
         </div>
         <br/><br/>
         <div class="row">
             <div class="col-lg-6"> </div>
-            <div class="col-lg-6"><a href="#" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+            <?php if (isset($preference)) {?>
+                <div class="col-lg-6"><a href="<?php echo $preference["response"]["sandbox_init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+            <?php }?>
         </div>
         <br/><br/>
         <div class="col-lg-11">
@@ -168,5 +210,6 @@
     <?php include 'php/footer.php'; ?>
     <?php include 'php/scripts-footer.php'; ?>
 
+    <script type="text/javascript" src="//resources.mlstatic.com/mptools/render.js"></script>
 </body>
 </html>

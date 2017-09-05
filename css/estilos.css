@@ -236,7 +236,7 @@ span#text-lost-msg {
 /* MENU */
 
 #menu-principal {
-    z-index: 9999;
+    z-index: 15;
 }
 
 .container-nav {

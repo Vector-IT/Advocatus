@@ -5,13 +5,6 @@
 	$strSQL = "SELECT NumeCate, NombCate FROM categorias WHERE NumePadr IS NULL ORDER BY NombCate";
 	$categorias = cargarTabla($strSQL);
 
-	if (isset($_SESSION["NumeCarr"])) {
-		$cantCarrito = buscarDato("SELECT COUNT(*) FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
-	}
-	else {
-		$cantCarrito = 0;
-	}
-
 	$strFiltro = "";
 	$cate = 0;
 	$subcat = "";

@@ -23,10 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['NumeUser'] = $usuario["NumeUser"];
                 $_SESSION['NombPers'] = $usuario['NombPers'];
 
-                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $usuario["NumeUser"]);
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeUser = ". $usuario["NumeUser"]);
                 if ($numeCarr != "") {
                     $_SESSION["NumeCarr"] = $numeCarr;
                 }
+
+                $params = session_get_cookie_params();
+                if ($_POST["remember"] == "1") {
+                    setcookie("v-commerce_numeUser", $_SESSION["NumeUser"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+                }
+                else {
+                    setcookie("v-commerce_numeUser", "", time() - 4200, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+                }
+                setcookie("v-commerce_numeInvi", "", time() - 4200, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
 
                 $salida = array(
                     "estado"=>true,
