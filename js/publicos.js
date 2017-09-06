@@ -17,6 +17,12 @@ $(document).ready(function () {
 
 	});
 
+	$('#bsqTexto1').keypress(function(e) {
+        if (e.keyCode == 13) {
+            busqSimple();
+            return false; // prevent the button click from happening
+        }
+	});
 });
 
 function busqSimple() {

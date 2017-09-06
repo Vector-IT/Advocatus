@@ -13,7 +13,7 @@
 	} else {
 		if(isset($_COOKIE["v-commerce_numeInvi"])) {
 			$_SESSION["NumeInvi"] = $_COOKIE["v-commerce_numeInvi"];
-			$_SESSION["NumeCarr"] = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeInvi = ". $_SESSION["NumeInvi"]);
+			$_SESSION["NumeCarr"] = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeInvi = ". $_SESSION["NumeInvi"]);
 		}
 	}
 

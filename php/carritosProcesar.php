@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_SESSION["NumeUser"])) {
                 $numeUser = $_SESSION["NumeUser"];
                 $numeInvi = 'null';
-                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeUser = ". $numeUser);
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeUser = ". $numeUser);
             }
             else {
                 $params = session_get_cookie_params();
@@ -29,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setcookie("v-commerce_numeInvi", $_SESSION["NumeInvi"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
                 }
                 $numeInvi = $_SESSION["NumeInvi"];
-                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeInvi = ". $numeInvi);
+                $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeInvi = ". $numeInvi);
+
                 setcookie("v-commerce_numeInvi", $_SESSION["NumeInvi"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
             }
             
@@ -93,6 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             else {
                 $salida = array("estado"=>false, "html"=>"Error al quitar producto!");
             }
+            break;
+
+        case "3": //Pre-compra
             break;
     }
 

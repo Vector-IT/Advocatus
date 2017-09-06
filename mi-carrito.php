@@ -101,7 +101,7 @@
             </div>
             
             <?php if (isset($preference)) {?>
-                <div class="col-lg-6"><a href="<?php echo $preference["response"]["sandbox_init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+                <div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
             <?php }?>
         </div>
         <div class="row">
