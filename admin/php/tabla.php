@@ -224,6 +224,7 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
+			'print' => true
 		);
 
 		if ($isID) {
@@ -279,6 +280,7 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
+			'print' => true
 		);
 
 		$this->IDField = $name;
@@ -337,6 +339,7 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
+			'print' => true
 		);
 	}
 
@@ -383,6 +386,7 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
+			'print' => true
 		);
 	}
 	
@@ -943,7 +947,7 @@ class Tabla
 					foreach ($this->fields as $field) {
 						if ($field['showOnList']) {
 							if (!$field['isHiddenInList']) {
-								$strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] . ($this->orderColumns? ' clickable': '') .'" '. ($this->orderColumns? 'onclick="ordenar('.$I.', this);"': '') .'>'. $field['label'] .'</th>';
+								$strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] . ($this->orderColumns? ' clickable': '') . (!$field["print"]? ' noPrn': '') .'" '. ($this->orderColumns? 'onclick="ordenar('.$I.', this);"': '') .'>'. $field['label'] .'</th>';
 								// $strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'" '. ($this->orderColumns? 'data-sortcolumn="'.$I.'" data-sortkey="'.$I.'"': '') .'>'. $field['label'] .'</th>';
 								// $strSalida.= $crlf.'<th class="text-'. $field['txtAlign'] .'" >'. $field['label'] .'</th>';
 								$I++;
@@ -955,30 +959,30 @@ class Tabla
 						//Botones de la clase
 						if (count($this->btnList) > 0) {
 							for ($I = 0; $I < count($this->btnList); $I++) {
-								$strSalida.= $crlf.'<th class="thBtn text-center">'.$this->btnList[$I]["titulo"].'</th>';
+								$strSalida.= $crlf.'<th class="noPrn text-center">'.$this->btnList[$I]["titulo"].'</th>';
 							}
 						}
 
 						//Orden
 						if ($this->orderField != '') {
-							$strSalida.= $crlf.'<th class="thBtn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn"></th>';
 						}
 
 						//Editar
 						if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
-							$strSalida.= $crlf.'<th class="thBtn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn"></th>';
 						}
 
 						//Borrar
 						if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
-							$strSalida.= $crlf.'<th class="thBtn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn"></th>';
 						}
 					}
 
 					//Botones del método
 					if (count($btnList) > 0) {
 						for ($I = 0; $I < count($btnList); $I++) {
-							$strSalida.= $crlf.'<th class="thBtn text-center">'.$btnList[$I]["titulo"].'</th>';
+							$strSalida.= $crlf.'<th class="noPrn text-center">'.$btnList[$I]["titulo"].'</th>';
 						}
 					}
 					
@@ -1034,7 +1038,7 @@ class Tabla
 												$dato = '';
 											}
 
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
 											$strSalida.= $crlf.$dato;
 
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field["name"]].'" />';
@@ -1046,13 +1050,13 @@ class Tabla
 											$post['dato'] = $fila[$this->IDField];
 											$dato = $this->customFunc($post);
 		
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
 											$strSalida.= $crlf. $dato;
 											$strSalida.= $crlf.'</td>';
 											break;
 
 										case 'image':
-											$strSalida.= $crlf.'<td class="'. $field["cssList"] .'">';
+											$strSalida.= $crlf.'<td class="'. $field["cssList"] . (!$field["print"]? ' noPrn': '') .'">';
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											if ($fila[$fname] != '') {
 												$strSalida.= $crlf.'<img src="'. $fila[$fname].'" class="thumbnailChico">';
@@ -1061,14 +1065,14 @@ class Tabla
 											break;
 											
 										case 'file':
-											$strSalida.= $crlf.'<td class="'. $field["cssList"] .'">';
+											$strSalida.= $crlf.'<td class="'. $field["cssList"] . (!$field["print"]? ' noPrn': '') .'">';
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											$strSalida.= $crlf.$fila[$fname];
 											$strSalida.= $crlf.'</td>';
 											break;
 
 										case 'checkbox':
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] . (!$field["print"]? ' noPrn': '') .'">';
 
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											if (boolval($fila[$fname])) {
@@ -1080,13 +1084,13 @@ class Tabla
 											break;
 
 										case 'textarea':
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
 											$strSalida.= $crlf. str_replace($crlf, "<br>", $fila[$fname]);
 											$strSalida.= $crlf.'</td>';
 											break;
 											
 										default:
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
 											break;
 									}
 
@@ -1114,12 +1118,12 @@ class Tabla
 							//De clase
 							if (count($this->btnList) > 0) {
 								for ($I = 0; $I < count($this->btnList); $I++) {
-									$strSalida.= $crlf.'<td class="thBtn text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$this->btnList[$I]["titulo"].'">'. $this->btnList[$I]['texto'] .'</button></td>';
+									$strSalida.= $crlf.'<td class="noPrn text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$this->btnList[$I]["titulo"].'">'. $this->btnList[$I]['texto'] .'</button></td>';
 								}
 							}
 
 							if ($this->orderField != '') {
-								$strSalida.= $crlf.'<td class="thBtn text-center">';
+								$strSalida.= $crlf.'<td class="noPrn text-center">';
 								$strSalida.= $crlf.'<button class="btn btn-sm btn-default" onclick="subir'. $this->tabladb .'(\''.$fila[$this->IDField].'\', \''.$fila[$this->orderField].'\')"><i class="fa fa-arrow-up fa-fw" aria-hidden="true"></i></button>';
 								$strSalida.= $crlf.'<button class="btn btn-sm btn-default" onclick="bajar'. $this->tabladb .'(\''.$fila[$this->IDField].'\', \''.$fila[$this->orderField].'\')"><i class="fa fa-arrow-down fa-fw" aria-hidden="true"></i></button>';
 								$strSalida.= $crlf.'</td>';
@@ -1127,18 +1131,18 @@ class Tabla
 
 							//Editar
 							if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
-								$strSalida.= $crlf.'<td class="thBtn text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
 							}
 							//Borrar
 							if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
-								$strSalida.= $crlf.'<td class="thBtn text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
 							}
 						}
 
 						//Botones del método
 						if (count($btnList) > 0) {
 							for ($I = 0; $I < count($btnList); $I++) {
-								$strSalida.= $crlf.'<td class="thBtn text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$btnList[$I]["titulo"].'">'. $btnList[$I]['texto'] .'</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$btnList[$I]["titulo"].'">'. $btnList[$I]['texto'] .'</button></td>';
 							}
 						}
 
