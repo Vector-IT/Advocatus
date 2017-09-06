@@ -416,7 +416,7 @@ span#text-lost-msg {
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     position: absolute;
-    z-index: 9998;
+    z-index: 4;
     right: 15px;
 }
 
@@ -490,6 +490,10 @@ span#text-lost-msg {
 .carousel-inner > .item > img {
     width: 100%;
     max-width: unset !important;
+}
+
+.carousel-indicators {
+    z-index: 4;
 }
 
 .carousel-control {
