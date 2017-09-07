@@ -118,7 +118,7 @@ function editarproductos(strID){
 			$("#SlugProd").val($("#SlugProd" + strID).val());
 			$("#DescProd").val($("#DescProd" + strID).val());
 			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
-			$("#Peso").val($("#Peso" + strID).text());
+			// $("#Peso").val($("#Peso" + strID).text());
 			$("#CantProd").val($("#CantProd" + strID).text());
 			$("#ImpoComp").val($("#ImpoComp" + strID).text());
 			$("#ImpoVent").val($("#ImpoVent" + strID).text());
@@ -196,7 +196,7 @@ function editarproductos(strID){
 		$("#SlugProd").val("");
 		$("#DescProd").val("");
 		$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
-		$("#Peso").val("");
+		// $("#Peso").val("");
 		$("#CantProd").val("");
 		$("#ImpoComp").val("");
 		$("#ImpoVent").val("");
@@ -235,7 +235,7 @@ function aceptarproductos(){
 	frmData.append("NombProd", $("#NombProd").val());
 	frmData.append("SlugProd", $("#SlugProd").val());
 	frmData.append("DescProd", $("#DescProd").val());
-	frmData.append("Peso", $("#Peso").val());
+	// frmData.append("Peso", $("#Peso").val());
 	frmData.append("CantProd", $("#CantProd").val());
 	frmData.append("ImpoComp", $("#ImpoComp").val());
 	frmData.append("ImpoVent", $("#ImpoVent").val());

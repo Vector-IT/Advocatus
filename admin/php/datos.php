@@ -227,6 +227,7 @@
 	$tabla->addField("Peso", "number", 0, "Peso");
 	$tabla->fields["Peso"]["step"] = "0.0001";
 	$tabla->fields["Peso"]["txtAlign"] = "right";
+	$tabla->fields["Peso"]["showOnForm"] = false;
 	
 	$tabla->addField("CantProd", "number", 0, "Cantidad");
 	$tabla->fields["CantProd"]["step"] = "0.1";
@@ -377,4 +378,138 @@
 	$tabla->fields["FechNove"]["showOnForm"] = false;
 
 	$config->tablas["productosnovedades"] = $tabla;
+
+	/**
+	* SHIPPING
+	*/
+	$tabla = new Tabla("shipping", "shipping", "Costos Envíos", "el precio", true, "objeto/shipping/", "fa-truck");
+	$tabla->labelField = "NumeProv";
+	$tabla->order = "NumeProv, PesoShip";
+
+	$tabla->searchFields = [
+		array("name"=>"NumeProv", "operator"=>"=", "join"=>"and"),
+		array("name"=>"PesoShip", "operator"=>"=", "join"=>"and"),
+	];
+
+	$tabla->addFieldId("CodiIden", "Número", true, true);
+	$tabla->addFieldSelect("NumeProv", 50, "Provincia", false, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv", true, "TODAS LAS PROVINCIAS");
+	$tabla->addField("PesoShip", "number", 0, "Peso (en Kgs)");
+	$tabla->fields["PesoShip"]["step"] = "0.001";
+	$tabla->fields["PesoShip"]["txtAlign"] = "right";
+
+	$tabla->addField("ImpoShip", "number", 0, "Importe");
+	$tabla->fields["ImpoShip"]["step"] = "0.001";
+	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
+
+	$config->tablas["shipping"] = $tabla;
+
+	/**
+	* CARRITOS
+	*/
+	$tabla = new Tabla("carritos", "carritos", "Carritos de compra", "el carrito", true, "objeto/carritos/", "fa-shopping-cart");
+	$tabla->order = "FechCarr DESC";
+	
+	$tabla->allowNew = false;
+	$tabla->allowEdit = false;
+	$tabla->allowDelete = false;
+
+	$tabla->searchFields = [
+		array("name"=>"NumeEstaCarr", "operator"=>"=", "join"=>"and"),
+	];
+
+	$tabla->jsFiles = ["admin/js/custom/carritos.js"];
+
+	$tabla->btnList = [
+		array(
+			'id'=> 'btnUsuarios',
+			'titulo'=> 'Ver Usuario',
+			'texto'=> '<i class="fa fa-users fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-info',
+			'onclick'=> 'verUsuario'
+		),
+		array(
+			'id'=> 'btnDetalles',
+			'titulo'=> 'Ver Productos',
+			'texto'=> '<i class="fa fa-paper-plane fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-info',
+			'onclick'=> 'verProductos'
+		),
+		array(
+			'id'=> 'btnProcesar',
+			'titulo'=> 'Procesar',
+			'texto'=> '<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-danger',
+			'onclick'=> 'procesar'
+		),
+	];
+
+	$tabla->addFieldId("NumeCarr", "Número");
+	$tabla->addField("FechCarr", "datetime", 0, "Fecha");
+	$tabla->addFieldSelect("NumeUser", 0, "Usuario", true, "", "usuarios", "", "NumeUser", "NombPers", "", "", "NombPers");
+	$tabla->fields["NumeUser"]["nameAlias"] = "NombPersUser";
+
+	$tabla->addFieldSelect("NumeInvi", 0, "Invitado", true, "", "invitados", "", "NumeInvi", "NombPers", "", "", "NombPers");
+	$tabla->fields["NumeInvi"]["nameAlias"] = "NombPersInvi";
+
+	$tabla->addField("ImpoSubt", "number", 0, "Sub-Total");
+	$tabla->fields["ImpoSubt"]["txtAlign"] = "right";
+	
+	$tabla->addField("ImpoShip", "number", 0, "Envio");
+	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
+	
+	$tabla->addField("ImpoDesc", "number", 0, "Descuento");
+	$tabla->fields["ImpoDesc"]["txtAlign"] = "right";
+	
+	$tabla->addField("ImpoTota", "number", 0, "Total");
+	$tabla->fields["ImpoTota"]["txtAlign"] = "right";
+	
+	$tabla->addFieldSelect("NumeEstaCarr", 0, "Estado", true, "", "estadoscarritos", "", "NumeEstaCarr", "NombEstaCarr", "", "", "NombEstaCarr");
+	$tabla->addField("ID_MP", "text", 0, "ID MP");
+	
+	$tabla->addField("NombPers", "text", 0, "Envío - Persona");
+	$tabla->fields["NombPers"]["nameAlias"] = "NombPersCarr";
+	
+	$tabla->addField("MailUser", "mail", 0, "Envío - Mail");
+	$tabla->addField("TeleUser", "text", 0, "Envío - Teléfono");
+	$tabla->addField("DireUser", "text", 0, "Envío - Dirección");
+	$tabla->addField("CodiPost", "text", 0, "Envío - Código Postal");
+	$tabla->addFieldSelect("NumeProv", 0, "Envío - Provincia", true, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv");
+	
+	$config->tablas["carritos"] = $tabla;
+
+	/**
+	* DETALLES CARRITOS
+	*/
+	$tabla = new Tabla("carritosdetalles", "carritosdetalles", "Productos del carrito", "el producto", false, "", "fa-paper-plane");
+	$tabla->labelField = "NumeProd";
+	$tabla->masterTable = "carritos";
+	$tabla->masterFieldId = "NumeCarr";
+	$tabla->masterFieldName = "NumeCarr";
+	
+	$tabla->footerField = "ImpoTota";
+
+	$tabla->allowNew = false;
+	$tabla->allowEdit = false;
+	$tabla->allowDelete = false;
+
+	$tabla->addFieldId("CodiIden", "Código", true, true);
+	
+	$tabla->addField("NumeCarr", "number", 0, "Carrito");
+	$tabla->fields["NumeCarr"]["isHiddenInList"] = true;
+	$tabla->fields["NumeCarr"]["isHiddenInForm"] = true;
+
+	$tabla->addFieldSelect("NumeProd", 0, "Producto", true, "", "productos", "", "NumeProd", "NombProd", "", "", "NombProd");
+	
+	$tabla->addField("CantProd", "number", 0, "Cantidad");
+	$tabla->fields["CantProd"]["txtAlign"] = "right";
+	
+	$tabla->addField("ImpoUnit", "number", 0, "Importe unitario");
+	$tabla->fields["ImpoUnit"]["txtAlign"] = "right";
+
+	$tabla->addField("ImpoTota", "number", 0, "Total");
+	$tabla->fields["ImpoTota"]["txtAlign"] = "right";
+
+	$config->tablas["carritosdetalles"] = $tabla;
+
+	unset($tabla);
 ?>

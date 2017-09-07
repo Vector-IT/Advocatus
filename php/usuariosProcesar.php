@@ -19,10 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($usuario != "")
             {
+                unset($_SESSION["NumeInvi"]);
+
                 $_SESSION['is_logged_in'] = 1;
                 $_SESSION['NumeUser'] = $usuario["NumeUser"];
                 $_SESSION['NombPers'] = $usuario['NombPers'];
-
+                
                 $numeCarr = buscarDato("SELECT NumeCarr FROM carritos WHERE NumeEstaCarr = 1 AND NumeUser = ". $usuario["NumeUser"]);
                 if ($numeCarr != "") {
                     $_SESSION["NumeCarr"] = $numeCarr;
@@ -76,6 +78,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $strSQL = "INSERT INTO usuarios(NumeUser, NombPers, NombUser, NombPass, NumeCarg, MailUser, TeleUser, DireUser, CodiPost, NumeProv, NumeEsta)";
             $strSQL.= $crlf."VALUES ({$NumeUser}, '{$NombPers}', '{$NombUser}', '{$NombPass}', 10, '{$MailUser}', '{$TeleUser}', '{$DireUser}', '{$CodiPost}', {$NumeProv}, 0);";
 
+            $result = ejecutarCMD($strSQL);
+            
+            if ($result["estado"]) {
+                $salida = array("estado"=>true, "msg"=>"Registro exitoso!<br>Revise su correo electrónico para verificar la cuenta!");
+            }
+            else {
+                $salida = array("estado"=>false, "msg"=>"Error al registrar usuario!");
+            }
+            break;
+
+        case "3": //Actualizar datos
+            $NombPers = $_POST["NombPers"];
+            $TeleUser = $_POST["TeleUser"];
+            $MailUser = $_POST["MailUser"];
+            $DireUser = $_POST["DireUser"];
+            $CodiPost = $_POST["CodiPost"];
+            $NumeProv = $_POST["NumeProv"];
+
+            $numeUser = isset($_SESSION["NumeUser"])? $_SESSION["NumeUser"]: '';
+            $numeInvi = isset($_SESSION["NumeInvi"])? $_SESSION["NumeInvi"]: '';
+        
+            if ($numeUser != '') {
+                if (isset($_SESSION["NumeCarr"])) {
+                    $strSQL = "UPDATE carritos SET";
+                    $strSQL.= $crlf."NombPers = '{$NombPers}'";
+                    $strSQL.= $crlf.", TeleUser = '{$TeleUser}'";
+                    $strSQL.= $crlf.", MailUser = '{$MailUser}'";
+                    $strSQL.= $crlf.", DireUser = '{$DireUser}'";
+                    $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                    $strSQL.= $crlf.", NumeProv = ". $NumeProv;
+                    $strSQL.= $crlf." WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+                }
+            }
+            else {
+                $strSQL = "UPDATE invitados SET";
+                $strSQL.= $crlf."NombPers = '{$NombPers}'";
+                $strSQL.= $crlf.", TeleUser = '{$TeleUser}'";
+                $strSQL.= $crlf.", MailUser = '{$MailUser}'";
+                $strSQL.= $crlf.", DireUser = '{$DireUser}'";
+                $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                $strSQL.= $crlf.", NumeProv = ". $NumeProv;
+                $strSQL.= $crlf." WHERE NumeInvi = ". $numeInvi;
+            }
             $result = ejecutarCMD($strSQL);
             
             if ($result["estado"]) {

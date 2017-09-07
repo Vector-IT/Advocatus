@@ -51,7 +51,7 @@
 	<script src="<?php echo $config->raiz ?>admin/js/moment-with-locales.min.js"></script>
 
 	<?php
-		if  ($tabla->orderColumns) {
+		if  (isset($tabla) && $tabla->orderColumns) {
 			echo '	<script src="'. $config->raiz .'admin/js/tinysort.js"></script>';
 		}
 	?>

@@ -8,7 +8,7 @@ $mpClientSecret = $config->buscarDato("SELECT ValoConf FROM configuraciones WHER
 $mp = new MP($mpClientID, $mpClientSecret);
 
 //Activo modo prueba
-$mp->sandbox_mode(TRUE);
+//$mp->sandbox_mode(TRUE);
 
 if (!isset($_GET["id"], $_GET["topic"]) || !ctype_digit($_GET["id"])) {
 	http_response_code(400);
@@ -77,7 +77,36 @@ if ($merchant_order_info["status"] == 200) {
 
 	if($paid_amount >= $merchant_order_info["response"]["total_amount"]){
 		// Totally paid. Release your item
-		$strSQL = "UPDATE carritos SET NumeEstaCarr = {$numeEstaCarr} WHERE NumeCarr = ".$numeCarr;
+		$datosUsuario = $config->buscarDato("SELECT NumeUser, NumeInvi, NombPers, MailUser, TeleUser, DireUser, CodiPost, NumeProv FROM carritos WHERE NumeCarr = ".$numeCarr);
+
+		if ($datosUsuario["NombPers"] == '') {
+			if ($datosUsuario["NumeUser"] != '') {
+				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv";
+				$strSQL.= $crlf."FROM usuarios u";
+				$strSQL.= $crlf."WHERE u.NumeUser = ". $datosUsuario["NumeUser"];
+		
+				$datosUsuario = buscarDato($strSQL);
+			}
+			else {
+				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv";
+				$strSQL.= $crlf."FROM Invitados u";
+				$strSQL.= $crlf."WHERE u.NumeInvi = ". $datosUsuario["NumeInvi"];
+		
+				$datosUsuario = buscarDato($strSQL);
+			}
+		}
+
+		$strSQL = "UPDATE carritos SET ";
+		$strSQL.= $crlf."ID_MP = '{$_GET["id"]}'";
+		$strSQL.= $crlf.", NumeEstaCarr = ". $numeEstaCarr;
+		$strSQL.= $crlf.", NombPers = '{$datosUsuario["NombPers"]}'";
+		$strSQL.= $crlf.", TeleUser = '{$datosUsuario["TeleUser"]}'";
+		$strSQL.= $crlf.", MailUser = '{$datosUsuario["MailUser"]}'";
+		$strSQL.= $crlf.", DireUser = '{$datosUsuario["DireUser"]}'";
+		$strSQL.= $crlf.", CodiPost = '{$datosUsuario["CodiPost"]}'";
+		$strSQL.= $crlf.", NumeProv = ". $datosUsuario["NumeProv"];
+		$strSQL.= $crlf." WHERE NumeCarr = ".$numeCarr;
+
 		$config->ejecutarCMD($strSQL);
 	} else {
 		// Not paid yet. Do not release your item

@@ -56,6 +56,7 @@
 					$strFiltro.= $crlf. " AND ";
 				}
 				$strFiltro.= "p.NombProd LIKE '%". $_GET["texto"] ."%'";
+				$strFiltro.= " AND p.DescProd LIKE '%". $_GET["texto"] ."%'";
 			}
 		}
 		else {

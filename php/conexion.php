@@ -120,8 +120,8 @@
 		}
 	}
 
-	function crearInvitado($numeCook) {
-		$result = ejecutarCMD("INSERT INTO invitados(NumeCook) VALUES('".$numeCook."')", true);
+	function crearInvitado() {
+		$result = ejecutarCMD("INSERT INTO invitados() VALUES()", true);
 		return $result["msg"];
 	}
 

@@ -23,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $numeUser = 'null';
 
                 if (!isset($_SESSION["NumeInvi"])) {
-                    $numeCook = get_random_string('abcdefghijklmnopqrstuvwxyz0123456789', 20);
-                    $_SESSION["NumeInvi"] = crearInvitado($numeCook);
+                    $_SESSION["NumeInvi"] = crearInvitado();
                     
                     setcookie("v-commerce_numeInvi", $_SESSION["NumeInvi"], time() + (60*60*24*365), $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
                 }
@@ -147,6 +146,9 @@ function carrito() {
         $strHTML.= $crlf."<br><br><br>";
     }
 
+    $strSQL = "UPDATE carritos SET ImpoSubt = {$subtotal}, ImpoDesc = 0 WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+    $config->ejecutarCMD($strSQL);
+    
     $salida = array(
         "estado"=>true, 
         "html"=>$strHTML,

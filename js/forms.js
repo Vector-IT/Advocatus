@@ -13,9 +13,9 @@ $(function() {
             case "login-form":
                 $.post("php/usuariosProcesar.php", {
                         operacion: "1",
-                        usuario: $("#nombUser").val().trim(),
-                        password: $("#nombPass").val().trim(),
-                        remember: ($("#chkRemember").prop("checked") ? 1 : 0),
+                        usuario: $(this).find("#nombUser").val().trim(),
+                        password: $(this).find("#nombPass").val().trim(),
+                        remember: ($(this).find("#chkRemember").prop("checked") ? 1 : 0),
                     },
                     function (data) {
                         if (data.estado === true) {
@@ -29,7 +29,7 @@ $(function() {
                 break;
 
             case "lost-form":
-                var $ls_email=$('#lost_email').val();
+                var $ls_email=$(this).find('#lost_email').val();
                 if ($ls_email == "ERROR") {
                     msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
                 } else {
@@ -40,14 +40,14 @@ $(function() {
             case "register-form":
                 $.post("php/usuariosProcesar.php", {
                         operacion: "2",
-                        NombPers: $("#NombPers").val().trim().replace("'", ""),
-                        TeleUser: $("#TeleUser").val().trim().replace("'", ""),
-                        MailUser: $("#MailUser").val().trim().replace("'", ""),
-                        DireUser: $("#DireUser").val().trim().replace("'", ""),
-                        CodiPost: $("#CodiPost").val().trim().replace("'", ""),
-                        NumeProv: $("#NumeProv").val(),
-                        NombUser: $("#NombUser").val().trim().replace("'", ""),
-                        NombPass: $("#NombPass").val().trim().replace("'", "")
+                        NombPers: $(this).find("#NombPers").val().trim().replace("'", ""),
+                        TeleUser: $(this).find("#TeleUser").val().trim().replace("'", ""),
+                        MailUser: $(this).find("#MailUser").val().trim().replace("'", ""),
+                        DireUser: $(this).find("#DireUser").val().trim().replace("'", ""),
+                        CodiPost: $(this).find("#CodiPost").val().trim().replace("'", ""),
+                        NumeProv: $(this).find("#NumeProv").val(),
+                        NombUser: $(this).find("#NombUser").val().trim().replace("'", ""),
+                        NombPass: $(this).find("#NombPass").val().trim().replace("'", "")
                     },
                     function (data) {
                         if (data.estado === true) {
@@ -55,6 +55,24 @@ $(function() {
                         }
                         else {
                             msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                        }
+                    }
+                );
+                break;
+            
+            case "frmEnvio":
+                $.post("php/usuariosProcesar.php", {
+                        operacion: "3",
+                        NombPers: $(this).find("#NombPers").val().trim().replace("'", ""),
+                        TeleUser: $(this).find("#TeleUser").val().trim().replace("'", ""),
+                        MailUser: $(this).find("#MailUser").val().trim().replace("'", ""),
+                        DireUser: $(this).find("#DireUser").val().trim().replace("'", ""),
+                        CodiPost: $(this).find("#CodiPost").val().trim().replace("'", ""),
+                        NumeProv: $(this).find("#NumeProv").val(),
+                    },
+                    function (data) {
+                        if (data.estado === true) {
+                            location.reload();
                         }
                     }
                 );

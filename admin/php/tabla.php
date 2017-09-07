@@ -129,7 +129,7 @@ class Tabla
 		$this->btnList = [];
 		$this->btnForm = [];
 
-		$this->footerFunc = '';
+		$this->footerFunc = 'SUM';
 		$this->footerField = '';
 
 		$this->masterTable = '';
@@ -898,7 +898,7 @@ class Tabla
 							break;
 					}
 
-					$filtro.= $crlf. $key ." ". $data["operator"] ." ". $data["value"];
+					$filtro.= $crlf. $this->tabladb.".".$key ." ". $data["operator"] ." ". $data["value"];
 				}
 			}
 

@@ -3,9 +3,9 @@
     require_once 'php/conexion.php';
 
     if (isset($_SESSION["NumeCarr"])) {
-        $strSQL = $crlf."SELECT c.NumeCarr, cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd";
+        $strSQL = $crlf."SELECT c.NumeCarr, cd.NumeProd, cd.NombProd, cd.Peso, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd";
         $strSQL.= $crlf."FROM carritos c";
-        $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag, p.SlugProd";
+        $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, p.Peso, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag, p.SlugProd";
         $strSQL.= $crlf."			FROM carritosdetalles cd";
         $strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
         $strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
@@ -21,9 +21,44 @@
     else {
         $carrito = false;
     }
+    $peso = 0;
     $subtotal = 0;
+    $envio = 0;
     $bonificacion = 0;
     $total = 0;
+
+	//Datos usuario
+	$numeUser = isset($_SESSION["NumeUser"])? $_SESSION["NumeUser"]: '';
+	$numeInvi = isset($_SESSION["NumeInvi"])? $_SESSION["NumeInvi"]: '';
+
+	if ($numeUser != '') {
+        $strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv, p.NombProv";
+        $strSQL.= $crlf."FROM usuarios u";
+        $strSQL.= $crlf."LEFT JOIN provincias p ON u.NumeProv = p.NumeProv";
+        $strSQL.= $crlf."WHERE NumeUser = ". $numeUser;
+
+        $datosUsuario = buscarDato($strSQL);
+    
+        if (isset($_SESSION["NumeCarr"])) {
+            $nombPersCarr = buscarDato("SELECT NombPers FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
+
+            if ($nombPersCarr != '') {
+                $strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv, p.NombProv";
+                $strSQL.= $crlf."FROM carritos u";
+                $strSQL.= $crlf."LEFT JOIN provincias p ON u.NumeProv = p.NumeProv";
+                $strSQL.= $crlf."WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+                $datosUsuario = buscarDato($strSQL);
+            }
+        }
+	}
+	elseif ($numeInvi != '') {
+		$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv, p.NombProv";
+		$strSQL.= $crlf."FROM invitados u";
+		$strSQL.= $crlf."LEFT JOIN provincias p ON u.NumeProv = p.NumeProv";
+		$strSQL.= $crlf."WHERE NumeInvi = ". $numeInvi;
+		$datosUsuario = buscarDato($strSQL);
+	}
+	
 
     //Mercado pago
     require_once "admin/mercadopago/mercadopago.php";
@@ -35,7 +70,29 @@
     
     if ($carrito) {
         while ($fila = $carrito->fetch_assoc()) {
+            $peso+= floatval($fila["Peso"]);
             $subtotal+= floatval($fila["ImpoTota"]);
+        }
+
+        if ($datosUsuario["NumeProv"] != '' && $peso > 0) {
+            if (buscarDato("SELECT COUNT(*) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}") != '0') {
+                $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}");
+                if ($peso <= $maxPeso) {
+                    $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
+                }
+                else {
+                    $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
+                }
+            }
+            else {
+                $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv IS NULL");
+                if ($peso <= $maxPeso) {
+                    $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
+                }
+                else {
+                    $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
+                }
+            }
         }
 
         if ($subtotal > 0) {
@@ -47,7 +104,7 @@
                         "category_id" => "Libro",
                         "picture_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."img/logo_transparente.png",
                         "quantity" => 1,
-                        "unit_price" => $subtotal
+                        "unit_price" => $subtotal + $envio - $bonificacion
                     )
                     ),
                     "external_reference" => $_SESSION["NumeCarr"],
@@ -57,7 +114,6 @@
             $preference = $mp->create_preference($preference_data);
         }
 
-        $subtotal = 0;
         $carrito->data_seek(0);
     }
 
@@ -100,8 +156,12 @@
                 <h1>Mi carrito de compras</h1>
             </div>
             
-            <?php if (isset($preference)) {?>
-                <div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+			<?php if (isset($preference)) {?>
+				<?php if ($subtotal > 0 && $envio == 0) {?>
+					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío</a>
+				<?php } else {?>
+					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+	            <?php }?>
             <?php }?>
         </div>
         <div class="row">
@@ -128,8 +188,6 @@
             $strHTML = "";
 
             while($fila = $carrito->fetch_assoc()) {
-                $subtotal+= floatval($fila["ImpoTota"]);
-
                 $strHTML.= $crlf.'<div class="row">';
                 $strHTML.= $crlf.'    <div class="col-lg-3 noPadding">';
                 $strHTML.= $crlf.'        <article>';
@@ -162,25 +220,47 @@
                 $strHTML.= $crlf.'</div>';
             }
             echo $strHTML;
-            $total = $subtotal - $bonificacion;
+            $total = $subtotal + $envio - $bonificacion;
+
+            $strSQL = "UPDATE carritos SET ImpoSubt = {$subtotal}, ImpoDesc = {$bonificacion}, ImpoShip = {$envio}, ImpoTota = {$total} WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+            ejecutarCMD($strSQL);
         }
         ?>
         <div class="row">
             <div class="col-lg-6">
-                <h4>Agregar código de bonificación</h4>
-                <input class="codigo-bonificacion" value="" placeholder="Ingrese su código aquí"> <a href="#" class="btn-carrito-negro">Aplicar</a>  
+                <!-- <h4>Agregar código de bonificación</h4> -->
+				<!-- <input class="codigo-bonificacion" value="" placeholder="Ingrese su código aquí"> <a href="#" class="btn-carrito-negro">Aplicar</a>   -->
+				<h4>Datos de envío y contacto</h4>
+				<?php 
+					if (isset($datosUsuario)) {
+						$strSalida = '';
+						if ($subtotal > 0 && $envio == 0) {
+							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Cargar datos de envío</a>';
+						}
+						else {
+							$strSalida.= $crlf.'<div><strong>Nombre completo: </strong> '.$datosUsuario["NombPers"].'</div>';
+							$strSalida.= $crlf.'<div><strong>Teléfono: </strong> '.$datosUsuario["TeleUser"].'</div>';
+							$strSalida.= $crlf.'<div><strong>Mail: </strong> '.$datosUsuario["MailUser"].'</div>';
+							$strSalida.= $crlf.'<div><strong>Dirección: </strong> '.$datosUsuario["DireUser"].'</div>';
+							$strSalida.= $crlf.'<div><strong>Código postal: </strong> '.$datosUsuario["CodiPost"].'</div>';
+							$strSalida.= $crlf.'<div><strong>Provincia: </strong> '.$datosUsuario["NombProv"].'</div>';
+							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Modificar datos</a>';
+						}
+						echo $strSalida;
+					}
+				?>
             </div>
             <div class="col-sm-6">
                 <div class="col-xs-6">
                     <h3>SUBTOTAL</h3>
                     <h3>ENVIO</h3>
-                    <h3>BONIFICACION</h3>
+                    <!-- <h3>BONIFICACION</h3> -->
                     <h3>TOTAL:</h3>
                 </div>
                 <div class="col-xs-6">
                     <h3 class="alignRight">$ <?php echo number_format($subtotal, 2)?></h3>
-                    <h3 class="alignRight">GRATIS</h3>
-                    <h3 class="alignRight">$ <?php echo number_format($bonificacion, 2)?></h3>
+                    <h3 class="alignRight">$ <?php echo number_format($envio, 2)?></h3>
+                    <!-- <h3 class="alignRight">$ <?php echo number_format($bonificacion, 2)?></h3> -->
                     <h3 class="alignRight">$ <?php echo number_format($total, 2)?></h3>
                 </div>
             </div>
@@ -188,8 +268,12 @@
         <br/><br/>
         <div class="row">
             <div class="col-lg-6"> </div>
-            <?php if (isset($preference)) {?>
-                <div class="col-lg-6"><a href="<?php echo $preference["response"]["sandbox_init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+			<?php if (isset($preference)) {?>
+				<?php if ($subtotal > 0 && $envio == 0) {?>
+					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío</a>
+				<?php } else {?>
+					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+	            <?php }?>
             <?php }?>
         </div>
         <br/><br/>
@@ -208,6 +292,66 @@
     </div>
 
     <?php include 'php/footer.php'; ?>
+
+	<?php if (isset($datosUsuario)) {?>
+	<div class="modal fade" id="mdlEnvio" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<form id="frmEnvio" method="post">
+				<div class="modal-content">
+					<div class="modal-header" align="center" style="padding: 5px;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+					</div>
+
+					<h4 class="modal-title">Datos de Envío</h4>
+					<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="NombPers">Nombre completo *</label>
+								<input type="text" class="form-control form-custom" id="NombPers" placeholder="Nombre Completo *" value="<?php echo $datosUsuario["NombPers"]?>" required>
+							</div>
+							<div class="form-group">
+								<label for="TeleUser">Teléfono *</label>
+								<input type="text" class="form-control form-custom" id="TeleUser" placeholder="Teléfono *" value="<?php echo $datosUsuario["TeleUser"]?>" required>
+							</div>
+							<div class="form-group">
+								<label for="MailUser">Mail *</label>   
+								<input type="email" class="form-control form-custom" id="MailUser" placeholder="Correo Electrónico *" value="<?php echo $datosUsuario["MailUser"]?>" required>
+							</div>
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="DireUser">Dirección</label>
+										<input type="text" class="form-control form-custom" id="DireUser" placeholder="Dirección *" value="<?php echo $datosUsuario["DireUser"]?>" required>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="CodiPost">Código Postal</label>
+										<input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal" value="<?php echo $datosUsuario["CodiPost"]?>" required>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="NumeProv">Provincia *</label>
+								<select class="form-control form-custom" id="NumeProv" required>
+								<?php echo cargarCombo("SELECT NumeProv, NombProv FROM provincias ORDER BY NombProv", "NumeProv", "NombProv", $datosUsuario["NumeProv"]);?>
+								</select>
+							</div>
+						</div>
+					</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-small">Confirmar</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</form>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->    
+	<?php }?>
+
     <?php include 'php/scripts-footer.php'; ?>
 
     <script type="text/javascript" src="//resources.mlstatic.com/mptools/render.js"></script>

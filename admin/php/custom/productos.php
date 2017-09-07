@@ -131,6 +131,20 @@ class Producto extends Tabla {
                 $config->ejecutarCMD($strSQL);
             }
             
+            //Calcular Peso
+            $cantPagi = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = 135");
+            $tipoEncu = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = 143");
+
+            if ($tipoEncu == '43') {
+                $peso = (($cantPagi * 1.5) + 25) / 1000;
+            }
+            else {
+                $peso = (($cantPagi * 1.5) + 50) / 1000;
+            }
+
+            $strSQL = "UPDATE productos SET Peso = {$peso} WHERE NumeProd = ". $numeProd;
+            $config->ejecutarCMD($strSQL);
+
             return $result;
         }
     }
@@ -211,6 +225,20 @@ class Producto extends Tabla {
                 $strSQL = "INSERT INTO productosatributos(NumeProd, NumeAtri, Valor) VALUES({$numeProd}, {$numeAtri}, {$valor})";
                 $config->ejecutarCMD($strSQL);
             }
+
+            //Calcular Peso
+            $cantPagi = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = 135");
+            $tipoEncu = $config->buscarDato("SELECT Valor FROM productosatributos WHERE NumeProd = {$numeProd} AND NumeAtri = 143");
+
+            if ($tipoEncu == '43') {
+                $peso = (($cantPagi * 1.5) + 25) / 1000;
+            }
+            else {
+                $peso = (($cantPagi * 1.5) + 50) / 1000;
+            }
+
+            $strSQL = "UPDATE productos SET Peso = {$peso} WHERE NumeProd = ". $numeProd;
+            $config->ejecutarCMD($strSQL);
 
             return $result;
         }
