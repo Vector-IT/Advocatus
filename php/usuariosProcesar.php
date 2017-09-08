@@ -110,6 +110,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $strSQL.= $crlf.", NumeProv = ". $NumeProv;
                     $strSQL.= $crlf." WHERE NumeCarr = ". $_SESSION["NumeCarr"];
                 }
+                else {
+                    $strSQL = "UPDATE usuarios SET";
+                    $strSQL.= $crlf."NombPers = '{$NombPers}'";
+                    $strSQL.= $crlf.", TeleUser = '{$TeleUser}'";
+                    $strSQL.= $crlf.", MailUser = '{$MailUser}'";
+                    $strSQL.= $crlf.", DireUser = '{$DireUser}'";
+                    $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                    $strSQL.= $crlf.", NumeProv = ". $NumeProv;
+                    $strSQL.= $crlf." WHERE NumeUser = ". $numeUser;
+                }
             }
             else {
                 $strSQL = "UPDATE invitados SET";
@@ -127,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $salida = array("estado"=>true, "msg"=>"Registro exitoso!<br>Revise su correo electrónico para verificar la cuenta!");
             }
             else {
-                $salida = array("estado"=>false, "msg"=>"Error al registrar usuario!");
+                $salida = array("estado"=>false, "msg"=>"Error al modificar datos!".$result["msg"]);
             }
             break;
     }
