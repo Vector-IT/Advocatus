@@ -1,3 +1,3 @@
 function verImagenes(strID) {
-    location.href= "objeto/slidersimagenes&NumeSlid=" + strID;
+    location.href= "objeto/slidersimagenes.php?NumeSlid=" + strID;
 }

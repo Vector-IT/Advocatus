@@ -33,7 +33,7 @@
 	/**
 	* CONFIGURACIONES
 	*/
-	$tabla = new Tabla("configuraciones", "configuraciones", "Configuraciones", "la configuración", true, "objeto/configuraciones", "fa-cogs");
+	$tabla = new Tabla("configuraciones", "configuraciones", "Configuraciones", "la configuración", true, "objeto/configuraciones.php", "fa-cogs");
 	$tabla->labelField = "NombConf";
 	$tabla->numeCarg = 2;
 	$tabla->numeCargNew = 1;
@@ -52,7 +52,7 @@
 	/**
 	* USUARIOS
 	*/
-	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios", "fa-users");
+	$tabla = new Tabla("usuarios", "usuarios", "Usuarios", "el Usuario", true, "objeto/usuarios.php", "fa-users");
 	$tabla->labelField = "NombPers";
 	$tabla->numeCarg = 2;
 	$tabla->isSubItem = true;
@@ -82,7 +82,7 @@
 	/**
 	* SLIDERS
 	*/
-	$tabla = new Tabla("sliders", "sliders", "Sliders", "el Slider", true, "objeto/sliders", "fa-picture-o");
+	$tabla = new Tabla("sliders", "sliders", "Sliders", "el Slider", true, "objeto/sliders.php", "fa-picture-o");
 	$tabla->labelField = "NombSlid";
 	$tabla->isSubItem = true;
 	$tabla->numeCargNew = 1;
@@ -109,7 +109,7 @@
 	/**
 	* SLIDERS IMAGENES
 	*/
-	$tabla = new Tabla("slidersimagenes", "slidersimagenes", "Imágenes del Slider", "la Imagen", false, "objeto/slidersimagenes", "fa-picture-o");
+	$tabla = new Tabla("slidersimagenes", "slidersimagenes", "Imágenes del Slider", "la Imagen", false, "objeto/slidersimagenes.php", "fa-picture-o");
 	$tabla->masterTable = "sliders";
 	$tabla->masterFieldId = "NumeSlid";
 	$tabla->masterFieldName = "NombSlid";
@@ -145,7 +145,7 @@
 	/**
 	* PAISES
 	*/
-	$tabla = new Tabla("paises", "paises", "Paises", "el país", true, "objeto/paises/", "fa-cubes");
+	$tabla = new Tabla("paises", "paises", "Paises", "el país", true, "objeto/paises.php", "fa-cubes");
 	$tabla->labelField = "NombPais";
 	$tabla->isSubItem = true;
 
@@ -163,7 +163,7 @@
 	/**
 	 * PROVINCIAS
 	 */
-	$tabla = new Tabla("provincias", "provincias", "Provincias", "la provincia", true, "objeto/provincias/", "fa-linode");
+	$tabla = new Tabla("provincias", "provincias", "Provincias", "la provincia", true, "objeto/provincias.php", "fa-linode");
 	$tabla->labelField = "NombProv";
 	$tabla->isSubItem = true;
 
@@ -264,7 +264,7 @@
 	/**
 	* ATRIBUTOS
 	*/
-	$tabla = new Tabla("atributos", "atributos", "Atributos", "el atributo", true, "objeto/atributos/", "fa-info-circle");
+	$tabla = new Tabla("atributos", "atributos", "Atributos", "el atributo", true, "objeto/atributos.php", "fa-info-circle");
 	$tabla->isSubItem = true;
 	$tabla->labelField = "NombAtri";
 	$tabla->order = 'NumeOrde';
@@ -322,7 +322,7 @@
 	/**
 	* CATEGORIAS
 	*/
-	$tabla = new Categoria("categorias", "categorias", "Categorías", "la categoría", true, "objeto/categorias/", "fa-code");
+	$tabla = new Categoria("categorias", "categorias", "Categorías", "la categoría", true, "objeto/categorias.php", "fa-code");
 	$tabla->isSubItem = true;
 	$tabla->labelField = "NombCate";
 	$tabla->order = "categorias.NumePadr, categorias.NombCate";
@@ -337,7 +337,7 @@
 	/**
 	* PRODUCTOS IMAGENES
 	*/
-	$tabla = new Tabla("productosimagenes", "productosimagenes", "Imágenes de Producto", "la imagen", false, "objeto/productosimagenes/", "fa-image");
+	$tabla = new Tabla("productosimagenes", "productosimagenes", "Imágenes de Producto", "la imagen", false, "objeto/productosimagenes.php", "fa-image");
 	$tabla->masterTable = "productos";
 	$tabla->masterFieldId = "NumeProd";
 	$tabla->masterFieldName = "NombProd";
@@ -361,7 +361,7 @@
 	/**
 	* PRODUCTOS NOVEDADES
 	*/
-	$tabla = new Tabla("productosnovedades", "productosnovedades", "Novedades", "el producto", true, "objeto/productosnovedades/", "fa-newspaper-o");
+	$tabla = new Tabla("productosnovedades", "productosnovedades", "Novedades", "el producto", true, "objeto/productosnovedades.php", "fa-newspaper-o");
 	$tabla->isSubItem = true;
 
 	$tabla->order = 'NumeOrde';
@@ -382,7 +382,7 @@
 	/**
 	* SHIPPING
 	*/
-	$tabla = new Tabla("shipping", "shipping", "Costos Envíos", "el precio", true, "objeto/shipping/", "fa-truck");
+	$tabla = new Tabla("shipping", "shipping", "Costos Envíos", "el precio", true, "objeto/shipping.php", "fa-truck");
 	$tabla->labelField = "NumeProv";
 	$tabla->order = "NumeProv, PesoShip";
 
@@ -406,7 +406,7 @@
 	/**
 	* CARRITOS
 	*/
-	$tabla = new Tabla("carritos", "carritos", "Carritos de compra", "el carrito", true, "objeto/carritos/", "fa-shopping-cart");
+	$tabla = new Tabla("carritos", "carritos", "Carritos de compra", "el carrito", true, "objeto/carritos.php", "fa-shopping-cart");
 	$tabla->order = "FechCarr DESC";
 	
 	$tabla->allowNew = false;

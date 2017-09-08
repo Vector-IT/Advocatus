@@ -303,7 +303,7 @@ function aceptarproductos(){
 }
 
 function verImagenes(strID) {
-    location.href= "objeto/productosimagenes&NumeProd=" + strID;
+    location.href= "objeto/productosimagenes.php?NumeProd=" + strID;
 }
 
 function selectCate(strID) {

@@ -9,13 +9,13 @@ $(document).ready(function () {
 
 function verUsuario(strID) {
     if ($("#NumeUser" + strID).val() != '') {
-        location.href= "objeto/usuarios&id=" + $("#NumeUser" + strID).val();
+        location.href= "objeto/usuarios.php?id=" + $("#NumeUser" + strID).val();
     }
     else {
-        location.href= "objeto/invitados&id=" + $("#NumeInvi" + strID).val();
+        location.href= "objeto/invitados.php?id=" + $("#NumeInvi" + strID).val();
     }
 }
 
 function verProductos(strID) {
-    location.href= "objeto/carritosdetalles&NumeCarr=" + strID;
+    location.href= "objeto/carritosdetalles.php?NumeCarr=" + strID;
 }

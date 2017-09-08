@@ -10,5 +10,5 @@ function habilitarOpciones() {
 }
 
 function verOpciones(strID) {
-    location.href= "objeto/atributosopciones&NumeAtri=" + strID;
+    location.href= "objeto/atributosopciones.php?NumeAtri=" + strID;
 }
