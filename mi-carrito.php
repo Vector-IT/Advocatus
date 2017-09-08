@@ -158,7 +158,7 @@
             
 			<?php if (isset($preference)) {?>
 				<?php if ($subtotal > 0 && $envio == 0) {?>
-					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío</a>
+					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío y Comprar</a>
 				<?php } else {?>
 					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
 	            <?php }?>
@@ -235,7 +235,7 @@
 					if (isset($datosUsuario)) {
 						$strSalida = '';
 						if ($subtotal > 0 && $envio == 0) {
-							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Cargar datos de envío</a>';
+							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Cargar datos de envío y Comprar</a>';
 						}
 						else {
 							$strSalida.= $crlf.'<div><strong>Nombre completo: </strong> '.$datosUsuario["NombPers"].'</div>';
@@ -270,7 +270,7 @@
             <div class="col-lg-6"> </div>
 			<?php if (isset($preference)) {?>
 				<?php if ($subtotal > 0 && $envio == 0) {?>
-					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío</a>
+					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío y Comprar</a>
 				<?php } else {?>
 					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
 	            <?php }?>

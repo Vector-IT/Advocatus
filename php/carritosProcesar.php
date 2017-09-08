@@ -147,7 +147,7 @@ function carrito() {
     }
 
     $strSQL = "UPDATE carritos SET ImpoSubt = {$subtotal}, ImpoDesc = 0 WHERE NumeCarr = ". $_SESSION["NumeCarr"];
-    $config->ejecutarCMD($strSQL);
+    ejecutarCMD($strSQL);
     
     $salida = array(
         "estado"=>true, 

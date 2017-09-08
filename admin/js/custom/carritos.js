@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("button[id^='btnProcesar']").each(function(i, element) {
         var strID = element.id.replace("btnProcesar", "");
-        if ($("#NumeEstaCarr").val() != "7") {
+        if ($("#NumeEstaCarr" + strID).val() != "7") {
             $(element).hide();
         }
     }, this);
