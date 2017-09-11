@@ -8,6 +8,7 @@
 	require_once 'vectorForms.php';
 	require_once 'custom/productos.php';
 	require_once 'custom/categorias.php';
+	require_once 'custom/carritos.php';
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
@@ -406,7 +407,7 @@
 	/**
 	* CARRITOS
 	*/
-	$tabla = new Tabla("carritos", "carritos", "Carritos de compra", "el carrito", true, "objeto/carritos.php", "fa-shopping-cart");
+	$tabla = new Carrito("carritos", "carritos", "Carritos de compra", "el carrito", true, "objeto/carritos.php", "fa-shopping-cart");
 	$tabla->order = "FechCarr DESC";
 	
 	$tabla->allowNew = false;
@@ -418,6 +419,8 @@
 	];
 
 	$tabla->jsFiles = ["admin/js/custom/carritos.js"];
+	$tabla->jsOnLoad = "checkButtons();";
+	$tabla->jsOnList = "checkButtons();";
 
 	$tabla->btnList = [
 		array(

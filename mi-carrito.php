@@ -3,7 +3,7 @@
     require_once 'php/conexion.php';
 
     if (isset($_SESSION["NumeCarr"])) {
-        $strSQL = $crlf."SELECT c.NumeCarr, cd.NumeProd, cd.NombProd, cd.Peso, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd";
+        $strSQL = $crlf."SELECT c.NumeCarr, cd.NumeProd, cd.NombProd, cd.Peso, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag, cd.SlugProd, c.FlagShip";
         $strSQL.= $crlf."FROM carritos c";
         $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, p.Peso, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag, p.SlugProd";
         $strSQL.= $crlf."			FROM carritosdetalles cd";
@@ -26,6 +26,7 @@
     $envio = 0;
     $bonificacion = 0;
     $total = 0;
+    $ship = "1";
 
 	//Datos usuario
 	$numeUser = isset($_SESSION["NumeUser"])? $_SESSION["NumeUser"]: '';
@@ -70,31 +71,37 @@
     
     if ($carrito) {
         while ($fila = $carrito->fetch_assoc()) {
+            $ship = $fila["FlagShip"];
+
             $peso+= floatval($fila["Peso"]);
             $subtotal+= floatval($fila["ImpoTota"]);
         }
 
-        if ($datosUsuario["NumeProv"] != '' && $peso > 0) {
-            if (buscarDato("SELECT COUNT(*) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}") != '0') {
-                $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}");
-                if ($peso <= $maxPeso) {
-                    $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
+        //ENVIO
+        if ($ship == "1") {
+            if ($datosUsuario["NumeProv"] != '' && $peso > 0) {
+                if (buscarDato("SELECT COUNT(*) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}") != '0') {
+                    $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]}");
+                    if ($peso <= $maxPeso) {
+                        $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
+                    }
+                    else {
+                        $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
+                    }
                 }
                 else {
-                    $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv = {$datosUsuario["NumeProv"]} ORDER BY PesoShip LIMIT 1"));
-                }
-            }
-            else {
-                $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv IS NULL");
-                if ($peso <= $maxPeso) {
-                    $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
-                }
-                else {
-                    $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
+                    $maxPeso = buscarDato("SELECT MAX(PesoShip) PesoShip FROM shipping WHERE NumeProv IS NULL");
+                    if ($peso <= $maxPeso) {
+                        $envio = floatval(buscarDato("SELECT ImpoShip FROM shipping WHERE PesoShip >= {$peso} AND NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
+                    }
+                    else {
+                        $envio = floatval(buscarDato("SELECT MAX(ImpoShip) FROM shipping WHERE NumeProv IS NULL ORDER BY PesoShip LIMIT 1"));
+                    }
                 }
             }
         }
 
+        //CHECKOUT
         if ($subtotal > 0) {
             $preference_data = array(
                 "items" => array(
@@ -105,10 +112,15 @@
                         "picture_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."img/logo_transparente.png",
                         "quantity" => 1,
                         "unit_price" => $subtotal + $envio - $bonificacion
-                    )
+                        )
                     ),
                     "external_reference" => $_SESSION["NumeCarr"],
-                    "notification_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."admin/mercadopago/notifications.php"
+                    "notification_url" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz ."admin/mercadopago/notifications.php",
+                    "back_urls" => array(
+                        "success" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz,
+                        "pending" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz,
+                        "failure" => "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz
+                    )
             );
             
             $preference = $mp->create_preference($preference_data);
@@ -143,6 +155,18 @@
                 }
             );
         }
+
+        function envio() {
+            $.post("php/carritosProcesar.php", { 
+                "operacion": "3"
+                },
+                function (data) {
+                    if (data.estado === true) {
+                        location.reload();
+                    }
+                }
+            );
+        }
     </script>
 </head>
 <body>
@@ -157,10 +181,12 @@
             </div>
             
 			<?php if (isset($preference)) {?>
-				<?php if ($subtotal > 0 && $envio == 0) {?>
+				<?php if ($ship == 1 && $envio == 0) {?>
 					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío y Comprar</a>
-				<?php } else {?>
-					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+                <?php } elseif(!isset($datosUsuario) || $datosUsuario["NombPers"] == '') { ?>
+                    <a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos personales y Comprar</a>
+                <?php } elseif ($subtotal > 0) {?>
+					<div class="col-lg-6"><a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
 	            <?php }?>
             <?php }?>
         </div>
@@ -234,17 +260,30 @@
 				<?php 
 					if (isset($datosUsuario)) {
 						$strSalida = '';
-						if ($subtotal > 0 && $envio == 0) {
+						if ($subtotal > 0 && $envio == 0 && $ship == "1") {
 							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Cargar datos de envío y Comprar</a>';
+							$strSalida.= $crlf.'<a href="javascript:void(0);" class="btn-carrito-negro" onclick="envio()">Retiro en tienda</a>';
 						}
 						else {
+                            if ($ship == "1") {
+                                $strSalida.= $crlf.'<div><strong>ENVIO A DOMICILIO</strong></div>';
+                            }
+                            else {
+                                $strSalida.= $crlf.'<div><strong>RETIRO EN TIENDA</strong></div>';
+                            }
 							$strSalida.= $crlf.'<div><strong>Nombre completo: </strong> '.$datosUsuario["NombPers"].'</div>';
 							$strSalida.= $crlf.'<div><strong>Teléfono: </strong> '.$datosUsuario["TeleUser"].'</div>';
 							$strSalida.= $crlf.'<div><strong>Mail: </strong> '.$datosUsuario["MailUser"].'</div>';
 							$strSalida.= $crlf.'<div><strong>Dirección: </strong> '.$datosUsuario["DireUser"].'</div>';
 							$strSalida.= $crlf.'<div><strong>Código postal: </strong> '.$datosUsuario["CodiPost"].'</div>';
 							$strSalida.= $crlf.'<div><strong>Provincia: </strong> '.$datosUsuario["NombProv"].'</div>';
-							$strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Modificar datos</a>';
+                            $strSalida.= $crlf.'<a href="#mdlEnvio" class="btn-carrito-negro" data-toggle="modal">Modificar datos</a>';
+                            if ($ship == "1") {
+                                $strSalida.= $crlf.'<a href="javascript:void(0);" class="btn-carrito-negro" onclick="envio()">Retiro en tienda</a>';
+                            }
+                            else {
+                                $strSalida.= $crlf.'<a href="javascript:void(0);" class="btn-carrito-negro" onclick="envio()">Envío a domicilio</a>';
+                            }
 						}
 						echo $strSalida;
 					}
@@ -269,10 +308,12 @@
         <div class="row">
             <div class="col-lg-6"> </div>
 			<?php if (isset($preference)) {?>
-				<?php if ($subtotal > 0 && $envio == 0) {?>
+				<?php if ($ship == 1 && $envio == 0) {?>
 					<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío y Comprar</a>
-				<?php } else {?>
-					<div class="col-lg-6"><a href="<?php echo $preference["response"]["init_point"]; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+                <?php } elseif(!isset($datosUsuario) || $datosUsuario["NombPers"] == '') { ?>
+                    <a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos personales y Comprar</a>
+                <?php } elseif ($subtotal > 0) {?>
+					<div class="col-lg-6"><a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
 	            <?php }?>
             <?php }?>
         </div>
@@ -352,8 +393,8 @@
 	</div><!-- /.modal -->    
 	<?php }?>
 
-    <?php include 'php/scripts-footer.php'; ?>
-
     <script type="text/javascript" src="//resources.mlstatic.com/mptools/render.js"></script>
+    <!-- <script type="text/javascript" src="http://mp-tools.mlstatic.com/buttons/render.js"></script> -->
+    <?php include 'php/scripts-footer.php'; ?>
 </body>
 </html>

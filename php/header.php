@@ -34,8 +34,8 @@
 			<div class="col-lg-12">
 				<a class="lista-precios pull-right" href="<?php echo $raiz?>descargas/Lista Advocatus  Nacional Agosto 2017 - Nº 46  - Revisada, Ordenada - 08 de Agosto 2017.xls">Lista de Precios</a>
 				<a class="mis-compras pull-right" href="mi-carrito.php">Mi Carrito(<span class="cantProds"><?php echo $cantCarrito?></span>)</a>
-				<div id="divLogin" class="logueo pull-right" <?php echo (isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
-				<div id="divLogout" class="logueo pull-right" <?php echo (!isset($_SESSION['is_logged_in'])? 'style="display: none;"': '')?>><a href="php/logout.php" class="navbar-link clickable" title="Cerrar sesión"><?php echo (isset($_SESSION['is_logged_in'])? $_SESSION["NombPers"]: '')?></a></div>
+				<div id="divLogin" class="logueo pull-right" <?php echo (isset($_SESSION['NumeUser'])? 'style="display: none;"': '')?>><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
+				<div id="divLogout" class="logueo pull-right" <?php echo (!isset($_SESSION['NumeUser'])? 'style="display: none;"': '')?>><a href="php/logout.php" class="navbar-link clickable" title="Cerrar sesión"><?php echo (isset($_SESSION['NumeUser'])? $_SESSION["NombPers"]: '')?></a></div>
 			</div>
 		</div>
 	</div>

@@ -55,8 +55,11 @@
 				if ($strFiltro != "") {
 					$strFiltro.= $crlf. " AND ";
 				}
-				$strFiltro.= "p.NombProd LIKE '%". $_GET["texto"] ."%'";
-				$strFiltro.= " AND p.DescProd LIKE '%". $_GET["texto"] ."%'";
+				$strFiltro.= "(p.NombProd LIKE '%". $_GET["texto"] ."%'";
+				$strFiltro.= " OR p.DescProd LIKE '%". $_GET["texto"] ."%'";
+				$strFiltro.= "OR p.NumeProd IN (SELECT NumeProd FROM productosatributos WHERE NumeAtri = 139 AND Valor LIKE '%". $_GET["texto"] ."%')";
+				$strFiltro.= "OR p.NumeProd IN (SELECT NumeProd FROM productosatributos WHERE NumeAtri = 81 AND Valor = '". $_GET["texto"] ."')";
+				$strFiltro.= ")";
 			}
 		}
 		else {

@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             {
                 unset($_SESSION["NumeInvi"]);
 
-                $_SESSION['is_logged_in'] = 1;
                 $_SESSION['NumeUser'] = $usuario["NumeUser"];
                 $_SESSION['NombPers'] = $usuario['NombPers'];
                 

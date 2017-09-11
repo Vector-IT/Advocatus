@@ -95,7 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-        case "3": //Pre-compra
+        case "3": //Envío
+            $numeCarr = $_SESSION["NumeCarr"];
+
+            $strSQL = "UPDATE carritos SET FlagShip = NOT FlagShip WHERE NumeCarr = {$numeCarr}";
+            $salida = ejecutarCMD($strSQL);
+
             break;
     }
 
