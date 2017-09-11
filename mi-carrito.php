@@ -164,23 +164,6 @@
 	            <?php }?>
             <?php }?>
         </div>
-        <div class="row">
-            <div class="col-lg-3 noPadding">
-                <h2>Producto</h2>
-            </div>
-            <div class="col-lg-3 noPadding">
-                <h2>Descripción</h2>
-            </div>
-            <div class="col-lg-2 noPadding">
-                <h2>Cantidad</h2>
-            </div>
-            <div class="col-lg-2 noPadding">
-                <h2>Precio</h2>
-            </div>
-            <div class="col-lg-2 noPadding">
-                <h2>Total</h2>
-            </div>
-        </div>
         <?php 
         if (!$carrito) {
             echo '<h4>Su carrito está vacío</h4>';
@@ -189,27 +172,32 @@
 
             while($fila = $carrito->fetch_assoc()) {
                 $strHTML.= $crlf.'<div class="row">';
-                $strHTML.= $crlf.'    <div class="col-lg-3 noPadding">';
+                $strHTML.= $crlf.'    <div class="col-sm-3 noPadding">';
+                $strHTML.= $crlf.'        <h2>Producto</h2>';
                 $strHTML.= $crlf.'        <article>';
                 $strHTML.= $crlf.'            <a href="producto/'. $fila["SlugProd"] .'.php"><img class="img-producto-carrito" src="admin/'. $fila["RutaImag"] .'" alt=""></a>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
-                $strHTML.= $crlf.'    <div class="col-lg-3 noPadding">';
+                $strHTML.= $crlf.'    <div class="col-sm-3 noPadding">';
+                $strHTML.= $crlf.'        <h2>Descripción</h2>';
                 $strHTML.= $crlf.'        <article>';
                 $strHTML.= $crlf.'            <p class="info-producto">'. $fila["NombProd"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
-                $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
+                $strHTML.= $crlf.'    <div class="col-sm-2 noPadding">';
+                $strHTML.= $crlf.'        <h2>Cantidad</h2>';
                 $strHTML.= $crlf.'        <article id="1">';
                 $strHTML.= $crlf.'            <p class="info-producto text-right">'. $fila["CantProd"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
-                $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
+                $strHTML.= $crlf.'    <div class="col-sm-2 noPadding">';
+                $strHTML.= $crlf.'        <h2>Precio</h2>';
                 $strHTML.= $crlf.'        <article id="1">';
                 $strHTML.= $crlf.'            <p class="info-producto text-right">$ '. $fila["ImpoUnit"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
                 $strHTML.= $crlf.'    </div>';
-                $strHTML.= $crlf.'    <div class="col-lg-2 noPadding">';
+                $strHTML.= $crlf.'    <div class="col-sm-2 noPadding">';
+                $strHTML.= $crlf.'        <h2>Total</h2>';
                 $strHTML.= $crlf.'        <article id="1">';
                 $strHTML.= $crlf.'            <p class="info-producto text-right">$ '. $fila["ImpoTota"] .'</p>';
                 $strHTML.= $crlf.'        </article>';
