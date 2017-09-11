@@ -1684,7 +1684,7 @@ footer .redes-sociales img {
 .ucase { text-transform: uppercase; }
 
 
-@media all and (max-width: 768px) {
+@media all and (max-width: 769px) {
     .mis-compras, .lista-precios {
         padding: 6px 0px 6px 25px !important;
         float: unset !important;
@@ -1744,5 +1744,26 @@ footer .redes-sociales img {
     }
     .subfooter img {
         max-width: 290px !important;
+    }
+    #contacto .formulario {
+        margin-top: 50px;
+    }
+}
+
+@media all and (min-width: 361px) and (max-width: 769px) {
+    #contacto {
+        height: 650px !important;
+    }
+}
+
+@media all and (max-width: 361px) {
+    .row-eq-height {
+        display: unset !important;
+        display: unset !important;
+        display: unset !important;
+        display: unset !important;
+    }
+    #contacto {
+        height: 960px !important;
     }
 }
