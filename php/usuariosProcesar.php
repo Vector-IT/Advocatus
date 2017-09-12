@@ -144,62 +144,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $MailUser = $_POST["MailUser"];
             $numeUser = buscarDato("SELECT NumeUser FROM usuarios WHERE NumeEsta = 1 AND UPPER(MailUser) = '{$MailUser}'");
 
-            if ($numeUser != "") {
-                $nombPass = get_random_string("abcdefghijklmnopqrstuvwxyz", 5);
-                ejecutarCMD("UPDATE usuarios SET NombPass = '". md5($nombPass) ."' WHERE NumeUser = ". $numeUser);
+            // if ($numeUser != "") {
+            //     $nombPass = get_random_string("abcdefghijklmnopqrstuvwxyz", 5);
+            //     ejecutarCMD("UPDATE usuarios SET NombPass = '". md5($nombPass) ."' WHERE NumeUser = ". $numeUser);
 
-                $titulo = "Editorial Advocatus - Recuperar Contraseña";
-				$mensajeHtml = "Este es un mensaje autom&aacute;tico. Por favor no lo responda.";
-				$mensajeHtml.= "<br>Usted solicit&oacute; recuperar la contrase&ntilde;a en eadvocatus.com.ar";
-				$mensajeHtml.= "<br><br>";
-				$mensajeHtml.= "Su contrase&ntilde;a es <strong>{$nombPass}</strong>";
-				$mensajeHtml.= "<br><br>";
-				$mensajeHtml.= $crlf."Muchas gracias.";
+            //     $titulo = "Editorial Advocatus - Recuperar Contraseña";
+			// 	$mensajeHtml = "Este es un mensaje autom&aacute;tico. Por favor no lo responda.";
+			// 	$mensajeHtml.= "<br>Usted solicit&oacute; recuperar la contrase&ntilde;a en eadvocatus.com.ar";
+			// 	$mensajeHtml.= "<br><br>";
+			// 	$mensajeHtml.= "Su contrase&ntilde;a es <strong>{$nombPass}</strong>";
+			// 	$mensajeHtml.= "<br><br>";
+			// 	$mensajeHtml.= $crlf."Muchas gracias.";
 				
-				$mensaje = "Este es un mensaje automatico. Por favor no lo responda";
-				$mensaje.= "\nUsted solicito recuperar la contrasena en eadvocatus.com.ar";
-				$mensaje.= "\n\n";
-				$mensaje.= "\nSu contraseña es " . $nombPass;
-				$mensaje.= "\n\n";
-				$mensaje.= "\nMuchas gracias.";
+			// 	$mensaje = "Este es un mensaje automatico. Por favor no lo responda";
+			// 	$mensaje.= "\nUsted solicito recuperar la contrasena en eadvocatus.com.ar";
+			// 	$mensaje.= "\n\n";
+			// 	$mensaje.= "\nSu contraseña es " . $nombPass;
+			// 	$mensaje.= "\n\n";
+			// 	$mensaje.= "\nMuchas gracias.";
 				
-				$url = "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'admin/php/enviarMail.php';
-				$fields = array(
-						'Para' => $MailUser,
-						'Titulo' => $titulo,
-						'Mensaje' => $mensajeHtml,
-						'MensajeAlt' => $mensaje
-				);
-				$datos = http_build_query($fields);
+			// 	$url = "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'admin/php/enviarMail.php';
+			// 	$fields = array(
+			// 			'Para' => $MailUser,
+			// 			'Titulo' => $titulo,
+			// 			'Mensaje' => $mensajeHtml,
+			// 			'MensajeAlt' => $mensaje
+			// 	);
+			// 	$datos = http_build_query($fields);
 					
-				//open connection
-				$handle = curl_init();
-				curl_setopt($handle, CURLOPT_URL, $url);
-				curl_setopt($handle, CURLOPT_POST, true);
-				curl_setopt($handle, CURLOPT_POSTFIELDS, $fields);
-				curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+			// 	//open connection
+			// 	$handle = curl_init();
+			// 	curl_setopt($handle, CURLOPT_URL, $url);
+			// 	curl_setopt($handle, CURLOPT_POST, true);
+			// 	curl_setopt($handle, CURLOPT_POSTFIELDS, $fields);
+			// 	curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+			// 	curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
 				
-				//execute post
-				$response = curl_exec($handle);
-				if (!$response) {
-					$salida = array("estado"=>false, "msg"=>"Error al recuperar contraseña!");
-				}
-				//close connection
-				curl_close($handle);
+			// 	//execute post
+			// 	$response = curl_exec($handle);
+			// 	if (!$response) {
+			// 		$salida = array("estado"=>false, "msg"=>"Error al recuperar contraseña!");
+			// 	}
+			// 	//close connection
+			// 	curl_close($handle);
 				
-				if (strripos($response, "error") === false) {
-                    $salida = array("estado"=>true, "msg"=>"Enviamos un correo electrónico con su contraseña!");
-                }
-                else {
-                    $salida = array("estado"=>false, "msg"=>"Su correo no está registrado!");
-				}
+			// 	if (strripos($response, "error") === false) {
+            //         $salida = array("estado"=>true, "msg"=>"Enviamos un correo electrónico con su contraseña!");
+            //     }
+            //     else {
+            //         $salida = array("estado"=>false, "msg"=>"Su correo no está registrado!");
+			// 	}
                 
-                break;
-            }
-            else {
-                $salida = array("estado"=>false, "msg"=>"Su correo no está registrado!");
-            }
+            //     break;
+            // }
+            // else {
+            //     $salida = array("estado"=>false, "msg"=>"Su correo no está registrado!");
+            // }
+
+            $salida = array("estado"=>false, "msg"=>"Error al recuperar contraseña!");
             break;
     }
 
