@@ -180,22 +180,27 @@
 			</form>
 			<!-- End # Login Form -->
 			<!-- Begin | Lost Password Form -->
-			<form id="lost-form" style="display:none;">
+			<form id="lost-form" method="post" style="display:none;">
 				<h4 class="modal-title">Recuperar Contraseña</h4>
 				<div class="modal-body">
-					<div id="div-lost-msg">
-						<span id="text-lost-msg">Ingrese su e-mail</span>
+					<div class="row">
+						<div class="col-md-12">
+							<div id="div-lost-msg">
+								<span id="text-lost-msg">Ingrese su e-mail</span>
+							</div>
+							<input id="lost_email" class="form-control" type="text" placeholder="E-Mail" style="text-transform: none !important;" required>
+							<div id="recaptcha1"></div>
+						</div>
 					</div>
-					<input id="lost_email" class="form-control" type="text" placeholder="E-Mail" style="text-transform: none !important;" required>
 				</div>
-				<div class="modal-footer"  style="border-top: none !important;">
-					<div>
-						<button type="submit" class="btn btn-small pull-left">Enviar</button>
-					</div>
-					<div>
-						<button id="lost_login_btn" type="button" class="btn btn-link">Iniciar Sesión</button>
-						<button id="lost_register_btn" type="button" class="btn btn-link">Registrarse</button>
-					</div>
+				<div id="divLostMsg" class="" role="alert">
+					<span id="iconLost" class="" aria-hidden="true"></span>&nbsp;<span id="txtLostMsg"></span>
+				</div>
+				<button type="submit" class="btn btn-small center-block">Enviar</button>
+				<br>
+				<div class="text-right">
+					<button id="lost_login_btn" type="button" class="btn btn-link">Iniciar Sesión</button>
+					<button id="lost_register_btn" type="button" class="btn btn-link">Registrarse</button>
 				</div>
 			</form>
 			<!-- End | Lost Password Form -->
@@ -229,6 +234,8 @@
 							<input type="text" class="form-control form-custom" id="NombUser" placeholder="Usuario *" required>
 							<label for="NombPass">Contraseña *</label>
 							<input type="password" class="form-control form-custom" id="NombPass" placeholder="Contraseña *" required>
+							<input type="password" class="form-control form-custom" id="NombPass2" placeholder="Repetir Contraseña *" required>
+							<div id="recaptcha2"></div>
 						</div>
 					</div>
 					<div id="divRegisterMsg" class="" role="alert">

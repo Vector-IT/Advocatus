@@ -59,7 +59,7 @@
                 <div class="container-full noMargin">
                 <div class="row noMargin">
                   <div class="col-sm-12 noPadding noMargin">
-                  <div id="intro" class="carousel slide noPadding noMargin" data-ride="carousel">
+                  <div id="intro" class="carousel slide noPadding noMargin" data-ride="carousel" data-interval="4000">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
 					<?php
@@ -215,7 +215,7 @@
 	<div class="container-full">
 	<div class="row noMargin">
 		<div class="col-sm-12 noPadding">
-		<div id="promos" class="carousel slide" data-ride="carousel">
+		<div id="promos" class="carousel slide" data-ride="carousel" data-interval="4000">
 			<!-- Indicators -->
 			<ol class="carousel-indicators">
 			<?php

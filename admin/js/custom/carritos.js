@@ -12,11 +12,20 @@ function verProductos(strID) {
 }
 
 function procesar(strID) {
+    $("#hdnNumeCarr").val(strID);
+    $("#mdlProcesar").modal("show");
+}
+
+function procesarCarrito() {
     $.post("php/tablaHandler.php", { 
         operacion: "100",
         tabla: "carritos",
         field: "Procesar",
-        data: strID
+        data: {
+            NumeCarr: $("#hdnNumeCarr").val(),
+            NumeFact: $("#NumeFact").val(),
+            ObseCarr: $("#ObseCarr").val()
+        }
         },
         function (data) {
             if (data.valor === true) {
@@ -24,16 +33,22 @@ function procesar(strID) {
                 $("#divMsj").removeClass("alert-danger");
                 $("#divMsj").addClass("alert-success");
 
+                $("#mdlProcesar").modal("hide");
+
                 listarcarritos();
             }
             else {
                 $("#txtHint").html("Error al actualizar los datos.");
                 $("#divMsj").addClass("alert-danger");
                 $("#divMsj").removeClass("alert-success");
+                
+                $("#mdlProcesar").modal("hide");
             }
             $("#divMsj").show();
         }
     );
+
+    return false;
 }
 
 function checkButtons() {

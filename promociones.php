@@ -32,7 +32,7 @@
 	<div class="container-full">
 		<div class="row noMargin">
 			<div class="col-sm-12 noPadding">
-				<div id="promos" class="carousel slide" data-ride="carousel">
+				<div id="promos" class="carousel slide" data-ride="carousel" data-interval="4000">
 				<!-- Indicators -->
 					<ol class="carousel-indicators">
 					<?php

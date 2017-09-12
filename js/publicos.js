@@ -117,3 +117,20 @@ function quitarProd(strID) {
 		}
 	);
 }
+
+//reCAPTCHA
+var recaptcha1;
+var recaptcha2;
+var myCallBackCaptcha = function() {
+	//Render the recaptcha1 on the element with ID "recaptcha1"
+	recaptcha1 = grecaptcha.render('recaptcha1', {
+		'sitekey' : '6LfIVjAUAAAAAPsWkjVGihmeCtGV_2_Fw1O1GrJN', //Replace this with your Site key
+		'theme' : 'light'
+	});
+
+	//Render the recaptcha2 on the element with ID "recaptcha2"
+	recaptcha2 = grecaptcha.render('recaptcha2', {
+		'sitekey' : '6LfIVjAUAAAAAPsWkjVGihmeCtGV_2_Fw1O1GrJN', //Replace this with your Site key
+		'theme' : 'light'
+	});
+};

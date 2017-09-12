@@ -29,32 +29,71 @@ $(function() {
                 break;
 
             case "lost-form":
-                var $ls_email=$(this).find('#lost_email').val();
-                if ($ls_email == "ERROR") {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
-                } else {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
-                }
+                var respuesta = grecaptcha.getResponse(recaptcha1);
+                $.post(
+                    'php/recaptcha.php',
+                    {
+                        'response': respuesta
+                    },
+                    function (data) {
+                        if (data.success) {
+                            grecaptcha.reset(recaptcha1);
+
+                            $.post("php/usuariosProcesar.php", {
+                                    operacion: "4",
+                                    MailUser: $formLost.find("#lost_email").val().trim().replace("'", ""),
+                                },
+                                function (data) {
+                                    if (data.estado === true) {
+                                        msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                                    }
+                                    else {
+                                        msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                                    }
+                                }
+                            );
+                        }
+                    }
+                );
                 break;
 
             case "register-form":
-                $.post("php/usuariosProcesar.php", {
-                        operacion: "2",
-                        NombPers: $(this).find("#NombPers").val().trim().replace("'", ""),
-                        TeleUser: $(this).find("#TeleUser").val().trim().replace("'", ""),
-                        MailUser: $(this).find("#MailUser").val().trim().replace("'", ""),
-                        DireUser: $(this).find("#DireUser").val().trim().replace("'", ""),
-                        CodiPost: $(this).find("#CodiPost").val().trim().replace("'", ""),
-                        NumeProv: $(this).find("#NumeProv").val(),
-                        NombUser: $(this).find("#NombUser").val().trim().replace("'", ""),
-                        NombPass: $(this).find("#NombPass").val().trim().replace("'", "")
+                if ($(this).find("#NombPass").val().trim().replace("'", "") != $(this).find("#NombPass2").val().trim().replace("'", "")) {
+                    msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", "Las contraseñas no coinciden!", $("#login-modal"), false);
+                    break;
+                }
+                $.post(
+                    'php/recaptcha.php',
+                    {
+                        'response': grecaptcha.getResponse(recaptcha2)
                     },
                     function (data) {
-                        if (data.estado === true) {
-                            msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                        if (data.success) {
+                            grecaptcha.reset(recaptcha2);
+
+                            $.post("php/usuariosProcesar.php", {
+                                    operacion: "2",
+                                    NombPers: $("#register-form").find("#NombPers").val().trim().replace("'", ""),
+                                    TeleUser: $("#register-form").find("#TeleUser").val().trim().replace("'", ""),
+                                    MailUser: $("#register-form").find("#MailUser").val().trim().replace("'", ""),
+                                    DireUser: $("#register-form").find("#DireUser").val().trim().replace("'", ""),
+                                    CodiPost: $("#register-form").find("#CodiPost").val().trim().replace("'", ""),
+                                    NumeProv: $("#register-form").find("#NumeProv").val(),
+                                    NombUser: $("#register-form").find("#NombUser").val().trim().replace("'", ""),
+                                    NombPass: $("#register-form").find("#NombPass").val().trim().replace("'", "")
+                                },
+                                function (data) {
+                                    if (data.estado === true) {
+                                        msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                                    }
+                                    else {
+                                        msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                                    }
+                                }
+                            );
                         }
                         else {
-                            msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+                            msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", "Error de captcha!", $("#login-modal"), false);
                         }
                     }
                 );
@@ -93,7 +132,7 @@ $(function() {
     
     function modalAnimate ($oldForm, $newForm) {
         var $oldH = $oldForm.height();
-        var $newH = $newForm.height();
+        var $newH = $newForm.height() + 20;
         $divForms.css("height",$oldH);
         $oldForm.fadeToggle($modalAnimateTime, function(){
             $divForms.animate({height: $newH}, $modalAnimateTime, function(){

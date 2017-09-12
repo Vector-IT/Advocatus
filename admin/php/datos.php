@@ -14,7 +14,7 @@
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
 	$config->tbLogin = 'usuarios';
 	// $config->theme = 'dark';
-	// $config->cssFiles = ['admin/css/custom/custom.css'];
+	$config->cssFiles = ['admin/css/custom/custom.css'];
 
 	/**
 	 * Items de menu adicionales
@@ -446,6 +446,8 @@
 		),
 	];
 
+	$tabla->modalList = ["php/modals/carritos.php"];
+
 	$tabla->addFieldId("NumeCarr", "Número");
 	$tabla->addField("FechCarr", "datetime", 0, "Fecha");
 	$tabla->addFieldSelect("NumeUser", 0, "Usuario", true, "", "usuarios", "", "NumeUser", "NombPers", "", "", "NombPers");
@@ -456,19 +458,26 @@
 
 	$tabla->addField("ImpoSubt", "number", 0, "Sub-Total");
 	$tabla->fields["ImpoSubt"]["txtAlign"] = "right";
+	$tabla->fields["ImpoSubt"]["isHiddenInList"] = true;
 	
 	$tabla->addField("ImpoShip", "number", 0, "Envio");
 	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
+	$tabla->fields["ImpoShip"]["isHiddenInList"] = true;
 	
 	$tabla->addField("ImpoDesc", "number", 0, "Descuento");
 	$tabla->fields["ImpoDesc"]["txtAlign"] = "right";
+	$tabla->fields["ImpoDesc"]["isHiddenInList"] = true;
 	
 	$tabla->addField("ImpoTota", "number", 0, "Total");
 	$tabla->fields["ImpoTota"]["txtAlign"] = "right";
 	
+	$tabla->addFieldSelect("FlagShip", 0, "Envío", true, "", "tiposenvios", "", "NumeShip", "NombShip", "", "", "");
+
 	$tabla->addFieldSelect("NumeEstaCarr", 0, "Estado", true, "", "estadoscarritos", "", "NumeEstaCarr", "NombEstaCarr", "", "", "NombEstaCarr");
-	$tabla->addField("ID_MP", "text", 0, "ID MP");
 	
+	$tabla->addField("ID_MP", "text", 0, "ID MP");
+	$tabla->fields["ID_MP"]["isHiddenInList"] = true;
+
 	$tabla->addField("NombPers", "text", 0, "Envío - Persona");
 	$tabla->fields["NombPers"]["nameAlias"] = "NombPersCarr";
 	
@@ -478,6 +487,9 @@
 	$tabla->addField("CodiPost", "text", 0, "Envío - Código Postal");
 	$tabla->addFieldSelect("NumeProv", 0, "Envío - Provincia", true, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv");
 	
+	$tabla->addField("NumeFact", "text", 0, "Factura");
+	$tabla->addField("ObseCarr", "textarea", 0, "Observaciones");
+
 	$config->tablas["carritos"] = $tabla;
 
 	/**
