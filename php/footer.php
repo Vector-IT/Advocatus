@@ -17,7 +17,7 @@
               </div>
               <div class="col-sm-3">
                 <a href="http://qr.afip.gob.ar/?qr=pFPVKyHQXZNOU1w81V302A,," target="_blank">
-                  <img class="img-responsive" src="./img/afip-dataweb.jpg" alt="">
+                  <img class="img-responsive" src="./img/afip-dataweb.jpg" alt="" style="max-width: 60px;">
                 </a>
               </div> 
             </div>
@@ -54,7 +54,7 @@
            <p class="tels">Tel.: +54 351 446 - 1931 / 1932</p>  
           </div>
           <div class="col-lg-6">
-            <img class="img-responsive img-center" src="./img/home/tarjetas-footer.png" alt="" style="max-width: 420px;">
+            <a href="https://www.mercadopago.com.ar/promociones" target="_blank"><img class="img-responsive img-center" src="./img/home/tarjetas-footer.png" alt="" style="max-width: 420px;"></a>
           </div>
           <div class="col-lg-3">
             <p class="copyright">EDITORIAL ADVOCATUS LIBRERIA. ©2017</p> 
