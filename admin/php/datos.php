@@ -167,6 +167,11 @@
 	$tabla = new Tabla("provincias", "provincias", "Provincias", "la provincia", true, "objeto/provincias.php", "fa-linode");
 	$tabla->labelField = "NombProv";
 	$tabla->isSubItem = true;
+	
+	$tabla->searchFields = [
+		// array("name"=>"NumeProd", "operator"=>"=", "join"=>"and"), 
+		array("name"=>"NombProv", "operator"=>"LIKE", "join"=>"and"),
+	];
 
 	$tabla->addFieldId("NumeProv", "Número");
 	$tabla->addField("NumePais", "select", 60, "País", true, false, false, true, '9', '', 'paises', 'NumePais', 'NombPais', '', 'NombPais');

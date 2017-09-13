@@ -291,7 +291,7 @@ class Producto extends Tabla {
     public function listar($strFiltro = "", $conBotones = true, $btnList = [], $order = '', $pagina = 1) {
         if ($strFiltro != "") {
             if (isset($strFiltro["ISBN"])) {
-                $strFiltro["productos.NumeProd"] = array(
+                $strFiltro["NumeProd"] = array(
                     "type"=>"number",
                     "operator"=>"in",
                     "join"=>"and",
@@ -302,11 +302,11 @@ class Producto extends Tabla {
             }
 
             if (isset($strFiltro["Autor"])) {
-                if (isset($strFiltro["productos.NumeProd"])) {
-                    $strFiltro["productos.NumeProd"]["value"].= " AND productos.NumeProd IN (SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')";
+                if (isset($strFiltro["NumeProd"])) {
+                    $strFiltro["NumeProd"]["value"].= " AND productos.NumeProd IN (SELECT NumeProd FROM productosatributos WHERE Valor LIKE '%". $strFiltro["Autor"]["value"] ."%')";
                 }
                 else {
-                    $strFiltro["productos.NumeProd"] = array(
+                    $strFiltro["NumeProd"] = array(
                         "type"=>"number",
                         "operator"=>"in",
                         "join"=>"and",

@@ -164,7 +164,7 @@
 						<input type="checkbox" id="chkRemember"> Recordarme
 						</label>
 					</div>
-					<div id="divLoginMsg" class="" role="alert">
+					<div id="divLoginMsg" class="alert noMargin" role="alert">
 						<span id="iconLogin" class="" aria-hidden="true"></span>&nbsp;<span id="txtLoginMsg"></span>
 					</div>
 				</div>
@@ -192,15 +192,20 @@
 							<div id="recaptcha1"></div>
 						</div>
 					</div>
+					<div id="divLostMsg" class="alert noMargin" role="alert">
+						<span id="iconLost" class="" aria-hidden="true"></span>&nbsp;<span id="txtLostMsg"></span>
+					</div>
 				</div>
-				<div id="divLostMsg" class="" role="alert">
-					<span id="iconLost" class="" aria-hidden="true"></span>&nbsp;<span id="txtLostMsg"></span>
-				</div>
-				<button type="submit" class="btn btn-small center-block">Enviar</button>
-				<br>
-				<div class="text-right">
-					<button id="lost_login_btn" type="button" class="btn btn-link">Iniciar Sesión</button>
-					<button id="lost_register_btn" type="button" class="btn btn-link">Registrarse</button>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-4">
+							<button type="submit" id="btnRecuperar" class="btn btn-small pull-left">Enviar</button>
+						</div>
+						<div class="col-md-8 text-right">
+							<button id="lost_login_btn" type="button" class="btn btn-link">Iniciar Sesión</button>
+							<button id="lost_register_btn" type="button" class="btn btn-link">Registrarse</button>
+						</div>
+					</div>
 				</div>
 			</form>
 			<!-- End | Lost Password Form -->
@@ -238,12 +243,19 @@
 							<div id="recaptcha2"></div>
 						</div>
 					</div>
-					<div id="divRegisterMsg" class="" role="alert">
+					<div id="divRegisterMsg" class="alert noMargin" role="alert">
 						<span id="iconRegister" class="" aria-hidden="true"></span>&nbsp;<span id="txtRegisterMsg"></span>
 					</div>
-					<button type="submit" class="btn btn-small center-block"><span style="font-size: 12px;">Registrarse</span></button>  
-					<br>
-					<p>Ya eres un usuario registrado? <button id="register_login_btn" type="button" class="btn btn-link">Iniciar sesión</button>    </p>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-small pull-left">Registrarse</button>  
+						</div>
+						<div class="col-md-8 text-right">
+							<p>Ya eres un usuario registrado? <button id="register_login_btn" type="button" class="btn btn-link">Iniciar sesión</button>    </p>
+						</div>
+					</div>
 				</div>
 			</form>
 			<!-- End | Register Form -->

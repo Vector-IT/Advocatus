@@ -37,6 +37,8 @@ $(function() {
                     },
                     function (data) {
                         if (data.success) {
+                            $formLost.find("#btnRecuperar").fadeOut();
+
                             grecaptcha.reset(recaptcha1);
 
                             $.post("php/usuariosProcesar.php", {
@@ -44,6 +46,8 @@ $(function() {
                                     MailUser: $formLost.find("#lost_email").val().trim().replace("'", ""),
                                 },
                                 function (data) {
+                                    $formLost.find("#btnRecuperar").fadeIn();
+                                    
                                     if (data.estado === true) {
                                         msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
                                     }
@@ -52,6 +56,9 @@ $(function() {
                                     }
                                 }
                             );
+                        }
+                        else {
+                            msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-danger", "glyphicon-remove", "Error de captcha!", $("#login-modal"), false);
                         }
                     }
                 );
@@ -132,7 +139,7 @@ $(function() {
     
     function modalAnimate ($oldForm, $newForm) {
         var $oldH = $oldForm.height();
-        var $newH = $newForm.height() + 20;
+        var $newH = $newForm.height();
         $divForms.css("height",$oldH);
         $oldForm.fadeToggle($modalAnimateTime, function(){
             $divForms.animate({height: $newH}, $modalAnimateTime, function(){
@@ -151,12 +158,12 @@ $(function() {
         var $msgOld = "";
         msgFade($textTag, $msgText);
         
-        $divTag.addClass("alert " + $divClass);
+        $divTag.addClass($divClass);
         
         $iconTag.addClass("glyphicon " + $iconClass);
         
         setTimeout(function() {
-            $divTag.removeClass();
+            $divTag.removeClass($divClass);
             $iconTag.removeClass();
             $textTag.html($msgOld);
 

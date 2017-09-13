@@ -15,7 +15,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$para = isset($_POST["Para"])? $_POST["Para"]: 'info@eadvocatus.com';
 	$titulo = isset($_POST["Titulo"])? $_POST["Titulo"]: 'Editorial Advocatus';
+	
 	$mensaje = $_POST['Mensaje'];
+	$mensaje.= $crlf."<br><br>";
+	$mensaje.= $crlf.'<img src="http://'. $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'/mail_advocatus/firma_tienda.jpg" alt="" />';
+
 	$mensajeAlt = isset($_POST["MensajeAlt"])? $_POST["MensajeAlt"]: $_POST["Mensaje"];
 
 	$mail = new PHPMailer();
