@@ -168,7 +168,8 @@
                 responsive: true,
                 title:{
                     display:true,
-                    text:'Ventas en los últimos 30 días'
+                    text:'Ventas en los últimos 30 días',
+					fontSize: 16
 				},
 				legend: {
 					display:false
@@ -202,7 +203,7 @@
 
 		var ctx2 = document.getElementById("chart2").getContext('2d');
 		var myChart2 = new Chart(ctx2, {
-			type: 'doughnut',
+			type: 'pie',
             data: {
 				datasets: [{
 					data: [<?php echo $data2?>],
@@ -218,7 +219,8 @@
 				},
 				title: {
 					display: true,
-					text: 'Productos más vendidos'
+					text: 'Productos más vendidos',
+					fontSize: 16
 				},
 				animation: {
 					animateScale: true,
