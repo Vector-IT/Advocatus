@@ -371,17 +371,21 @@
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
-										<label for="DireUser">Dirección</label>
+										<label for="DireUser">Dirección *</label>
 										<input type="text" class="form-control form-custom" id="DireUser" placeholder="Dirección *" value="<?php echo $datosUsuario["DireUser"]?>" required>
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
-										<label for="CodiPost">Código Postal</label>
+										<label for="CodiPost">Código Postal *</label>
 										<input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal" value="<?php echo $datosUsuario["CodiPost"]?>" required>
 									</div>
 								</div>
-							</div>
+                            </div>
+                            <div class="form-group">
+                                <label from="NombLoca">Localidad *</label>
+                                <input type="text" class="form-control form-custom" id="NombLoca" placeholder="Localidad *" required>
+                            </div>
 							<div class="form-group">
 								<label for="NumeProv">Provincia *</label>
 								<select class="form-control form-custom" id="NumeProv" required>

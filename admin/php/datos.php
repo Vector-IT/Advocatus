@@ -72,6 +72,7 @@
 	$tabla->addField("TeleUser", "text", 50, "Teléfono");
 	$tabla->addField("DireUser", "text", 50, "Dirección");
 	$tabla->addField("CodiPost", "text", 50, "Código Postal");
+	$tabla->addField("NombLoca", "text", 50, "Localidad");
 	$tabla->addFieldSelect("NumeProv", 50, "Provincia", true, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv");
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
@@ -79,6 +80,28 @@
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["usuarios"] = $tabla;
+
+	/**
+	* INVITADOS
+	*/
+	$tabla = new Tabla("invitados", "invitados", "Invitados", "el invitado", false, "objeto/invitados.php", "fa-user-secret");
+	$tabla->labelField = "NombPers";
+	$tabla->numeCarg = 2;
+	$tabla->isSubItem = true;
+	$tabla->allowNew = false;
+	$tabla->allowDelete = false;
+
+	$tabla->addField("NumeInvi", "number", 0, "Número", false, true, true);
+	$tabla->addField("NombPers", "text", 200, "Nombre Completo", true, true);
+	$tabla->addField("MailUser", "mail", 50, "Mail", true, true);
+	$tabla->addField("TeleUser", "text", 50, "Teléfono", true, true);
+	$tabla->addField("DireUser", "text", 50, "Dirección", true, true);
+	$tabla->addField("CodiPost", "text", 50, "Código Postal", true, true);
+	$tabla->addField("NombLoca", "text", 50, "Localidad", true, true);
+	$tabla->addFieldSelect("NumeProv", 50, "Provincia", true, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv");
+	$tabla->fields["NumeProv"]["readOnly"] = true;
+
+	$config->tablas["invitados"] = $tabla;
 
 	/**
 	* SLIDERS
@@ -455,11 +478,12 @@
 
 	$tabla->addFieldId("NumeCarr", "Número");
 	$tabla->addField("FechCarr", "datetime", 0, "Fecha");
-	$tabla->addFieldSelect("NumeUser", 0, "Usuario", true, "", "usuarios", "", "NumeUser", "NombPers", "", "", "NombPers");
-	$tabla->fields["NumeUser"]["nameAlias"] = "NombPersUser";
+	
+	$tabla->addField("NumeUser", "number", 0, "Usuario");
+	$tabla->fields["NumeUser"]["isHiddenInList"] = true;
 
-	$tabla->addFieldSelect("NumeInvi", 0, "Invitado", true, "", "invitados", "", "NumeInvi", "NombPers", "", "", "NombPers");
-	$tabla->fields["NumeInvi"]["nameAlias"] = "NombPersInvi";
+	$tabla->addField("NumeInvi", "number", 0, "Invitado");
+	$tabla->fields["NumeInvi"]["isHiddenInList"] = true;
 
 	$tabla->addField("ImpoSubt", "number", 0, "Sub-Total");
 	$tabla->fields["ImpoSubt"]["txtAlign"] = "right";
@@ -490,6 +514,7 @@
 	$tabla->addField("TeleUser", "text", 0, "Envío - Teléfono");
 	$tabla->addField("DireUser", "text", 0, "Envío - Dirección");
 	$tabla->addField("CodiPost", "text", 0, "Envío - Código Postal");
+	$tabla->addField("NombLoca", "text", 0, "Envío - Localidad");
 	$tabla->addFieldSelect("NumeProv", 0, "Envío - Provincia", true, "", "provincias", "", "NumeProv", "NombProv", "", "", "NombProv");
 	
 	$tabla->addField("NumeFact", "text", 0, "Factura");

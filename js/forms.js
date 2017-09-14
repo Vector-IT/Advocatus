@@ -29,6 +29,8 @@ $(function() {
                 break;
 
             case "lost-form":
+                msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-info", "glyphicon-refresh gly-spin", "Espere un momento", $("#login-modal"), true);
+
                 var respuesta = grecaptcha.getResponse(recaptcha1);
                 $.post(
                     'php/recaptcha.php',
@@ -69,6 +71,7 @@ $(function() {
                     msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", "Las contraseñas no coinciden!", $("#login-modal"), false);
                     break;
                 }
+                msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-info", "glyphicon-refresh gly-spin", "Espere un momento", $("#login-modal"), false, false, false);
                 $.post(
                     'php/recaptcha.php',
                     {
@@ -85,6 +88,7 @@ $(function() {
                                     MailUser: $("#register-form").find("#MailUser").val().trim().replace("'", ""),
                                     DireUser: $("#register-form").find("#DireUser").val().trim().replace("'", ""),
                                     CodiPost: $("#register-form").find("#CodiPost").val().trim().replace("'", ""),
+                                    NombLoca: $("#register-form").find("#NombLoca").val().trim().replace("'", ""),
                                     NumeProv: $("#register-form").find("#NumeProv").val(),
                                     NombUser: $("#register-form").find("#NombUser").val().trim().replace("'", ""),
                                     NombPass: $("#register-form").find("#NombPass").val().trim().replace("'", "")
@@ -114,6 +118,7 @@ $(function() {
                         MailUser: $(this).find("#MailUser").val().trim().replace("'", ""),
                         DireUser: $(this).find("#DireUser").val().trim().replace("'", ""),
                         CodiPost: $(this).find("#CodiPost").val().trim().replace("'", ""),
+                        NombLoca: $(this).find("#NombLoca").val().trim().replace("'", ""),
                         NumeProv: $(this).find("#NumeProv").val(),
                     },
                     function (data) {
@@ -154,26 +159,28 @@ $(function() {
         });
     }
     
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, close = true, reload = false) {
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, closeModal = true, reloadPage = false, ocultarMsg = true) {
         var $msgOld = "";
         msgFade($textTag, $msgText);
         
-        $divTag.addClass($divClass);
+        $divTag.attr('class', 'alert '+ $divClass);
         
-        $iconTag.addClass("glyphicon " + $iconClass);
+        $iconTag.attr('class', "glyphicon " + $iconClass);
         
-        setTimeout(function() {
-            $divTag.removeClass($divClass);
-            $iconTag.removeClass();
-            $textTag.html($msgOld);
+        if (ocultarMsg) {
+            setTimeout(function() {
+                $divTag.attr('class', 'alert');
+                $iconTag.removeClass();
+                $textTag.html($msgOld);
 
-            if (close) {
-                $modal.modal('hide');
-            }
+                if (closeModal) {
+                    $modal.modal('hide');
+                }
 
-            if (reload) {
-                location.reload();
-            }
-  		}, $msgShowTime);
+                if (reloadPage) {
+                    location.reload();
+                }
+            }, $msgShowTime);
+        }
     }
 });

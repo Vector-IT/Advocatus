@@ -12,7 +12,7 @@
 	ejecutarCMD("UPDATE productos SET Vistas = Vistas + 1 WHERE NumeProd = ". $numeProd);
 	
 	//Producto
-	$strSQL = "SELECT NombProd, DescProd, ImpoVent";
+	$strSQL = "SELECT NombProd, DescProd, ImpoVent, CantProd";
 	$strSQL.= $crlf."FROM productos";
 	$strSQL.= $crlf."WHERE NumeProd = ". $numeProd;
 	$tabla = cargarTabla($strSQL);
@@ -42,8 +42,6 @@
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link href="css/sidebar.css" rel="stylesheet">
 
-	<script>
-	</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -139,16 +137,19 @@
 						<div>
 							<div class="section">
 								<p class="precio">$ <?php echo $producto["ImpoVent"]?></p>
+								<?php if (intval($producto["CantProd"]) > 0) {?>
 								<div>
 									<p class="cantidad">Cantidad</p>
 									<div id="cantidad">
-									<div class="btn-minus"><span class="glyphicon glyphicon-minus"></span></div>
-									<input id="CantProd" value="1" readonly />
-									<div class="btn-plus"><span class="glyphicon glyphicon-plus"></span></div>
+									<button class="btn-minus"><span class="glyphicon glyphicon-minus"></span></button>
+									<input id="CantProd" value="1" max="<?php echo $producto["CantProd"]?>" readonly />
+									<button class="btn-plus"><span class="glyphicon glyphicon-plus"></span></button>
 									</div>
 								</div>
+								
 								<button type="button" onclick="agregarProd(<?php echo $numeProd?>, $('#CantProd').val())" class="animated fadeInLeft btn-bordo" >Agregar a carro de compras</button>
 								&nbsp;
+								<?php }?>
 								<button type="button" class="btn-bordo" data-toggle="modal" data-target="#consultar">Consultar</button> 
 								<!-- Modal -->
 								<div class="modal fade" id="consultar" tabindex="-1" role="dialog" aria-labelledby="contactoModalLabel" aria-hidden="true">
@@ -287,20 +288,23 @@
 		
 				//-- Click on CANTIDAD
 				$(".btn-minus").on("click",function(){
-					var now = $(".section > div > input").val();
+					var now = $("#CantProd").val();
 					if ($.isNumeric(now)){
 						if (parseInt(now) -1 > 0){ now--;}
-						$(".section > div > div > input").val(now);
+						$("#CantProd").val(now);
 					}else{
-						$(".section > div > div > input").val("1");
+						$("#CantProd").val("1");
 					}
 				})			
 				$(".btn-plus").on("click",function(){
-					var now = $(".section > div > div > input").val();
+					var now = $("#CantProd").val();
+					var max = $("#CantProd").attr("max");
 					if ($.isNumeric(now)){
-						$(".section > div > div > input").val(parseInt(now)+1);
+						if ((now+1 <= max)) {
+							$("#CantProd").val(parseInt(now)+1);
+						}
 					}else{
-						$(".section > div > div > input").val("1");
+						$("#CantProd").val("1");
 					}
 				})						
 			}); 

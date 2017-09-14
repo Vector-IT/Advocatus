@@ -223,14 +223,16 @@
 							<input type="email" class="form-control form-custom" id="MailUser" placeholder="Correo Electrónico *" required>
 							<div class="row">
 								<div class="col-md-8">
-									<label for="DireUser">Dirección</label>
+									<label for="DireUser">Dirección *</label>
 									<input type="text" class="form-control form-custom" id="DireUser" placeholder="Dirección *" required>
 								</div>
 								<div class="col-md-4">
-									<label for="CodiPost">Código Postal</label>
+									<label for="CodiPost">Código Postal *</label>
 									<input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal" required>
 								</div>
 							</div>
+							<label from="NombLoca">Localidad *</label>
+							<input type="text" class="form-control form-custom" id="NombLoca" placeholder="Localidad *" required>
 							<label for="NumeProv">Provincia *</label>
 							<select class="form-control form-custom" id="NumeProv" required>
 							<?php echo cargarCombo("SELECT NumeProv, NombProv FROM provincias ORDER BY NombProv", "NumeProv", "NombProv");?>

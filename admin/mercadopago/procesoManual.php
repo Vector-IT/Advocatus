@@ -10,7 +10,7 @@ $mp = new MP($mpClientID, $mpClientSecret);
 //Activo modo prueba
 //$mp->sandbox_mode(TRUE);
 
-if (!isset($_GET["id"], $_GET["topic"]) || !ctype_digit($_GET["id"])) {
+if (!isset($_GET["id"]) || !ctype_digit($_GET["id"])) {
 	http_response_code(400);
 	return;
 }
@@ -18,18 +18,14 @@ if (!isset($_GET["id"], $_GET["topic"]) || !ctype_digit($_GET["id"])) {
 
 // Get the payment and the corresponding merchant_order reported by the IPN.
 try {
-	if($_GET["topic"] == 'payment'){
-		$payment_info = $mp->get("/collections/notifications/" . $_GET["id"]);
-		//$payment_info = $mp->get_payment_info($_GET["id"]);
-		$numeCarr = $payment_info["response"]["collection"]["external_reference"];
-		
-		error_log("Procesando carrito NRO: ". $numeCarr ." - ID: ". $_GET["id"]);
+    $paymentInfo = $mp->get_payment ($_GET["id"]);
+    $payment_info = $mp->get("/collections/notifications/" . $_GET["id"]);
+    //$payment_info = $mp->get_payment_info($_GET["id"]);
+    $numeCarr = $payment_info["response"]["collection"]["external_reference"];
+    
+    error_log("Procesando carrito NRO: ". $numeCarr ." - ID: ". $_GET["id"]);
 
-		$merchant_order_info = $mp->get("/merchant_orders/" . $payment_info["response"]["collection"]["merchant_order_id"]);
-	// Get the merchant_order reported by the IPN.
-	} else if($_GET["topic"] == 'merchant_order'){
-		$merchant_order_info = $mp->get("/merchant_orders/" . $_GET["id"]);
-	}
+    $merchant_order_info = $mp->get("/merchant_orders/" . $payment_info["response"]["collection"]["merchant_order_id"]);
 }
 catch (Exception $e) {
 	http_response_code(200);

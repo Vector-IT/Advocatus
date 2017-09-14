@@ -56,9 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $MailUser = $_POST["MailUser"];
             $DireUser = $_POST["DireUser"];
             $CodiPost = $_POST["CodiPost"];
+            $NombLoca = $_POST["NombLoca"];
             $NumeProv = $_POST["NumeProv"];
             $NombUser = $_POST["NombUser"];
-            $NombPass = $_POST["NombPass"];
+            $NombPass = md5($_POST["NombPass"]);
 
             $result = buscarDato("SELECT COUNT(*) FROM usuarios WHERE UPPER(NombUser) = '{$NombUser}'");
             if ($result != "0") {
@@ -74,13 +75,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $NumeUser = buscarDato("SELECT COALESCE(MAX(NumeUser), 0) + 1 FROM usuarios");
 
-            $strSQL = "INSERT INTO usuarios(NumeUser, NombPers, NombUser, NombPass, NumeCarg, MailUser, TeleUser, DireUser, CodiPost, NumeProv, NumeEsta)";
-            $strSQL.= $crlf."VALUES ({$NumeUser}, '{$NombPers}', '{$NombUser}', '{$NombPass}', 10, '{$MailUser}', '{$TeleUser}', '{$DireUser}', '{$CodiPost}', {$NumeProv}, 1);";
+            $strSQL = "INSERT INTO usuarios(NumeUser, NombPers, NombUser, NombPass, NumeCarg, MailUser, TeleUser, DireUser, CodiPost, NombLoca, NumeProv, NumeEsta)";
+            $strSQL.= $crlf."VALUES ({$NumeUser}, '{$NombPers}', '{$NombUser}', '{$NombPass}', 10, '{$MailUser}', '{$TeleUser}', '{$DireUser}', '{$CodiPost}', '{$NombLoca}', {$NumeProv}, 2);";
 
             $result = ejecutarCMD($strSQL);
             
             if ($result["estado"]) {
-                $salida = array("estado"=>true, "msg"=>"Registro exitoso!<br>Revise su correo electrónico para verificar la cuenta!");
+                $titulo = "Editorial Advocatus - Activar Cuenta";
+				$mensajeHtml = "Este es un mensaje autom&aacute;tico. Por favor no lo responda.";
+				$mensajeHtml.= "<br>Usted se registró como usuario en eadvocatus.com.ar";
+				$mensajeHtml.= "<br><br>";
+				$mensajeHtml.= 'Haga click <a href="http://'. $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'/php/activarUsuario.php?id='. md5($NumeUser) .'">aquí</a> para activar su cuenta y empezar a usarla.';
+				$mensajeHtml.= "<br><br>";
+				$mensajeHtml.= $crlf."Muchas gracias.";
+				
+				$mensaje = "Este es un mensaje automatico. Por favor no lo responda";
+				$mensaje.= "\nUsted se registró como usuario en eadvocatus.com.ar";
+				$mensaje.= "\n\n";
+				$mensaje.= '\nDirijase a http://'. $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'/php/activarUsuario.php?id='. md5($NumeUser) .' para activar su cuenta y empezar a usarla.';
+				$mensaje.= "\n\n";
+				$mensaje.= "\nMuchas gracias.";
+				
+				$url = "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $raiz .'admin/php/enviarMail.php';
+				$fields = array(
+						'Para' => $MailUser,
+						'Titulo' => $titulo,
+						'Mensaje' => $mensajeHtml,
+						'MensajeAlt' => $mensaje
+				);
+				$datos = http_build_query($fields);
+					
+				//open connection
+				$handle = curl_init();
+				curl_setopt($handle, CURLOPT_URL, $url);
+				curl_setopt($handle, CURLOPT_POST, true);
+				curl_setopt($handle, CURLOPT_POSTFIELDS, $fields);
+				curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+				
+				//execute post
+				$response = curl_exec($handle);
+				if (!$response) {
+					$salida = array("estado"=>false, "msg"=>"Error al enviar mail de activación!");
+				}
+				//close connection
+				curl_close($handle);
+				
+				if (strripos($response, "error") === false) {
+                    $salida = array("estado"=>true, "msg"=>"Registro exitoso!<br>Revise su correo electrónico para verificar la cuenta!");
+                }
+                else {
+                    $salida = array("estado"=>false, "msg"=>"Error al enviar mail de activación!");
+				}
+                
             }
             else {
                 $salida = array("estado"=>false, "msg"=>"Error al registrar usuario!");
@@ -93,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $MailUser = $_POST["MailUser"];
             $DireUser = $_POST["DireUser"];
             $CodiPost = $_POST["CodiPost"];
+            $NombLoca = $_POST["NombLoca"];
             $NumeProv = $_POST["NumeProv"];
 
             $numeUser = isset($_SESSION["NumeUser"])? $_SESSION["NumeUser"]: '';
@@ -106,6 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $strSQL.= $crlf.", MailUser = '{$MailUser}'";
                     $strSQL.= $crlf.", DireUser = '{$DireUser}'";
                     $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                    $strSQL.= $crlf.", NombLoca = '{$NombLoca}'";
                     $strSQL.= $crlf.", NumeProv = ". $NumeProv;
                     $strSQL.= $crlf." WHERE NumeCarr = ". $_SESSION["NumeCarr"];
                 }
@@ -116,6 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $strSQL.= $crlf.", MailUser = '{$MailUser}'";
                     $strSQL.= $crlf.", DireUser = '{$DireUser}'";
                     $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                    $strSQL.= $crlf.", NombLoca = '{$NombLoca}'";
                     $strSQL.= $crlf.", NumeProv = ". $NumeProv;
                     $strSQL.= $crlf." WHERE NumeUser = ". $numeUser;
                 }
@@ -127,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $strSQL.= $crlf.", MailUser = '{$MailUser}'";
                 $strSQL.= $crlf.", DireUser = '{$DireUser}'";
                 $strSQL.= $crlf.", CodiPost = '{$CodiPost}'";
+                $strSQL.= $crlf.", NombLoca = '{$NombLoca}'";
                 $strSQL.= $crlf.", NumeProv = ". $NumeProv;
                 $strSQL.= $crlf." WHERE NumeInvi = ". $numeInvi;
             }
