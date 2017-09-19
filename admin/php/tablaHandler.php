@@ -10,6 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	require_once 'datos.php';
 	require_once 'upload_file.php';
 
+	$urlLogout = "Location:". "http://". $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $config->raiz ."admin/logout.php";
+    
+	if (!isset($_SESSION['is_logged_in'])) {
+		$strSalida = 'Error al actualizar los datos, su sesión a caducado.<br>';
+		$strSalida.= $crlf.'Debe ingresar nuevamente.<br>';
+		$strSalida.= $crlf.'<button class="btn btn-default" onclick="location.href = \'http://'. $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT'] != "80"? ":".$_SERVER['SERVER_PORT']: "") . $config->raiz .'admin/logout.php\';">Iniciar Sesión</button>';
+	    exit($strSalida);
+	}
+	
 	$operacion = $_POST["operacion"];
 	$tabla = $config->getTabla($_POST["tabla"]);
 	

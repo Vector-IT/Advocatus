@@ -224,7 +224,8 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
-			'print' => true
+			'print' => true,
+			'txtBefore' => ''
 		);
 
 		if ($isID) {
@@ -280,7 +281,8 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
-			'print' => true
+			'print' => true,
+			'txtBefore' => ''
 		);
 
 		$this->IDField = $name;
@@ -339,11 +341,12 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
-			'print' => true
+			'print' => true,
+			'txtBefore' => ''
 		);
 	}
 
-	public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupTableAlias, $lookupFieldID, $lookupFieldLabel, $lookupConditions, $joinConditions, $lookupOrder, $itBlank = false, $itBlankText = "SELECCIONE...") 
+	public function addFieldSelect($name, $size, $label, $required, $value, $lookupTable, $lookupTableAlias = '', $lookupFieldID, $lookupFieldLabel, $lookupConditions = '', $joinConditions = '', $lookupOrder = '', $itBlank = false, $itBlankText = "SELECCIONE...") 
 	{
 		$this->fields[$name] = array (
 			'name' => $name,
@@ -386,7 +389,8 @@ class Tabla
 			'min' => "",
 			'condFormat' => "",
 			'classFormat' => "",
-			'print' => true
+			'print' => true,
+			'txtBefore' => ''
 		);
 	}
 	
@@ -858,7 +862,7 @@ class Tabla
 			$filtro = '';
 			if ($this->masterFieldId != '') {
 				if (isset($_REQUEST[$this->masterFieldId])) {
-					$filtro.= $crlf. $this->masterFieldId ." = '" . $_REQUEST[$this->masterFieldId] ."'";
+					$filtro.= $crlf. $this->tabladb .'.'. $this->masterFieldId ." = '" . $_REQUEST[$this->masterFieldId] ."'";
 				}
 			}
 
@@ -1031,15 +1035,16 @@ class Tabla
 											if ($fila[$fnameLookup] != '') {
 												$dato = $fila[$fnameLookup];
 											} 
-											elseif ($field['itBlank']) {
-												$dato = $field["itBlankText"];
-											}
+											// elseif ($field['itBlank']) {
+											// 	$dato = $field["itBlankText"];
+											// }
 											else {
-												$dato = '';
+												// $dato = '';
+												$dato = $field["value"];
 											}
 
 											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
-											$strSalida.= $crlf.$dato;
+											$strSalida.= $crlf.$field["txtBefore"].$dato;
 
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$field["name"]].'" />';
 											$strSalida.= $crlf.'</td>';
@@ -1051,7 +1056,7 @@ class Tabla
 											$dato = $this->customFunc($post);
 		
 											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
-											$strSalida.= $crlf. $dato;
+											$strSalida.= $crlf.$field["txtBefore"].$dato;
 											$strSalida.= $crlf.'</td>';
 											break;
 
@@ -1085,16 +1090,18 @@ class Tabla
 
 										case 'textarea':
 											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
-											$strSalida.= $crlf. str_replace($crlf, "<br>", $fila[$fname]);
-											$strSalida.= $crlf.'</td>';
+											$strSalida.= str_replace($crlf, "<br>", $fila[$fname]);
+											$strSalida.= '</td>';
 											break;
 											
 										default:
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'" id="'.$field['name'] . $fila[$this->IDField].'">'.$fila[$fname].'</td>';
+											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $fila[$fname]) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'" id="'.$field['name'] . $fila[$this->IDField].'">';
+											$strSalida.= $field["txtBefore"].$fila[$fname];
+											$strSalida.= '</td>';
 											break;
 									}
 
-									if ($field['name'] == $this->footerField) {
+									if ($fname == $this->footerField) {
 										$colFooter = $col;
 
 										switch ($this->footerFunc) {
@@ -1159,7 +1166,7 @@ class Tabla
 
 								switch ($this->footerFunc) {
 									case "SUM":
-										$strSalida.= $crlf.'TOTAL: '. (is_float($strFootValue)? number_format($strFootValue, 2) : $strFootValue);
+										$strSalida.= $crlf.'TOTAL: '. $this->fields[$this->footerField]['txtBefore'] . (is_float($strFootValue)? number_format($strFootValue, 2) : $strFootValue);
 										break;
 
 									case "COUNT":
@@ -1363,7 +1370,7 @@ class Tabla
 		if ($this->allowDelete) {
 			$strSalida.= $crlf.'';
 			$strSalida.= $crlf.'function borrar'. $this->tabladb .'(strID){';
-			$strSalida.= $crlf.'	if (confirm("Desea borrar '.$this->tituloSingular. ($this->labelField!=''?' " + $("#'.$this->labelField.'" + strID).html()':' seleccionado"') . ' + "?" )) {';
+			$strSalida.= $crlf.'	if (confirm("Desea borrar '.$this->tituloSingular. ($this->labelField!=''?' " + $("#'.$this->labelField.'" + strID).html().trim()':' seleccionado"') . ' + "?" )) {';
 			$strSalida.= $crlf.'		$("#hdnOperacion").val("2");';
 			$strSalida.= $crlf.'		$("#'.$this->IDField.'").val(strID);';
 			$strSalida.= $crlf.'		aceptar'. $this->tabladb .'();';
@@ -1477,7 +1484,7 @@ class Tabla
 										break;
 	
 									default:
-										$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).text());';
+										$strSalida.= $crlf.'		$("#'.$field['name'].'").val($("#'.$field['name'].'" + strID).text().replace("'.$field["txtBefore"].'", "").trim());';
 										break;
 								}
 							}

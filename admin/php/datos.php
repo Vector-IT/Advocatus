@@ -22,6 +22,7 @@
 	$config->menuItems = [
 			new MenuItem("Configuraciones", '', '', 'fa-cogs', 1, true, false),
 			new MenuItem("Productos", 'productos.php', '', 'fa-paper-plane', 2, false, true),
+			new MenuItem("Promociones", 'objeto/promociones.php', '', 'fa-handshake-o', 4, true),
 			new MenuItem("Reportes", 'reportes.php', '', 'fa-slideshare', '', false, false),
 			new MenuItem("Ir al sitio", $raiz, '', 'fa-bookmark', '', false, false),
 			new MenuItem("Salir del Sistema", 'logout.php', '', 'fa-sign-out', '', false, false)
@@ -267,11 +268,13 @@
 	$tabla->fields["ImpoComp"]["step"] = "0.1";
 	$tabla->fields["ImpoComp"]["txtAlign"] = "right";
 	$tabla->fields["ImpoComp"]["cssList"] = "editable";
+	$tabla->fields["ImpoComp"]["txtBefore"] = "$ ";
 
 	$tabla->addField("ImpoVent", "number", 0, "Imp. Venta");
 	$tabla->fields["ImpoVent"]["step"] = "0.1";
 	$tabla->fields["ImpoVent"]["txtAlign"] = "right";
 	$tabla->fields["ImpoVent"]["cssList"] = "editable";
+	$tabla->fields["ImpoVent"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("Promocion", "checkbox", 0, "Es Promoción?");
 	$tabla->fields["Promocion"]["txtAlign"] = "center";
@@ -429,6 +432,7 @@
 	$tabla->addField("ImpoShip", "number", 0, "Importe");
 	$tabla->fields["ImpoShip"]["step"] = "0.001";
 	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
+	$tabla->fields["ImpoShip"]["txtBefore"] = "$ ";
 
 	$config->tablas["shipping"] = $tabla;
 
@@ -488,17 +492,21 @@
 	$tabla->addField("ImpoSubt", "number", 0, "Sub-Total");
 	$tabla->fields["ImpoSubt"]["txtAlign"] = "right";
 	$tabla->fields["ImpoSubt"]["isHiddenInList"] = true;
+	$tabla->fields["ImpoSubt"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoShip", "number", 0, "Envio");
 	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
 	$tabla->fields["ImpoShip"]["isHiddenInList"] = true;
+	$tabla->fields["ImpoShip"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoDesc", "number", 0, "Descuento");
 	$tabla->fields["ImpoDesc"]["txtAlign"] = "right";
 	$tabla->fields["ImpoDesc"]["isHiddenInList"] = true;
+	$tabla->fields["ImpoDesc"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoTota", "number", 0, "Total");
 	$tabla->fields["ImpoTota"]["txtAlign"] = "right";
+	$tabla->fields["ImpoTota"]["txtBefore"] = "$ ";
 	
 	$tabla->addFieldSelect("FlagShip", 0, "Envío", true, "", "tiposenvios", "", "NumeShip", "NombShip", "", "", "");
 
@@ -550,11 +558,25 @@
 	
 	$tabla->addField("ImpoUnit", "number", 0, "Importe unitario");
 	$tabla->fields["ImpoUnit"]["txtAlign"] = "right";
+	$tabla->fields["ImpoUnit"]["txtBefore"] = "$ ";
 
 	$tabla->addField("ImpoTota", "number", 0, "Total");
 	$tabla->fields["ImpoTota"]["txtAlign"] = "right";
+	$tabla->fields["ImpoTota"]["txtBefore"] = "$ ";
 
 	$config->tablas["carritosdetalles"] = $tabla;
+
+	$tabla = new Tabla("tipospromociones", "tipospromociones", "Tipos de promociones", "el tipo de promoción", true, "objeto/tipospromociones.php", "fa-handshake-o");
+	$tabla->isSubItem = true;
+	$tabla->labelField = "NombTipoProm";
+
+	$tabla->addFieldId("NumeTipoProm", "Número");
+	$tabla->addField("NombTipoProm", "text", 50, "Nombre");
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';	
+
+	$config->tablas["tipospromociones"] = $tabla;
 
 	unset($tabla);
 ?>

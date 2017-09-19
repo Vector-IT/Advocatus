@@ -75,18 +75,18 @@ if ($merchant_order_info["status"] == 200) {
 
 	if($paid_amount >= $merchant_order_info["response"]["total_amount"]){
 		// Totally paid. Release your item
-		$datosUsuario = $config->buscarDato("SELECT NumeUser, NumeInvi, NombPers, MailUser, TeleUser, DireUser, CodiPost, NumeProv FROM carritos WHERE NumeCarr = ".$numeCarr);
+		$datosUsuario = $config->buscarDato("SELECT NumeUser, NumeInvi, NombPers, MailUser, TeleUser, DireUser, CodiPost, NombLoca, NumeProv FROM carritos WHERE NumeCarr = ".$numeCarr);
 
 		if ($datosUsuario["NombPers"] == '') {
 			if ($datosUsuario["NumeUser"] != '') {
-				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv";
+				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NombLoca, u.NumeProv";
 				$strSQL.= $crlf."FROM usuarios u";
 				$strSQL.= $crlf."WHERE u.NumeUser = ". $datosUsuario["NumeUser"];
 		
 				$datosUsuario = $config->buscarDato($strSQL);
 			}
 			else {
-				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NumeProv";
+				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NombLoca, u.NumeProv";
 				$strSQL.= $crlf."FROM invitados u";
 				$strSQL.= $crlf."WHERE u.NumeInvi = ". $datosUsuario["NumeInvi"];
 		
@@ -102,6 +102,7 @@ if ($merchant_order_info["status"] == 200) {
 		$strSQL.= $crlf.", MailUser = '{$datosUsuario["MailUser"]}'";
 		$strSQL.= $crlf.", DireUser = '{$datosUsuario["DireUser"]}'";
 		$strSQL.= $crlf.", CodiPost = '{$datosUsuario["CodiPost"]}'";
+		$strSQL.= $crlf.", NombLoca = '{$datosUsuario["NombLoca"]}'";
 		$strSQL.= $crlf.", NumeProv = ". $datosUsuario["NumeProv"];
 		$strSQL.= $crlf." WHERE NumeCarr = ".$numeCarr;
 

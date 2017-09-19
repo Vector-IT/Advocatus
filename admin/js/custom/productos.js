@@ -120,8 +120,8 @@ function editarproductos(strID){
 			$("#DescProd").autogrow({vertical: true, horizontal: false, minHeight: 36});
 			// $("#Peso").val($("#Peso" + strID).text());
 			$("#CantProd").val($("#CantProd" + strID).text());
-			$("#ImpoComp").val($("#ImpoComp" + strID).text());
-			$("#ImpoVent").val($("#ImpoVent" + strID).text());
+			$("#ImpoComp").val($("#ImpoComp" + strID).text().replace("$ ", ""));
+			$("#ImpoVent").val($("#ImpoVent" + strID).text().replace("$ ", ""));
 			$("#Promocion").prop("checked", Boolean(parseInt($("#Promocion" + strID).val())));
 			$("#Destacado").prop("checked", Boolean(parseInt($("#Destacado" + strID).val())));
 			$("#NumeEsta").val($("#NumeEsta" + strID).val());
@@ -341,11 +341,13 @@ function armarEditables() {
 				break;
 
 			case 'ImpoComp':
-				impoCompViejo = $(this).html();
+				impoCompViejo = $(this).html().replace("$ ", "");
+				$(this).html(impoCompViejo);
 				break;
 
 			case 'ImpoVent':
-				impoVentViejo = $(this).html();
+				impoVentViejo = $(this).html().replace("$ ", "");
+				$(this).html(impoVentViejo);
 				break;
 		}
         
@@ -411,6 +413,7 @@ function editarCantProd(numeProd) {
 }
 
 function editarImpoComp(numeProd) {
+	var NumeProd = numeProd;
 	var nombProd = $("#NombProd" + numeProd).html();
 	var impoComp = $("#ImpoComp" + numeProd).html();
 	
@@ -433,7 +436,9 @@ function editarImpoComp(numeProd) {
 			},
 			function (data) {
 				if (data.valor === true) {
-					$("#txtHint").html(nombProd + "<br>Nuevo precio de compra: " + impoComp);
+					$("#txtHint").html(nombProd + "<br>Nuevo precio de compra: $ " + impoComp);
+					$("#ImpoComp" + NumeProd).html("$ " + impoComp);
+
 					$("#divMsj").removeClass("alert-danger");
 					$("#divMsj").addClass("alert-success");
 				}
@@ -449,6 +454,7 @@ function editarImpoComp(numeProd) {
 }
 
 function editarImpoVent(numeProd) {
+	var NumeProd = numeProd;
 	var nombProd = $("#NombProd" + numeProd).html();
 	var impoVent = $("#ImpoVent" + numeProd).html();
 	
@@ -471,7 +477,9 @@ function editarImpoVent(numeProd) {
 			},
 			function (data) {
 				if (data.valor === true) {
-					$("#txtHint").html(nombProd + "<br>Nuevo precio de venta: " + impoVent);
+					$("#txtHint").html(nombProd + "<br>Nuevo precio de venta: $ " + impoVent);
+					$("#ImpoVent" + NumeProd).html("$ " + impoVent);
+
 					$("#divMsj").removeClass("alert-danger");
 					$("#divMsj").addClass("alert-success");
 				}
