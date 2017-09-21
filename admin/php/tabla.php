@@ -225,7 +225,8 @@ class Tabla
 			'condFormat' => "",
 			'classFormat' => "",
 			'print' => true,
-			'txtBefore' => ''
+			'txtBefore' => '',
+			'processAnyway' => false
 		);
 
 		if ($isID) {
@@ -282,7 +283,8 @@ class Tabla
 			'condFormat' => "",
 			'classFormat' => "",
 			'print' => true,
-			'txtBefore' => ''
+			'txtBefore' => '',
+			'processAnyway' => false
 		);
 
 		$this->IDField = $name;
@@ -342,7 +344,8 @@ class Tabla
 			'condFormat' => "",
 			'classFormat' => "",
 			'print' => true,
-			'txtBefore' => ''
+			'txtBefore' => '',
+			'processAnyway' => false
 		);
 	}
 
@@ -390,7 +393,8 @@ class Tabla
 			'condFormat' => "",
 			'classFormat' => "",
 			'print' => true,
-			'txtBefore' => ''
+			'txtBefore' => '',
+			'processAnyway' => false
 		);
 	}
 	
@@ -581,7 +585,7 @@ class Tabla
 							$strSalida.= $crlf.'<script type="text/javascript">';
 							$strSalida.= $crlf.'$(".inp'.$fname.'").datetimepicker({';
 							$strSalida.= $crlf.'	language: "es",';
-							$strSalida.= $crlf.'	format: "dd-mm-yyyy hh:ii",';
+							$strSalida.= $crlf.'	format: "yyyy-mm-dd hh:ii",';
 							$strSalida.= $crlf.'	autoclose: true,';
 							$strSalida.= $crlf.'	todayBtn: true,';
 							$strSalida.= $crlf.'	todayHighlight: false,';
@@ -1055,7 +1059,7 @@ class Tabla
 											$post['dato'] = $fila[$this->IDField];
 											$dato = $this->customFunc($post);
 		
-											$strSalida.= $crlf.'<td data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
+											$strSalida.= $crlf.'<td id="'.$field['name']. $fila[$this->IDField].'" data-valor="'. str_replace('"', '', $dato) .'" class="text-'. $field['txtAlign'] .' '. $field["cssList"] .' '. (eval($field["condFormat"])? $field["classFormat"]: '') . (!$field["print"]? ' noPrn': '') .'">';
 											$strSalida.= $crlf.$field["txtBefore"].$dato;
 											$strSalida.= $crlf.'</td>';
 											break;
@@ -1650,7 +1654,9 @@ class Tabla
 			$strSalida.= $crlf.'	frmData.append("tabla", "'.$this->name.'");';
 			if (isset($this->fields)) {
 				foreach ($this->fields as $field) {
-					if (($field['showOnForm']) && ($field['type'] != 'calcfield')) {
+					if (($field['showOnForm']) && (
+						($field['type'] != 'calcfield' || $field['processAnyway'])
+						)) {
 						switch ($field['type']) {
 							case "checkbox":
 								$strSalida.= $crlf.'	frmData.append("'.$field['name'].'", $("#'.$field['name'].'").prop("checked") ? 1 : 0);';

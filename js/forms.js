@@ -129,6 +129,31 @@ $(function() {
                 );
                 break;
 
+            case "frmCuponDescuento":
+                $.post("php/carritosProcesar.php", {
+                        operacion: "4",
+                        NombCupo: $(this).find("#txtCupon").val().trim().replace("'", "")
+                    },
+                    function (data) {
+                        if (data.estado === true) {
+                            location.reload();
+                        }
+                    }
+                );
+                break;
+            
+            case "frmQuitarCuponDescuento":
+                $.post("php/carritosProcesar.php", {
+                        operacion: "5"
+                    },
+                    function (data) {
+                        if (data.estado === true) {
+                            location.reload();
+                        }
+                    }
+                );
+                break;
+
             default:
                 return true;
         }

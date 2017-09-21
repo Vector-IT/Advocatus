@@ -61,14 +61,6 @@
 	}
 	
 
-    //Mercado pago
-    require_once "admin/mercadopago/mercadopago.php";
-    
-    $mpClientID = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_ID'");
-    $mpClientSecret = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_SECRET'");
-    
-    $mp = new MP($mpClientID, $mpClientSecret);
-    
     if ($carrito) {
         while ($fila = $carrito->fetch_assoc()) {
             $ship = $fila["FlagShip"];
@@ -101,7 +93,49 @@
             }
         }
 
-        //CHECKOUT
+        //PROMOCION DEL CARRITO
+        $numeProm = buscarDato("SELECT NumeProm FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
+        if ($numeProm != '') {
+            $strSQL = "SELECT NumeTipoProm, ValoProm";
+            $strSQL.= $crlf."FROM promociones pr";
+            $strSQL.= $crlf."WHERE (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+            $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+            $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+            $strSQL.= $crlf."AND NumeProm = ". $numeProm;
+            
+            $promocion = buscarDato($strSQL);
+
+            if ($promocion != '') {
+                switch ($promocion["NumeTipoProm"]) {
+                    case '1': //Porcentaje de descuento
+                        $bonificacion = $subtotal * $promocion["ValoProm"] / 100;
+                        break;
+                    
+                    case '2': //Monto fijo
+                        $bonificacion = $promocion["ValoProm"];
+                        break;
+
+                    case '3': //Envio gratis
+                        $bonificacion = $envio;
+                        break;
+                }
+            }
+            else {
+                $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+                ejecutarCMD($strSQL);
+            }
+        }
+
+        $total = $subtotal - $bonificacion;
+
+        //MERCADO PAGO
+        require_once "admin/mercadopago/mercadopago.php";
+        
+        $mpClientID = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_ID'");
+        $mpClientSecret = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'MP_CLIENT_SECRET'");
+        
+        $mp = new MP($mpClientID, $mpClientSecret);
+
         if ($subtotal > 0) {
             $preference_data = array(
                 "items" => array(
@@ -186,7 +220,7 @@
                 <?php } elseif(!isset($datosUsuario) || $datosUsuario["NombPers"] == '') { ?>
                     <a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos personales y Comprar</a>
                 <?php } elseif ($subtotal > 0) {?>
-					<div class="col-lg-6"><a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+					<div class="col-lg-6"><a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight" onclick="compra()">Realizar compra</a></div>
 	            <?php }?>
             <?php }?>
         </div>
@@ -261,8 +295,6 @@
         ?>
         <div class="row">
             <div class="col-lg-6">
-                <!-- <h4>Agregar código de bonificación</h4> -->
-				<!-- <input class="codigo-bonificacion" value="" placeholder="Ingrese su código aquí"> <a href="#" class="btn-carrito-negro">Aplicar</a>   -->
 				<h4>Datos de envío y contacto</h4>
 				<?php 
 					if (isset($datosUsuario)) {
@@ -294,25 +326,63 @@
 						}
 						echo $strSalida;
 					}
-				?>
+                ?>
             </div>
             <div class="col-sm-6">
-                <div class="col-xs-6">
-                    <h3>SUBTOTAL</h3>
-                    <h3>ENVIO</h3>
-                    <!-- <h3>BONIFICACION</h3> -->
-                    <h3>TOTAL:</h3>
+            <?php if ($numeProm == '') {?>
+                <div style="border-bottom: 1px solid;">
+                    <h4>Agregar código de bonificación</h4>
+                    <form id="frmCuponDescuento">
+                        <input id="txtCupon" class="codigo-bonificacion" required placeholder="Ingrese su código aquí"><button class="btn-carrito-negro btnCupon">Aplicar</button>
+                    </form>
+                    <br>
                 </div>
-                <div class="col-xs-6">
-                    <h3 class="alignRight">$ <?php echo number_format($subtotal, 2)?></h3>
-                    <h3 class="alignRight">$ <?php echo number_format($envio, 2)?></h3>
-                    <!-- <h3 class="alignRight">$ <?php echo number_format($bonificacion, 2)?></h3> -->
-                    <h3 class="alignRight">$ <?php echo number_format($total, 2)?></h3>
+            <?php } else {?>
+                <div style="border-bottom: 1px solid;">
+                    <form id="frmQuitarCuponDescuento">
+                        <strong style="display: inline-block; width: 75%;">Anular código de bonificación</strong><button class="btn-carrito-negro btnCupon">Aplicar</button>
+                    </form>
+                    <br>
+                </div>
+            <?php }?>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h3>SUBTOTAL</h3>
+                        <h3>ENVIO</h3>
+                    <?php if ($bonificacion > 0) {?>
+                        <h3>BONIFICACION</h3>
+                    <?php }?>
+                        <h3>TOTAL:</h3>
+                    </div>
+                    <div class="col-xs-6">
+                        <h3 class="alignRight">$ <?php echo number_format($subtotal, 2)?></h3>
+                        <h3 class="alignRight">$ <?php echo number_format($envio, 2)?></h3>
+                    <?php if ($bonificacion > 0) {?>
+                        <h3 class="alignRight">$ <?php echo number_format($bonificacion, 2)?></h3>
+                    <?php }?>
+                        <h3 class="alignRight">$ <?php echo number_format($total, 2)?></h3>
+
+                    <?php 
+                        $strSalida = '';
+                        if (isset($preference)) {
+                            if ($ship == 1 && $envio == 0) {
+                                $strSalida.= '<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos de envío y Comprar</a>';
+                            } elseif(!isset($datosUsuario) || $datosUsuario["NombPers"] == '') {
+                                $strSalida.= '<a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos personales y Comprar</a>';
+                            } elseif ($subtotal > 0) {
+                                $strSalida.= '<a href="'. $preference['response']['init_point'] .'" name="MP-Checkout" class="btn-carrito-negro pushRight" onclick="compra()">Realizar compra</a>';
+                            }
+                            
+                            echo $strSalida;
+                        }
+                    ?>
+                    </div>
                 </div>
             </div>
         </div>
         <br/><br/>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-6"> </div>
 			<?php if (isset($preference)) {?>
 				<?php if ($ship == 1 && $envio == 0) {?>
@@ -320,11 +390,13 @@
                 <?php } elseif(!isset($datosUsuario) || $datosUsuario["NombPers"] == '') { ?>
                     <a href="#mdlEnvio" class="btn-carrito-negro pushRight" data-toggle="modal">Cargar datos personales y Comprar</a>
                 <?php } elseif ($subtotal > 0) {?>
-					<div class="col-lg-6"><a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight">Realizar compra</a></div>
+					<div class="col-lg-6">
+                        <a href="<?php echo $preference['response']['init_point']; ?>" name="MP-Checkout" class="btn-carrito-negro pushRight" onclick="compra()">Realizar compra</a>
+                    </div>
 	            <?php }?>
             <?php }?>
         </div>
-        <br/><br/>
+        <br/><br/> -->
         <div class="col-lg-11">
             <div class="row">
                 <div class="col-lg-3">

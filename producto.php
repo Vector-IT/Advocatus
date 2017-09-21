@@ -3,11 +3,16 @@
 	require_once 'php/conexion.php';
 
 	if (!isset($_REQUEST["slug"])) {
-		header("Location: ". $raiz ."index.php");
+		header("Location: ". $raiz);
 		die();
 	}
 
 	$numeProd = buscarDato("SELECT NumeProd FROM productos WHERE SlugProd = '". $_REQUEST["slug"] . "'");
+
+	if ($numeProd == '') {
+		header("Location: ". $raiz);
+		die();
+	}
 
 	ejecutarCMD("UPDATE productos SET Vistas = Vistas + 1 WHERE NumeProd = ". $numeProd);
 	
@@ -19,7 +24,7 @@
 	$producto = $tabla->fetch_assoc();
 
 	//Atributos
-	$strSQL = $crlf."SELECT pa.NumeAtri, a.NombAtri, pa.Valor, a.NumeTipoAtri";
+	$strSQL = "SELECT pa.NumeAtri, a.NombAtri, pa.Valor, a.NumeTipoAtri";
 	$strSQL.= $crlf."FROM productosatributos pa";
 	$strSQL.= $crlf."INNER JOIN atributos a ON pa.NumeAtri = a.NumeAtri";
 	$strSQL.= $crlf."WHERE pa.NumeProd = ". $numeProd;
@@ -27,11 +32,36 @@
 	$atributos = cargarTabla($strSQL);
 
 	//Imagenes
-	$strSQL = $crlf."SELECT RutaImag";
+	$strSQL = "SELECT RutaImag";
 	$strSQL.= $crlf."FROM productosimagenes";
 	$strSQL.= $crlf."WHERE NumeProd = ". $numeProd;
 	$strSQL.= $crlf."ORDER BY NumeOrde";
 	$imagenes = cargarTabla($strSQL);
+
+	//Categorias
+	$strSQL = "SELECT NumeCate FROM productoscategorias WHERE NumeProd = ". $numeProd;
+	$categorias = cargarTabla($strSQL);
+	$filtroCategorias = '';
+	while ($fila = $categorias->fetch_assoc()) {
+		$filtroCategorias.= ' OR pf.ValoFilt = '. $fila["NumeCate"];
+	}
+
+	//Promociones
+	$strSQL = "SELECT NumeTipoProm, ValoProm, NumeTipoFilt, ValoFilt";
+	$strSQL.= $crlf."FROM promociones pr";
+	$strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
+	$strSQL.= $crlf."WHERE pr.NumeEsta = 1";
+	$strSQL.= $crlf."AND pr.NombCupo IS NULL";
+	$strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+	$strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+	$strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+	$strSQL.= $crlf."AND (pf.NumeEsta = 1 OR pf.NumeEsta IS NULL)";
+	//Filtro por producto
+	$strSQL.= $crlf."AND (((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 1) AND (pf.ValoFilt IS NULL OR pf.ValoFilt = {$numeProd}))";
+	//Filtro por categoría
+	$strSQL.= $crlf."OR ((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 2) AND (pf.ValoFilt IS NULL {$filtroCategorias})))";
+
+	$promociones = cargarTabla($strSQL);	
 ?>
 <!doctype html>
 <html>
@@ -39,7 +69,7 @@
 	<?php include 'php/links-header.php'; ?>
 
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="admin/css/font-awesome.css">
 	<link href="css/sidebar.css" rel="stylesheet">
 
 </head>
@@ -136,7 +166,37 @@
 					<?php }?>	
 						<div>
 							<div class="section">
-								<p class="precio">$ <?php echo $producto["ImpoVent"]?></p>
+							<?php
+								$strSalida = '';
+								if ($promociones->num_rows == 0) {
+									$strSalida.= $crlf.'<p class="precio">$ '. $producto["ImpoVent"] .'</p>';
+								}
+								else {
+									$strSalida.= $crlf.'<p class="precio">';
+									$strSalida.= $crlf.'<s>$ '. $producto["ImpoVent"] .'</s>';
+									$strSalida.= $crlf.'<strong style="color: red;"><i class="fa fa-fire" aria-hidden="true"></i>En Oferta</strong>';
+									
+									$precio = $producto["ImpoVent"];
+									while ($fila = $promociones->fetch_assoc()) {
+										switch ($fila["NumeTipoProm"]) {
+											case '1': //Porcentaje de descuento
+												$precio = number_format($precio * (100 - $fila["ValoProm"]) / 100, 2);
+												break;
+
+											case '2': //Monto de descuento
+												if ($precio < floatval($fila["ValoProm"])) {
+													$precio = 0;
+												}
+												else {
+													$precio = number_format($precio - $fila["ValoProm"], 2);
+												}
+												break;
+										}
+									}
+									$strSalida.= $crlf.'<br>$ '. $precio .'</p>';
+								}
+								echo $strSalida;
+							?>
 								<?php if (intval($producto["CantProd"]) > 0) {?>
 								<div>
 									<p class="cantidad">Cantidad</p>
@@ -251,21 +311,7 @@
 		</div>
 		 <!-- /#page-content-wrapper --> 
 
-		 <!-- Sidebar -->
-		 <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
-			<ul class="nav sidebar-nav">
-				<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-bottom"></span> </button>
-				<h1>Carrito de Compras</h1>
-
-				<div id="divCarrito"></div>
-
-				<p class="subtotal">Subtotal: $ <span id="subtotal">0</span></p>
-				<p class="bonificacion">Bonificación: <span id="bonificacion">0</span></p>
-				<p class="total">Total: $ <span id="total">0</span></p>
-				<a href="mi-carrito.php" class="btn-carrito-negro">Comprar</a>  
-			</ul>
-		 </nav>
-		 <!-- /#sidebar-wrapper --> 
+		 <?php include 'php/sidebar.php'; ?>
 	  </div>
 	  <!-- /#wrapper --> 
 

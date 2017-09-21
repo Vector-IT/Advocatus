@@ -1339,7 +1339,7 @@ ul.redes-sociales li  {
 
 .codigo-bonificacion {
     padding: 0px 10px 0px;
-    width: 250px;
+    width: 75%;
     font-family: 'BentonSans-Light';
     font-weight: 600;
     font-size: 15px;
@@ -1380,13 +1380,18 @@ ul.redes-sociales li  {
     font-size: 11px;
     text-transform: uppercase;
     background: #000;
-    padding: 8px 30px 0px;
+    padding: 10px 30px 0px;
     display: inline-block;
     vertical-align: top;
+    border: none;
 }
-
 .btn-carrito-negro:hover, .btn-carrito-negro:focus {
     opacity: 0.85;
+}
+
+.btnCupon {
+    margin-left: 1%;
+    width: 24%;
 }
 
 img.img-producto-carrito {

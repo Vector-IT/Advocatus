@@ -94,6 +94,7 @@ if ($merchant_order_info["status"] == 200) {
 			}
 		}
 
+		//Actualizo datos del carrito
 		$strSQL = "UPDATE carritos SET ";
 		$strSQL.= $crlf."ID_MP = '{$_GET["id"]}'";
 		$strSQL.= $crlf.", NumeEstaCarr = ". $numeEstaCarr;
@@ -108,6 +109,13 @@ if ($merchant_order_info["status"] == 200) {
 
 		$config->ejecutarCMD($strSQL);
 
+		//Descuento promocion
+		$numeProm = $config->buscarDato("SELECT NumeProm FROM carritos WHERE NumeCarr = ". $numeCarr);
+		if ($numeProm != '') {
+			$strSQL  = "UPDATE promociones SET CantUtil = CantUtil + 1 WHERE NumeProm = ". $numeProm;
+			$config->ejecutarCMD($strSQL);
+		}
+		
 		//Descuento stock
 		$strSQL = $crlf."SELECT cd.NumeProd, cd.CantProd";
         $strSQL.= $crlf."FROM carritosdetalles cd";

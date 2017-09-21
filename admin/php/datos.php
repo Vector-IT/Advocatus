@@ -9,6 +9,8 @@
 	require_once 'custom/productos.php';
 	require_once 'custom/categorias.php';
 	require_once 'custom/carritos.php';
+	require_once 'custom/promociones.php';
+	require_once 'custom/promocionesfiltros.php';
 
 	//Datos de configuracion iniciales
 	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
@@ -158,10 +160,11 @@
 	$tabla = new Tabla("cargos", "cargos", "Cargos", "el Cargo", false);
 	$tabla->labelField = "NombCarg";
 	$tabla->order = "NumeCarg";
+	$tabla->numeCarg = 1;
 
 	$tabla->addFieldId("NumeCarg", "Número");
 	$tabla->addField("NombCarg", "text", 50, "Nombre");
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
@@ -179,7 +182,7 @@
 	$tabla->fields["NombPais"]["cssControl"] = "ucase";
 	$tabla->fields["NombPais"]["cssList"] = "ucase";
 
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
@@ -203,7 +206,7 @@
 	$tabla->fields["NombProv"]["cssControl"] = "ucase";
 	$tabla->fields["NombProv"]["cssList"] = "ucase";
 
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
@@ -241,7 +244,6 @@
 
 	$tabla->addFieldId("NumeProd", "Número", true, true);
 	
-	// $tabla->addField("ISBN", "calcfield", 0, "ISBN");
 	$tabla->addFieldSelect("ISBN", 80, "ISBN", true, "", "productosatributos", "pai", "NumeProd", "Valor", "", "pai.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'ISBN')", "");
 	$tabla->fields["ISBN"]["name"] = 'NumeProd';
 	$tabla->fields["ISBN"]["nameAlias"] = 'ISBN';
@@ -281,13 +283,12 @@
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
 	$tabla->fields["Destacado"]["txtAlign"] = "center";
 
-	// $tabla->addField("Autor", "calcfield", 40, "Autor");
 	$tabla->addFieldSelect("Autor", 80, "Autor", true, "", "productosatributos", "paa", "NumeProd", "Valor", "", "paa.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')", "");
 	$tabla->fields["Autor"]["name"] = "NumeProd";
 	$tabla->fields["Autor"]["nameAlias"] = "AUTOR";
 	$tabla->fields["Autor"]["showOnForm"] = false;
 
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
@@ -327,7 +328,7 @@
 	$tabla->addField("FlagRequ", "checkbox", 0, "Es Obligatorio?");
 	$tabla->fields["FlagRequ"]["txtAlign"] = "center";
 
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
@@ -566,17 +567,110 @@
 
 	$config->tablas["carritosdetalles"] = $tabla;
 
+	/**
+	* PROMOCIONES
+	*/
+	$tabla = new Promocion("promociones", "promociones", "Promociones", "la promoción", true, "objeto/promociones.php", "fa-handshake-o");
+	$tabla->isSubItem = true;
+	$tabla->labelField = "NombProm";
+
+	$tabla->jsFiles = ["admin/js/custom/promociones.js"];
+
+	$tabla->btnList = [
+		array(
+			'id'=> 'btnFiltros',
+			'titulo'=> 'Filtros',
+			'texto'=> '<i class="fa fa-filter fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-info',
+			'onclick'=> 'verFiltros'
+		),
+	];
+
+	$tabla->addFieldId("NumeProm", "Número");
+	$tabla->addField("NombProm", "text", 50, "Nombre");
+	$tabla->addField("FechDesd", "datetime", 0, "Vigencia desde", false);
+	$tabla->fields["FechDesd"]["cssGroup"] = "form-group2";
+	
+	$tabla->addField("FechHast", "datetime", 0, "Vigencia hasta", false);
+	$tabla->fields["FechHast"]["cssGroup"] = "form-group2";
+
+	$tabla->addField("CantPerm", "number", 0, "Cantidad permitida de usos", false);
+	$tabla->fields["CantPerm"]["txtAlign"] = "right";
+
+	$tabla->addField("CantUtil", "number", 0, "Cantidad utilizado", false);
+	$tabla->fields["CantUtil"]["showOnForm"] = false;
+	$tabla->fields["CantUtil"]["txtAlign"] = "right";
+
+	$tabla->addFieldSelect("NumeTipoProm", 30, "Tipo de promoción", true, '', 'tipospromociones', '', 'NumeTipoProm', 'NombTipoProm', '', '', 'NombTipoProm');
+
+	$tabla->addField("NombCupo", "text", 0, "Cupón", false);
+
+	$tabla->addField("ValoProm", "text", 0, "Valor de descuento", false);
+	$tabla->fields["ValoProm"]["txtAlign"] = "right";
+
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';	
+
+	$config->tablas["promociones"] = $tabla;
+
+	/**
+	* PROMOCIONES FILTROS
+	*/
+	$tabla = new PromocionFiltro("promocionesfiltros", "promocionesfiltros", "Filtros", "el filtro", false, "", "fa-handshake-o");
+	$tabla->masterTable = "promociones";
+	$tabla->masterFieldId = "NumeProm";
+	$tabla->masterFieldName = "NombProm";
+
+	$tabla->jsFiles = ["admin/js/custom/promocionesfiltros.js"];
+	$tabla->jsOnNew = "nuevo();";
+
+	$tabla->addFieldId("NumeFilt", "Número", true, true);
+
+	$tabla->addField("NumeProm", "number", 0, "Promoción");
+	$tabla->fields["NumeProm"]["isHiddenInList"] = true;
+	$tabla->fields["NumeProm"]["isHiddenInForm"] = true;
+
+	$tabla->addFieldSelect("NumeTipoFilt", 30, "Tipo de Filtro", true, '', 'tipospromocionesfiltros', '', 'NumeTipoFilt', 'NombTipoFilt', '', '', 'NombTipoFilt');
+	$tabla->fields["NumeTipoFilt"]["onChange"] = "cambioTipo(this.value, false);";
+
+	$tabla->addField("ValoFilt", "calcfield", 100, "Dato del filtro");
+	$tabla->fields["ValoFilt"]["processAnyway"] = true;
+
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';	
+
+	$config->tablas["promocionesfiltros"] = $tabla;
+
+	/**
+	* TIPOS DE PROMOCIONES
+	*/
 	$tabla = new Tabla("tipospromociones", "tipospromociones", "Tipos de promociones", "el tipo de promoción", true, "objeto/tipospromociones.php", "fa-handshake-o");
 	$tabla->isSubItem = true;
 	$tabla->labelField = "NombTipoProm";
+	$tabla->numeCarg = 1;
 
 	$tabla->addFieldId("NumeTipoProm", "Número");
 	$tabla->addField("NombTipoProm", "text", 50, "Nombre");
-	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', '', 'NombEsta');
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';	
 
 	$config->tablas["tipospromociones"] = $tabla;
+
+	/**
+	* TIPOS DE PROMOCIONES FILTROS
+	*/
+	$tabla = new Tabla("tipospromocionesfiltros", "tipospromocionesfiltros", "Tipos de filtros de promociones", "el tipo de filtro", true, "objeto/tipospromocionesfiltros.php", "fa-filter");
+	$tabla->isSubItem = true;
+	$tabla->labelField = "NombTipoFilt";
+	$tabla->numeCarg = 1;
+
+	$tabla->addFieldId("NumeTipoFilt", "Número");
+	$tabla->addField("NombTipoFilt", "text", 50, "Nombre");
+
+	$config->tablas["tipospromocionesfiltros"] = $tabla;
 
 	unset($tabla);
 ?>

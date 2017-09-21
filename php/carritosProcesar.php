@@ -36,6 +36,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $impoUnit = buscarDato("SELECT ImpoVent FROM productos WHERE NumeProd = ". $numeProd);
             $cantProdOld = 0;
 
+            //Categorias
+            $strSQL = "SELECT NumeCate FROM productoscategorias WHERE NumeProd = ". $numeProd;
+            $categorias = cargarTabla($strSQL);
+            $filtroCategorias = '';
+            while ($fila = $categorias->fetch_assoc()) {
+                $filtroCategorias.= ' OR pf.ValoFilt = '. $fila["NumeCate"];
+            }
+
+            //Promociones
+            $strSQL = "SELECT NumeTipoProm, ValoProm, NumeTipoFilt, ValoFilt";
+            $strSQL.= $crlf."FROM promociones pr";
+            $strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
+            $strSQL.= $crlf."WHERE pr.NumeEsta = 1";
+            $strSQL.= $crlf."AND pr.NombCupo IS NULL";
+            $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+            $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+            $strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+            $strSQL.= $crlf."AND (pf.NumeEsta = 1 OR pf.NumeEsta IS NULL)";
+            //Filtro por producto
+            $strSQL.= $crlf."AND (((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 1) AND (pf.ValoFilt IS NULL OR pf.ValoFilt = {$numeProd}))";
+            //Filtro por categoría
+            $strSQL.= $crlf."OR ((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 2) AND (pf.ValoFilt IS NULL {$filtroCategorias})))";
+
+            $promociones = cargarTabla($strSQL);
+
+            if ($promociones->num_rows > 0) {
+                while ($fila = $promociones->fetch_assoc()) {
+                    switch ($fila["NumeTipoProm"]) {
+                        case '1': //Porcentaje de descuento
+                            $impoUnit = number_format($impoUnit * (100 - $fila["ValoProm"]) / 100, 2);
+                            break;
+
+                        case '2': //Monto de descuento
+                            if ($impoUnit < floatval($fila["ValoProm"])) {
+                                $impoUnit = 0;
+                            }
+                            else {
+                                $impoUnit = number_format($impoUnit - $fila["ValoProm"], 2);
+                            }
+                            break;
+                    }
+                }
+            }
             
             if ($numeCarr == "") {
                 //Creo un carrito nuevo
@@ -102,6 +145,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $salida = ejecutarCMD($strSQL);
 
             break;
+        case "4": //Cupon de descuento
+            $numeCarr = $_SESSION["NumeCarr"];
+
+            $strSQL = "SELECT pr.NumeProm, pr.NumeTipoProm, pr.ValoProm, pf.NumeTipoFilt, pf.ValoFilt";
+            $strSQL.= $crlf."FROM promociones pr";
+            $strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
+            $strSQL.= $crlf."WHERE pr.NumeEsta = 1";
+            $strSQL.= $crlf."AND pr.NombCupo = '". $_POST["NombCupo"] ."'";
+            $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+            $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+            $strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+            $strSQL.= $crlf."AND (pf.NumeEsta = 1 OR pf.NumeEsta IS NULL)";
+            $strSQL.= $crlf."AND pf.NumeTipoFilt IS NULL";
+            
+            $promocion = buscarDato($strSQL);
+
+            if ($promocion != '') {
+                $strSQL = "UPDATE carritos SET NumeProm = {$promocion["NumeProm"]} WHERE NumeCarr = {$numeCarr}";
+                $salida = ejecutarCMD($strSQL);
+            }
+            else {
+                $salida = false;
+            }
+            break;
+        
+        case "5": //Quitar cupon de descuento
+            $numeCarr = $_SESSION["NumeCarr"];
+            $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = {$numeCarr}";
+            $salida = ejecutarCMD($strSQL);
+            break;
     }
 
     header('Content-Type: application/json');
@@ -111,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function carrito() {
     global $crlf;
 
-    $strSQL = $crlf."SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
+    $strSQL = "SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
     $strSQL.= $crlf."FROM carritos c";
     $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag";
     $strSQL.= $crlf."			FROM carritosdetalles cd";
@@ -144,6 +217,36 @@ function carrito() {
 
             $subtotal+= floatval($fila["ImpoTota"]);
         }
+
+        //Promocion por cupon
+        $numeProm = buscarDato("SELECT NumeProm FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
+        if ($numeProm != '') {
+            $strSQL = "SELECT NumeTipoProm, ValoProm";
+            $strSQL.= $crlf."FROM promociones pr";
+            $strSQL.= $crlf."WHERE (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+            $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+            $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+            $strSQL.= $crlf."AND NumeProm = ". $numeProm;
+            
+            $promocion = buscarDato($strSQL);
+
+            if ($promocion != '') {
+                switch ($promocion["NumeTipoProm"]) {
+                    case '1': //Porcentaje de descuento
+                        $bonificacion = $subtotal * $promocion["ValoProm"] / 100;
+                        break;
+                    
+                    case '2': //Monto fijo
+                        $bonificacion = $promocion["ValoProm"];
+                        break;
+                }
+            }
+            else {
+                $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+                ejecutarCMD($strSQL);
+            }
+        }
+
         $total = $subtotal - $bonificacion;
     }
     else {
