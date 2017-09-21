@@ -41,9 +41,26 @@
 	//Categorias
 	$strSQL = "SELECT NumeCate FROM productoscategorias WHERE NumeProd = ". $numeProd;
 	$categorias = cargarTabla($strSQL);
-	$filtroCategorias = '';
+	$filtroCategorias = [];
+
+	$strBreadcrumb = [];
+	$I = 0;
 	while ($fila = $categorias->fetch_assoc()) {
-		$filtroCategorias.= ' OR pf.ValoFilt = '. $fila["NumeCate"];
+		$filtroCategorias[] = $fila["NumeCate"];
+
+		//Armo la ruta de categorias
+		$strBreadcrumb[$I] = '<nav id="item-producto" class="breadcrumb">';
+
+		$nombCate = buscarDato("SELECT NombCate FROM categorias WHERE NumeCate = ". $fila["NumeCate"]);
+		$nombCatePadr = buscarDato("SELECT NombCate FROM categorias WHERE NumePadr = ". $fila["NumeCate"]);
+
+		$strBreadcrumb[$I].= $crlf.'<span class="breadcrumb-item">'. $nombCate .'</span>';
+		if ($nombCatePadr != '') {
+			$strBreadcrumb[$I].= $crlf.'<span class="breadcrumb-item">'. $nombCatePadr .'</span>';
+		}
+		$strBreadcrumb[$I].= $crlf.'</nav>';
+
+		$I++;
 	}
 
 	//Promociones
@@ -51,15 +68,15 @@
 	$strSQL.= $crlf."FROM promociones pr";
 	$strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
 	$strSQL.= $crlf."WHERE pr.NumeEsta = 1";
-	$strSQL.= $crlf."AND pr.NombCupo IS NULL";
+	$strSQL.= $crlf."AND (pr.NombCupo IS NULL OR pr.NombCupo = '')";
 	$strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
 	$strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
 	$strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
 	$strSQL.= $crlf."AND (pf.NumeEsta = 1 OR pf.NumeEsta IS NULL)";
-	//Filtro por producto
-	$strSQL.= $crlf."AND (((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 1) AND (pf.ValoFilt IS NULL OR pf.ValoFilt = {$numeProd}))";
-	//Filtro por categoría
-	$strSQL.= $crlf."OR ((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 2) AND (pf.ValoFilt IS NULL {$filtroCategorias})))";
+	// //Filtro por producto
+	// $strSQL.= $crlf."AND (((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 1) AND (pf.ValoFilt IS NULL OR pf.ValoFilt = {$numeProd}))";
+	// //Filtro por categoría
+	// $strSQL.= $crlf."OR ((pf.NumeTipoFilt IS NULL OR pf.NumeTipoFilt = 2) AND (pf.ValoFilt IS NULL {$filtroCategorias})))";
 
 	$promociones = cargarTabla($strSQL);	
 ?>
@@ -69,7 +86,6 @@
 	<?php include 'php/links-header.php'; ?>
 
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="admin/css/font-awesome.css">
 	<link href="css/sidebar.css" rel="stylesheet">
 
 </head>
@@ -85,10 +101,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-6">
-						<nav id="item-producto" class="breadcrumb">
-						<a class="breadcrumb-item" href="#">Derecho</a>
-						<span class="breadcrumb-item active">Derecho Penal</span>
-						</nav>
+					<?php 
+						for ($I = 0; $I < count($strBreadcrumb); $I++) {
+							echo $crlf.$strBreadcrumb[$I];
+						}
+					?>
 						<div class="carousel slide article-slide" id="article-photo-carousel">
 						<!-- Wrapper for slides -->
 						<div class="carousel-inner cont-slider">
@@ -124,7 +141,8 @@
 					<div class="col-sm-6">
 						<div class="info-producto">
 						<h1><?php echo $producto["NombProd"]?></h1>
-						<div class="star-rating">
+
+						<!-- <div class="star-rating">
 							<div class="star-rating__wrap">
 								<input class="star-rating__input" id="star-rating-5" type="radio" name="rating" value="5">
 								<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-5" title="5 estrellas"></label>
@@ -138,7 +156,8 @@
 								<label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-1" title="1 estrellas"></label>
 							</div>
 						</div>
-						<p class="clasificacion">Calificación</p>
+
+						<p class="clasificacion">Calificación</p> -->
 						<h2>Detalles</h2>
 						<p>
 							<?php echo $producto["DescProd"]?>
@@ -168,16 +187,32 @@
 							<div class="section">
 							<?php
 								$strSalida = '';
-								if ($promociones->num_rows == 0) {
-									$strSalida.= $crlf.'<p class="precio">$ '. $producto["ImpoVent"] .'</p>';
-								}
-								else {
-									$strSalida.= $crlf.'<p class="precio">';
-									$strSalida.= $crlf.'<s>$ '. $producto["ImpoVent"] .'</s>';
-									$strSalida.= $crlf.'<strong style="color: red;"><i class="fa fa-fire" aria-hidden="true"></i>En Oferta</strong>';
-									
-									$precio = $producto["ImpoVent"];
+								$precio = $producto["ImpoVent"];
+								if ($promociones->num_rows > 0) {
 									while ($fila = $promociones->fetch_assoc()) {
+										if ($fila["ValoFilt"] != '') {
+											$blnFalse = false;
+
+											switch ($fila["NumeTipoFilt"]) {
+												case '1':
+													$arProds = explode(",", $fila["ValoFilt"]);
+													$blnPromo = (array_search($numeProd, $arProds) !== false ? true : false);
+													break;
+												
+												case '2':
+													$arCates = explode(",", $fila["ValoFilt"]);
+
+													for ($I = 0; $I < count($filtroCategorias); $I++) {
+														$blnPromo = $blnPromo || (array_search($filtroCategorias[$I], $arCates) !== false ? true : false);
+													}
+													break;
+											}
+
+											if ($blnPromo === false) {
+												continue;
+											}
+										}
+
 										switch ($fila["NumeTipoProm"]) {
 											case '1': //Porcentaje de descuento
 												$precio = number_format($precio * (100 - $fila["ValoProm"]) / 100, 2);
@@ -193,6 +228,15 @@
 												break;
 										}
 									}
+								}
+
+								if ($precio == $producto["ImpoVent"]) {
+									$strSalida.= $crlf.'<p class="precio">$ '. $producto["ImpoVent"] .'</p>';
+								}
+								else {
+									$strSalida.= $crlf.'<p class="precio">';
+									$strSalida.= $crlf.'<s>$ '. $producto["ImpoVent"] .'</s>';
+									$strSalida.= $crlf.'<strong style="color: red;"><i class="fa fa-fire" aria-hidden="true"></i>En Oferta</strong>';
 									$strSalida.= $crlf.'<br>$ '. $precio .'</p>';
 								}
 								echo $strSalida;

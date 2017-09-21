@@ -329,21 +329,23 @@
                 ?>
             </div>
             <div class="col-sm-6">
-            <?php if ($numeProm == '') {?>
-                <div style="border-bottom: 1px solid;">
-                    <h4>Agregar código de bonificación</h4>
-                    <form id="frmCuponDescuento">
-                        <input id="txtCupon" class="codigo-bonificacion" required placeholder="Ingrese su código aquí"><button class="btn-carrito-negro btnCupon">Aplicar</button>
-                    </form>
-                    <br>
-                </div>
-            <?php } else {?>
-                <div style="border-bottom: 1px solid;">
-                    <form id="frmQuitarCuponDescuento">
-                        <strong style="display: inline-block; width: 75%;">Anular código de bonificación</strong><button class="btn-carrito-negro btnCupon">Aplicar</button>
-                    </form>
-                    <br>
-                </div>
+            <?php if ($carrito) {?>
+                <?php if ($numeProm == '') {?>
+                    <div style="border-bottom: 1px solid;">
+                        <h4>Agregar código de bonificación</h4>
+                        <form id="frmCuponDescuento">
+                            <input id="txtCupon" class="codigo-bonificacion" required placeholder="Ingrese su código aquí"><button class="btn-carrito-negro btnCupon">Aplicar</button>
+                        </form>
+                        <br>
+                    </div>
+                <?php } else {?>
+                    <div style="border-bottom: 1px solid;">
+                        <form id="frmQuitarCuponDescuento">
+                            <strong style="display: inline-block; width: 75%;">Anular código de bonificación</strong><button class="btn-carrito-negro btnCupon">Aplicar</button>
+                        </form>
+                        <br>
+                    </div>
+                <?php }?>
             <?php }?>
 
                 <div class="row">

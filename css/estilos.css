@@ -596,6 +596,7 @@ span#text-lost-msg {
     color: #a94442;
     padding: 0px 15px;
     font-weight: 600;
+    text-align: center;
 }
 
 #consultanos {

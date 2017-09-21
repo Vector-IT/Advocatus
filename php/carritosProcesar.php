@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $strSQL.= $crlf."FROM promociones pr";
             $strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
             $strSQL.= $crlf."WHERE pr.NumeEsta = 1";
-            $strSQL.= $crlf."AND pr.NombCupo IS NULL";
+            $strSQL.= $crlf."AND (pr.NombCupo IS NULL OR pr.NombCupo = '')";
             $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
             $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
             $strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";

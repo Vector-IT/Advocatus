@@ -12,6 +12,10 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="admin/css/font-awesome.css">
+    
     <!-- Custom CSS -->
     <link href="css/estilos.css" rel="stylesheet">
     <link href="fuentes/fuentes.css" rel="stylesheet">

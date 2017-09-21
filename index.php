@@ -2,9 +2,9 @@
 	session_start();
 
 	require_once 'php/conexion.php';
-	
-	$cantNovedades = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD NOVEDADES HOME'");
 
+	//Novedades
+	$cantNovedades = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD NOVEDADES HOME'");
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."INNER JOIN productosnovedades pn ON p.NumeProd = pn.NumeProd";
@@ -13,25 +13,41 @@
 	$strSQL.= $crlf."LIMIT ". $cantNovedades;
 	$novedades = cargarTabla($strSQL);
 
+	//Productos en Promocion
 	$cantPromociones = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD PROMOCIONES HOME'");
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Promocion = 1";
 	$strSQL.= $crlf."LIMIT ". $cantPromociones;
-	$promociones = cargarTabla($strSQL);
+	$prodPromo = cargarTabla($strSQL);
 
+	//Destacados
 	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Destacado = 1";
 	$destacados = cargarTabla($strSQL);
 
+	//Slider 1
 	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 1";
 	$slider1 = cargarTabla($strSQL);
 
+	//Slider 2
 	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 2";
 	$slider2 = cargarTabla($strSQL);
+
+	//Promociones
+	$strSQL = "SELECT NumeTipoProm, ValoProm, NumeTipoFilt, ValoFilt";
+	$strSQL.= $crlf."FROM promociones pr";
+	$strSQL.= $crlf."LEFT JOIN promocionesfiltros pf ON pr.NumeProm = pf.NumeProm";
+	$strSQL.= $crlf."WHERE pr.NumeEsta = 1";
+	$strSQL.= $crlf."AND (pr.NombCupo IS NULL OR pr.NombCupo = '')";
+	$strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+	$strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+	$strSQL.= $crlf."AND (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+	$strSQL.= $crlf."AND (pf.NumeEsta = 1 OR pf.NumeEsta IS NULL)";
+	$promociones = cargarTabla($strSQL);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -111,7 +127,7 @@
 						
 						<!-- <li><a href="#packs" data-toggle="tab">Packs</a></li> -->
 
-						<?php if ($promociones->num_rows > 0) {?>
+						<?php if ($prodPromo->num_rows > 0) {?>
 						<li><a href="#promociones" data-toggle="tab">Promociones</a></li>
 						<?php }?>
 					</ul>
@@ -122,6 +138,15 @@
 								$J = 0;
 								$salida = '';
 								while ($fila = $novedades->fetch_assoc()) {
+									//Categorias
+									$strSQL = "SELECT NumeCate FROM productoscategorias WHERE NumeProd = ". $fila["NumeProd"];
+									$categorias = cargarTabla($strSQL);
+									$filtroCategorias = [];
+									while ($cate = $categorias->fetch_assoc()) {
+										$filtroCategorias[] = $cate["NumeCate"];
+									}
+
+									//Cantidad de favoritos
 									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
 
 									if ($J == 0) {
@@ -143,7 +168,62 @@
 									$salida.= $crlf.'		</div>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
-									$salida.= $crlf.'		<p class="precio-producto">$ '.$fila["ImpoVent"].'</p>';
+									
+									// $salida.= $crlf.'		<p class="precio-producto">$ '.$fila["ImpoVent"].'</p>';
+									$precio = $fila["ImpoVent"];
+									if ($promociones->num_rows > 0) {
+										$promociones->data_seek(0);
+
+										while ($promo = $promociones->fetch_assoc()) {
+											if ($promo["ValoFilt"] != '') {
+												$blnFalse = false;
+	
+												switch ($promo["NumeTipoFilt"]) {
+													case '1':
+														$arProds = explode(",", $promo["ValoFilt"]);
+														$blnPromo = (array_search($fila["NumeProd"], $arProds) !== false ? true : false);
+														break;
+													
+													case '2':
+														$arCates = explode(",", $promo["ValoFilt"]);
+	
+														for ($I = 0; $I < count($filtroCategorias); $I++) {
+															$blnPromo = $blnPromo || (array_search($filtroCategorias[$I], $arCates) !== false ? true : false);
+														}
+														break;
+												}
+	
+												if ($blnPromo === false) {
+													continue;
+												}
+											}
+	
+											switch ($promo["NumeTipoProm"]) {
+												case '1': //Porcentaje de descuento
+													$precio = number_format($precio * (100 - $promo["ValoProm"]) / 100, 2);
+													break;
+	
+												case '2': //Monto de descuento
+													if ($precio < floatval($promo["ValoProm"])) {
+														$precio = 0;
+													}
+													else {
+														$precio = number_format($precio - $promo["ValoProm"], 2);
+													}
+													break;
+											}
+										}
+									}
+									if ($precio == $fila["ImpoVent"]) {
+										$salida.= $crlf.'<p class="precio-producto">$ '. $fila["ImpoVent"] .'</p>';
+									}
+									else {
+										$salida.= $crlf.'<p class="precio-producto">';
+										$salida.= $crlf.'<s>$ '. $fila["ImpoVent"] .'</s>';
+										$salida.= $crlf.'<strong style="color: red;"><i class="fa fa-fire" aria-hidden="true"></i>En Oferta</strong>';
+										$salida.= $crlf.'<br>$ '. $precio .'</p>';
+									}
+
 									$salida.= $crlf.'	</div>';
 									$salida.= $crlf.'</div>';
 
@@ -155,12 +235,21 @@
 							<!-- /.row -->
 						</div>
 						<?php }?>
-						<?php if ($promociones->num_rows > 0) {?>
+						<?php if ($prodPromo->num_rows > 0) {?>
 						<div class="tab-pane" id="promociones">
 							<?php 
 								$J = 0;
 								$salida = '';
-								while ($fila = $promociones->fetch_assoc()) {
+								while ($fila = $prodPromo->fetch_assoc()) {
+									//Categorias
+									$strSQL = "SELECT NumeCate FROM productoscategorias WHERE NumeProd = ". $fila["NumeProd"];
+									$categorias = cargarTabla($strSQL);
+									$filtroCategorias = '';
+									while ($cate = $categorias->fetch_assoc()) {
+										$filtroCategorias.= ' OR pf.ValoFilt = '. $cate["NumeCate"];
+									}
+
+									//Cantidad de favoritos
 									$cantFav = buscarDato("SELECT COUNT(*) FROM usuariosfavoritos WHERE NumeProd = ". $fila["NumeProd"]);
 
 									if ($J == 0) {
@@ -182,7 +271,61 @@
 									$salida.= $crlf.'		</div>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
-									$salida.= $crlf.'		<p class="precio-producto">$ '.$fila["ImpoVent"].'</p>';
+									
+									$precio = $fila["ImpoVent"];
+									if ($promociones->num_rows > 0) {
+										$promociones->data_seek(0);
+										
+										while ($promo = $promociones->fetch_assoc()) {
+											if ($promo["ValoFilt"] != '') {
+												$blnFalse = false;
+	
+												switch ($promo["NumeTipoFilt"]) {
+													case '1':
+														$arProds = explode(",", $promo["ValoFilt"]);
+														$blnPromo = (array_search($fila["NumeProd"], $arProds) !== false ? true : false);
+														break;
+													
+													case '2':
+														$arCates = explode(",", $promo["ValoFilt"]);
+	
+														for ($I = 0; $I < count($filtroCategorias); $I++) {
+															$blnPromo = $blnPromo || (array_search($filtroCategorias[$I], $arCates) !== false ? true : false);
+														}
+														break;
+												}
+	
+												if ($blnPromo === false) {
+													continue;
+												}
+											}
+	
+											switch ($promo["NumeTipoProm"]) {
+												case '1': //Porcentaje de descuento
+													$precio = number_format($precio * (100 - $promo["ValoProm"]) / 100, 2);
+													break;
+	
+												case '2': //Monto de descuento
+													if ($precio < floatval($promo["ValoProm"])) {
+														$precio = 0;
+													}
+													else {
+														$precio = number_format($precio - $promo["ValoProm"], 2);
+													}
+													break;
+											}
+										}
+									}
+									if ($precio == $fila["ImpoVent"]) {
+										$salida.= $crlf.'<p class="precio-producto">$ '. $fila["ImpoVent"] .'</p>';
+									}
+									else {
+										$salida.= $crlf.'<p class="precio-producto">';
+										$salida.= $crlf.'<s>$ '. $fila["ImpoVent"] .'</s>';
+										$salida.= $crlf.'<strong style="color: red;"><i class="fa fa-fire" aria-hidden="true"></i>En Oferta</strong>';
+										$salida.= $crlf.'<br>$ '. $precio .'</p>';
+									}
+
 									$salida.= $crlf.'	</div>';
 									$salida.= $crlf.'</div>';
 
