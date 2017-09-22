@@ -30,11 +30,11 @@
 	$destacados = cargarTabla($strSQL);
 
 	//Slider 1
-	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 1";
+	$strSQL = "SELECT RutaImag, LinkImag FROM slidersimagenes WHERE NumeSlid = 1";
 	$slider1 = cargarTabla($strSQL);
 
 	//Slider 2
-	$strSQL = "SELECT RutaImag FROM slidersimagenes WHERE NumeSlid = 2";
+	$strSQL = "SELECT RutaImag, LinkImag FROM slidersimagenes WHERE NumeSlid = 2";
 	$slider2 = cargarTabla($strSQL);
 
 	//Promociones
@@ -89,7 +89,15 @@
 							else {
 								$strSalida.= $crlf.'<div class="item">';
 							}
-							$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+							if ($fila["LinkImag"] != '') {
+								$strSalida.= $crlf.'<a href="'. $fila["LinkImag"] .'" target="_blank">';
+								$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+								$strSalida.= $crlf.'</a>';
+							}
+							else {
+								$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+							}
+
 							$strSalida.= $crlf.'</div>';
 						}
 						echo $strSalida;
@@ -390,7 +398,14 @@
 					else {
 						$strSalida.= $crlf.'<div class="item">';
 					}
-					$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+					if ($fila["LinkImag"] != '') {
+						$strSalida.= $crlf.'<a href="'. $fila["LinkImag"] .'" target="_blank">';
+						$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+						$strSalida.= $crlf.'</a>';
+					}
+					else {
+						$strSalida.= $crlf.'<img src="admin/'. $fila["RutaImag"] .'" alt="">';
+					}
 					$strSalida.= $crlf.'</div>';
 				}
 				echo $strSalida;

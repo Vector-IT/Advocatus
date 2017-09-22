@@ -151,6 +151,7 @@
 	$tabla->fields["NumeOrde"]["showOnForm"] = false;
 
 	$tabla->addFieldFileImage("RutaImag", "Imagen", "imgSliders");
+	$tabla->addField("LinkImag", "text", 100, "Link", false);
 
 	$config->tablas["slidersimagenes"] = $tabla;
 
@@ -216,12 +217,13 @@
 	* PRODUCTOS
 	*/
 	$tabla = new Producto("productos", "productos", "Productos", "el producto", true, "productos.php", "fa-paper-plane");
+	$tabla->isSubMenu = true;
 	$tabla->labelField = "NombProd";
 	$tabla->order = "NombProd";
+	$tabla->exportToXLS = true;
 	
-	$tabla->isSubMenu = true;
-	// $tabla->paginacion = true;
 	$tabla->jsFiles = ["admin/js/custom/productos.js"];
+
 	$tabla->btnList = [
 		array(
 			'id'=> 'btnImg',
@@ -249,7 +251,13 @@
 	$tabla->fields["ISBN"]["nameAlias"] = 'ISBN';
 	$tabla->fields["ISBN"]["showOnForm"] = false;
 	
-	$tabla->addField("NombProd", "text", 200, "Nombre");
+	$tabla->addField("NombProd", "text", 200, "Título");
+
+	$tabla->addFieldSelect("Autor", 80, "Autor", true, "", "productosatributos", "paa", "NumeProd", "Valor", "", "paa.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')", "");
+	$tabla->fields["Autor"]["name"] = "NumeProd";
+	$tabla->fields["Autor"]["nameAlias"] = "AUTOR";
+	$tabla->fields["Autor"]["showOnForm"] = false;
+
 	$tabla->addField("SlugProd", "text", 200, "Slug");
 	$tabla->fields["SlugProd"]["isHiddenInList"] = true;
 
@@ -282,11 +290,6 @@
 	$tabla->fields["Promocion"]["txtAlign"] = "center";
 	$tabla->addField("Destacado", "checkbox", 0, "Es Destacado?");
 	$tabla->fields["Destacado"]["txtAlign"] = "center";
-
-	$tabla->addFieldSelect("Autor", 80, "Autor", true, "", "productosatributos", "paa", "NumeProd", "Valor", "", "paa.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')", "");
-	$tabla->fields["Autor"]["name"] = "NumeProd";
-	$tabla->fields["Autor"]["nameAlias"] = "AUTOR";
-	$tabla->fields["Autor"]["showOnForm"] = false;
 
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
@@ -554,6 +557,16 @@
 
 	$tabla->addFieldSelect("NumeProd", 0, "Producto", true, "", "productos", "", "NumeProd", "NombProd", "", "", "NombProd");
 	
+	$tabla->addFieldSelect("Autor", 80, "Autor", true, "", "productosatributos", "paa", "NumeProd", "Valor", "", "paa.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'AUTOR')", "");
+	$tabla->fields["Autor"]["name"] = "NumeProd";
+	$tabla->fields["Autor"]["nameAlias"] = "AUTOR";
+	$tabla->fields["Autor"]["showOnForm"] = false;
+
+	$tabla->addFieldSelect("Tomo", 80, "Tomo", true, "", "productosatributos", "pat", "NumeProd", "Valor", "", "pat.NumeAtri IN (SELECT NumeAtri FROM atributos WHERE UPPER(NombAtri) = 'TOMO')", "");
+	$tabla->fields["Tomo"]["name"] = "NumeProd";
+	$tabla->fields["Tomo"]["nameAlias"] = "TOMO";
+	$tabla->fields["Tomo"]["showOnForm"] = false;
+
 	$tabla->addField("CantProd", "number", 0, "Cantidad");
 	$tabla->fields["CantProd"]["txtAlign"] = "right";
 	

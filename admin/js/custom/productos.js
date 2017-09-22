@@ -493,3 +493,11 @@ function editarImpoVent(numeProd) {
 		);
 	}
 }
+
+function exportarproductos() {
+	$("#tblproductos").table2excel({
+		exclude: ".noXLS",
+		name: "Productos",
+		filename: "Productos"
+	});
+}

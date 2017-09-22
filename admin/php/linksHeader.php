@@ -22,7 +22,7 @@
 	<script src="<?php echo $config->raiz ?>admin/js/bootstrap.min.js"></script>
 
 	<?php
-		if (isset($_SESSION['DarkTheme']) || !isset($_SESSION['is_logged_in'])) {
+		if (isset($_SESSION['DarkTheme']) || !isset($_SESSION)) {
 			echo '<link rel="stylesheet" href="'.$config->raiz.'admin/css/bootstrap-dark.css">';
 		}
 	?>
@@ -53,6 +53,12 @@
 	<?php
 		if  (isset($tabla) && $tabla->orderColumns) {
 			echo '	<script src="'. $config->raiz .'admin/js/tinysort.js"></script>';
+		}
+	?>
+
+	<?php
+		if  (isset($tabla) && $tabla->exportToXLS) {
+			echo '	<script src="'. $config->raiz .'admin/js/jquery.table2excel.js"></script>';
 		}
 	?>
 

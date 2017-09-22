@@ -43,6 +43,7 @@
     <?php require_once 'php/linksHeader.php'; ?>
 
 	<script src="js/custom/productos.js"></script>
+	<script src="js/jquery.table2excel.js"></script>
 	
 	<link rel="stylesheet" href="css/equal-height-columns.css">
 
@@ -88,6 +89,8 @@
         ?>
 
         <button id="btnNuevo" type="button" class="btn btn-sm btn-primary" onclick="editarproductos(0);"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> Nuevo</button>
+        <button id="btnExport" type="button" class="btn btn-sm btn-success" onclick="exportarproductos();"><i class="fa fa-file-excel-o fa-fw" aria-hidden="true"></i> Exportar a Excel</button>
+
         <form id="frmproductos" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">
             <input type="hidden" id="hdnTabla" value="productos" />
             <input type="hidden" id="hdnOperacion" value="0" />

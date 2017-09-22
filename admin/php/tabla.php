@@ -10,70 +10,72 @@ namespace VectorForms;
  */
 class Tabla
 {
-	public $name;
-	public $tabladb;
-	public $titulo;
-	public $tituloSingular;
+	public $name; //String - Nombre del objeto
+	public $tabladb; //String - Nombre en la BD
+	public $titulo; //String - Titulo en la página
+	public $tituloSingular; //String - Titulo para utilizar en alerts
 	
-	public $headerFiles;
+	public $headerFiles; //Array de rutas de archivos php para cargar en el <head>
 
-	public $showMenu;
-	public $isSubMenu;
-	public $isSubItem;
+	public $showMenu; //Bool - Activa el objeto en el menu
+	public $isSubMenu; //Bool
+	public $isSubItem; //Bool
 	
-	public $url;
-	public $icono;
-	public $fields;
-	public $order;
-	public $orderColumns;
-	public $orderField;
-	public $orderFieldAppend;
-
-	public $paginacion;
-	public $pageRows;
-
-	public $IDField;
-	public $labelField;
-
-	public $allowNew;
-	public $allowEdit;
-	public $allowDelete;
-
-	public $masterTable;
-	public $masterFieldId;
-	public $masterFieldName;
-
-	public $numeCarg;
-	public $numeCargNew;
-	public $numeCargEdit;
-	public $numeCargDelete;
-
-	public $jsFiles;
-	public $jsOnLoad;
-	public $jsOnList;
-	public $jsOnNew;
-	public $jsOnEdit;
+	public $url; //String
+	public $icono; //String - Clase de Font Awesome
+	public $fields; //Array - Array de campos
 	
-	public $cssFiles;
+	public $order; //String - Nombre del campo para ordenar
+	public $orderColumns; //Bool - Activa el orden personalizado haciendo click en las columnas
+	public $orderField; //String - Campo que se utiliza para las funciones de orden
+	public $orderFieldAppend; //Bool - Todo item nuevo va al principio
 
-	public $btnList;
-	public $btnForm;
+	public $paginacion; //Bool - Activa la paginación
+	public $pageRows; //Int - Cantidad de items por página
 
-	public $footerFunc;
-	public $footerField;
+	public $IDField; //String - Campo ID
+	public $labelField; //String - Campo utilizado para nombre
 
-	//Google maps
-	public $gmaps;
-	public $gmapsApiKey;
-	public $gmapsCenterLat;
-	public $gmapsCenterLng;
+	public $allowNew; //Bool - Permitir crear items
+	public $allowEdit; //Bool - Permitir editar items
+	public $allowDelete; //Bool - Permitir borrar items
 
-	public $listarOnLoad;
-	public $searchFields;
+	public $masterTable; //String - Nombre de tabla maestra
+	public $masterFieldId; //String - Nombre de campo id en tabla maestra
+	public $masterFieldName; //String - Nombre de campo titulo en tabla maestra
 
-	public $modalList;
+	public $numeCarg; //Int - Numero de cargo de acceso al objeto
+	public $numeCargNew; //Int - Numero de cargo para crear items
+	public $numeCargEdit; //Int - Numero de cargo para editar items
+	public $numeCargDelete; //Int - Numero de cargo para borrar items
 
-	public $regUser;
+	public $jsFiles; //Array - Ruta de archivos javascript para cargar
+	public $jsOnLoad; //String - Nombre de función en JavaScript para ejecutar al cargar la página
+	public $jsOnList; //String - Nombre de función en JavaScript para ejecutar al listar items
+	public $jsOnNew; //String - Nombre de función en JavaScript para ejecutar al crear un item
+	public $jsOnEdit; //String - Nombre de función en JavaScript para ejecutar al editar un item
+	
+	public $cssFiles; //Array - Ruta de archivos css para cargar
+
+	public $btnList; //Array - Array de objetos de botones para mostrar en el listado
+	public $btnForm; //Array - Array de objetos de botones para mostrar en el formulario
+
+	public $footerFunc; //String - Funcion utilizada en el footer (SUM o COUNT)
+	public $footerField; //String - Campo que se usa como footer
+
+	public $gmaps; //Bool - Activa los scripts de carga del mapa
+	public $gmapsApiKey; //String
+	public $gmapsCenterLat; //String - Latitud del centro
+	public $gmapsCenterLng; //String - Longitud del centro
+
+	public $listarOnLoad; //Bool - Listar al cargar la página
+	public $searchFields; //Array - Array de campos de búsqueda
+
+	public $modalList; //Array - Ruta de archivos php que se agregan al final del documento
+
+	public $regUser; //Bool - Registrar usuario en cada ABM en la tabla
+
+	public $exportToXLS; //Bool - Exportar lista a Excel
 
 	/**
 	 * Constructor de la clase Tabla
@@ -147,6 +149,8 @@ class Tabla
 		$this->modalList = [];
 
 		$this->regUser = false;
+
+		$this->exportToXLS = false;
 	}
 
 	/**
@@ -415,6 +419,10 @@ class Tabla
 				for ($I = 0; $I < count($this->btnForm); $I++) {
 					$strSalida.= $crlf.'<button class="btn btn-sm '. $this->btnForm[$I]['class'] .'" onclick="'. $this->btnForm[$I]['onclick'] .'">'. $this->btnForm[$I]['titulo'] .'</button>';
 				}
+			}
+
+			if ($this->exportToXLS) {
+				$strSalida.= $crlf.'<button id="btnExport" type="button" class="btn btn-sm btn-success" onclick="exportar'. $this->tabladb .'();"><i class="fa fa-file-excel-o fa-fw" aria-hidden="true"></i> Exportar a Excel</button>';
 			}
 				
 			$strSalida.= $crlf.'<form id="frm'. $this->tabladb .'" class="form-horizontal marginTop20 frmObjeto" method="post" onSubmit="return false;">';
@@ -967,30 +975,30 @@ class Tabla
 						//Botones de la clase
 						if (count($this->btnList) > 0) {
 							for ($I = 0; $I < count($this->btnList); $I++) {
-								$strSalida.= $crlf.'<th class="noPrn text-center">'.$this->btnList[$I]["titulo"].'</th>';
+								$strSalida.= $crlf.'<th class="noPrn noXLS text-center">'.$this->btnList[$I]["titulo"].'</th>';
 							}
 						}
 
 						//Orden
 						if ($this->orderField != '') {
-							$strSalida.= $crlf.'<th class="noPrn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn noXLS"></th>';
 						}
 
 						//Editar
 						if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
-							$strSalida.= $crlf.'<th class="noPrn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn noXLS"></th>';
 						}
 
 						//Borrar
 						if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
-							$strSalida.= $crlf.'<th class="noPrn"></th>';
+							$strSalida.= $crlf.'<th class="noPrn noXLS"></th>';
 						}
 					}
 
 					//Botones del método
 					if (count($btnList) > 0) {
 						for ($I = 0; $I < count($btnList); $I++) {
-							$strSalida.= $crlf.'<th class="noPrn text-center">'.$btnList[$I]["titulo"].'</th>';
+							$strSalida.= $crlf.'<th class="noPrn noXLS text-center">'.$btnList[$I]["titulo"].'</th>';
 						}
 					}
 					
@@ -1086,9 +1094,12 @@ class Tabla
 											$strSalida.= $crlf.'<input type="hidden" id="'.$field['name']. $fila[$this->IDField].'" value="'.$fila[$fname].'" />';
 											if (boolval($fila[$fname])) {
 												$strSalida.= $crlf.'<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>';
+												$strSalida.= $crlf.'<span class="soloXLS">SI</span>';
 											} else {
 												$strSalida.= $crlf.'<i class="fa fa-square-o fa-fw" aria-hidden="true"></i>';
+												$strSalida.= $crlf.'<span class="soloXLS">NO</span>';
 											}
+
 											$strSalida.= $crlf.'</td>';
 											break;
 
@@ -1129,12 +1140,12 @@ class Tabla
 							//De clase
 							if (count($this->btnList) > 0) {
 								for ($I = 0; $I < count($this->btnList); $I++) {
-									$strSalida.= $crlf.'<td class="noPrn text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$this->btnList[$I]["titulo"].'">'. $this->btnList[$I]['texto'] .'</button></td>';
+									$strSalida.= $crlf.'<td class="noPrn noXLS text-center"><button id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $this->btnList[$I]['class'] .'" onclick="'. $this->btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$this->btnList[$I]["titulo"].'">'. $this->btnList[$I]['texto'] .'</button></td>';
 								}
 							}
 
 							if ($this->orderField != '') {
-								$strSalida.= $crlf.'<td class="noPrn text-center">';
+								$strSalida.= $crlf.'<td class="noPrn noXLS text-center">';
 								$strSalida.= $crlf.'<button class="btn btn-sm btn-default" onclick="subir'. $this->tabladb .'(\''.$fila[$this->IDField].'\', \''.$fila[$this->orderField].'\')"><i class="fa fa-arrow-up fa-fw" aria-hidden="true"></i></button>';
 								$strSalida.= $crlf.'<button class="btn btn-sm btn-default" onclick="bajar'. $this->tabladb .'(\''.$fila[$this->IDField].'\', \''.$fila[$this->orderField].'\')"><i class="fa fa-arrow-down fa-fw" aria-hidden="true"></i></button>';
 								$strSalida.= $crlf.'</td>';
@@ -1142,18 +1153,18 @@ class Tabla
 
 							//Editar
 							if ($this->allowEdit && $this->numeCargEdit >= $numeCarg) {
-								$strSalida.= $crlf.'<td class="noPrn text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn noXLS text-center"><button class="btn btn-sm btn-info" onclick="editar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Editar</button></td>';
 							}
 							//Borrar
 							if ($this->allowDelete && $this->numeCargDelete >= $numeCarg) {
-								$strSalida.= $crlf.'<td class="noPrn text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn noXLS text-center"><button class="btn btn-sm btn-danger" onclick="borrar'. $this->tabladb .'(\''.$fila[$this->IDField].'\')"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i> Borrar</button></td>';
 							}
 						}
 
 						//Botones del método
 						if (count($btnList) > 0) {
 							for ($I = 0; $I < count($btnList); $I++) {
-								$strSalida.= $crlf.'<td class="noPrn text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$btnList[$I]["titulo"].'">'. $btnList[$I]['texto'] .'</button></td>';
+								$strSalida.= $crlf.'<td class="noPrn noXLS text-center"><button  id="'.$this->btnList[$I]['id'].$fila[$this->IDField].'" class="btn btn-sm '. $btnList[$I]['class'] .'" onclick="'. $btnList[$I]['onclick'] .'(\''.$fila[$this->IDField].'\')" title="'.$btnList[$I]["titulo"].'">'. $btnList[$I]['texto'] .'</button></td>';
 							}
 						}
 
@@ -1854,6 +1865,17 @@ class Tabla
 			$strSalida.= $crlf.'			$("#divMsj").show();';
 			$strSalida.= $crlf.'		}';
 			$strSalida.= $crlf.'	);';
+			$strSalida.= $crlf.'}';
+		}
+
+		//Exportar a Excel
+		if ($this->exportToXLS) {
+			$strSalida.= $crlf.'function exportar'. $this->tabladb .'() {';
+			$strSalida.= $crlf.'	$("#tbl'. $this->tabladb .'").table2excel({';
+			$strSalida.= $crlf.'		exclude: ".noXLS",';
+			$strSalida.= $crlf.'		name: "'. $this->titulo .'",';
+			$strSalida.= $crlf.'		filename: "'. $this->titulo .'"';
+			$strSalida.= $crlf.'	});';
 			$strSalida.= $crlf.'}';
 		}
 
