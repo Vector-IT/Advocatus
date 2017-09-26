@@ -30,6 +30,8 @@ class imgbrowse {
     }
 
     // get protocol and host name to add absolute path in <img src>
+    //$protocol = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
+    //$site = $protocol. $_SERVER['SERVER_NAME'] .'/';
     $protocol = (($_SERVER['HTTPS'] == 'off') || empty($_SERVER['HTTPS'])) ? 'http://' : 'https://';
     $site = $protocol. $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/';
 
@@ -38,10 +40,8 @@ class imgbrowse {
       $name = $fileobj->getFilename();
 
       // if image file, else, directory (but not . or ..), add data in $re
-      if($fileobj->isFile() && in_array($fileobj->getExtension(), $this->imgext))
-      	$re['imgs'] .= '<span><img src="'. $site . $this->root . $this->imgdr . $name .'" alt="'. $name .'" height="50" />'. $name .'</span>';
-      else if($fileobj->isDir() && !$fileobj->isDot())
-      	$re['menu'] .= '<li><span title="'. $this->imgdr . $name .'">'. $name .'</span></li>';
+      if($fileobj->isFile() && in_array($fileobj->getExtension(), $this->imgext)) $re['imgs'] .= '<span><img src="'. $site . $this->root . $this->imgdr . $name .'" alt="'. $name .'" height="50" />'. $name .'</span>';
+      else if($fileobj->isDir() && !$fileobj->isDot()) $re['menu'] .= '<li><span title="'. $this->imgdr . $name .'">'. $name .'</span></li>';
     }
     if($re['menu'] != '') $re['menu'] = '<ul>'. $re['menu'] .'</ul>';
     if($re['imgs'] == '') $re['imgs'] = '<h1>Sin Im&aacute;genes</h1>';

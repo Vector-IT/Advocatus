@@ -13,7 +13,7 @@
 	require_once 'custom/promocionesfiltros.php';
 
 	//Datos de configuracion iniciales
-	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "", true);
+	$config = new VectorForms($dbhost, $dbschema, $dbuser, $dbpass, $raiz, "Advocatus - e-commerce", "img/logo_transparente.png", false);
 	$config->tbLogin = 'usuarios';
 	// $config->theme = 'dark';
 	$config->cssFiles = ['admin/css/custom/custom.css'];
@@ -495,17 +495,17 @@
 
 	$tabla->addField("ImpoSubt", "number", 0, "Sub-Total");
 	$tabla->fields["ImpoSubt"]["txtAlign"] = "right";
-	$tabla->fields["ImpoSubt"]["isHiddenInList"] = true;
+	// $tabla->fields["ImpoSubt"]["isHiddenInList"] = true;
 	$tabla->fields["ImpoSubt"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoShip", "number", 0, "Envio");
 	$tabla->fields["ImpoShip"]["txtAlign"] = "right";
-	$tabla->fields["ImpoShip"]["isHiddenInList"] = true;
+	// $tabla->fields["ImpoShip"]["isHiddenInList"] = true;
 	$tabla->fields["ImpoShip"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoDesc", "number", 0, "Descuento");
 	$tabla->fields["ImpoDesc"]["txtAlign"] = "right";
-	$tabla->fields["ImpoDesc"]["isHiddenInList"] = true;
+	// $tabla->fields["ImpoDesc"]["isHiddenInList"] = true;
 	$tabla->fields["ImpoDesc"]["txtBefore"] = "$ ";
 	
 	$tabla->addField("ImpoTota", "number", 0, "Total");

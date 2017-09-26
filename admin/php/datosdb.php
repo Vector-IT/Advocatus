@@ -1,8 +1,8 @@
 <?php
 	$dbhost = "localhost";
-	$dbschema = "v-commerce";
-	$dbuser = "v-commerce";
-	$dbpass = "v-commerce";
+	$dbschema = "advocatus";
+	$dbuser = "advocatus";
+	$dbpass = "advocatus";
 	
 	$crlf = "\n";
 
