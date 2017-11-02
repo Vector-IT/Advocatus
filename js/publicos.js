@@ -23,6 +23,17 @@ $(document).ready(function () {
             return false; // prevent the button click from happening
         }
 	});
+
+	$.post("php/carritosProcesar.php", { 
+		"operacion": "6",
+		},
+		function (data) {
+			if (data.estado === true) {
+				$(".cantProds").html(data.cantProds);
+			}
+		}
+	);
+
 });
 
 function busqSimple() {

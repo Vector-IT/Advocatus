@@ -191,7 +191,7 @@
 								if ($promociones->num_rows > 0) {
 									while ($fila = $promociones->fetch_assoc()) {
 										if ($fila["ValoFilt"] != '') {
-											$blnFalse = false;
+											$blnPromo = false;
 
 											switch ($fila["NumeTipoFilt"]) {
 												case '1':

@@ -175,6 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = {$numeCarr}";
             $salida = ejecutarCMD($strSQL);
             break;
+
+        case "6": //Carrito
+            $salida = carrito();
+            break;
     }
 
     header('Content-Type: application/json');
@@ -184,78 +188,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function carrito() {
     global $crlf;
 
-    $strSQL = "SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
-    $strSQL.= $crlf."FROM carritos c";
-    $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag";
-    $strSQL.= $crlf."			FROM carritosdetalles cd";
-    $strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
-    $strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
-    $strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
-    $strSQL.= $crlf."WHERE c.NumeCarr = ". $_SESSION["NumeCarr"];
-    $carrito = cargarTabla($strSQL);
-
     $strHTML = "";
     $subtotal = 0;
     $bonificacion = 0;
     $total = 0;
+    $cantProd = 0;
+    
+    if (isset($_SESSION["NumeCarr"])) {
+        $strSQL = "SELECT cd.NumeProd, cd.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, cd.RutaImag";
+        $strSQL.= $crlf."FROM carritos c";
+        $strSQL.= $crlf."INNER JOIN (SELECT cd.NumeCarr, cd.NumeProd, p.NombProd, cd.CantProd, cd.ImpoUnit, cd.ImpoTota, pi.RutaImag";
+        $strSQL.= $crlf."			FROM carritosdetalles cd";
+        $strSQL.= $crlf."			INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
+        $strSQL.= $crlf."			LEFT JOIN productosimagenes pi ON cd.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
+        $strSQL.= $crlf."		   ) cd ON c.NumeCarr = cd.NumeCarr";
+        $strSQL.= $crlf."WHERE c.NumeCarr = ". $_SESSION["NumeCarr"];
+        $carrito = cargarTabla($strSQL);
 
-    if ($carrito->num_rows > 0) {
-        while ($fila = $carrito->fetch_assoc()) {
-            $strHTML.= $crlf.'<article>';
-            $strHTML.= $crlf.'	<div class="row">';
-            $strHTML.= $crlf.'		<div class="col-lg-5">';
-            $strHTML.= $crlf.'			<img class="img-center" alt="" src="admin/'. $fila["RutaImag"] .'">';
-            $strHTML.= $crlf.'			<a href="javascript:void(0);" class="quitar" onclick="quitarProd('. $fila["NumeProd"] .')">Quitar</a>';
-            $strHTML.= $crlf.'		</div>';
-            $strHTML.= $crlf.'		<div class="col-lg-6">';
-            $strHTML.= $crlf.'			<p class="titulo">'. $fila["NombProd"] .'</p>';
-            $strHTML.= $crlf.'			<p class="cantidad">Cantidad: <span>'. $fila["CantProd"] .'</span></p>';
-            $strHTML.= $crlf.'			<p class="precio">$ <span>'. $fila["ImpoTota"] .'</span></p>';
-            $strHTML.= $crlf.'		</div>';
-            $strHTML.= $crlf.'	</div>';
-            $strHTML.= $crlf.'</article>';
+        $cantProd = $carrito->num_rows;
 
-            $subtotal+= floatval($fila["ImpoTota"]);
-        }
+        if ($carrito->num_rows > 0) {
+            while ($fila = $carrito->fetch_assoc()) {
+                $strHTML.= $crlf.'<article>';
+                $strHTML.= $crlf.'	<div class="row">';
+                $strHTML.= $crlf.'		<div class="col-lg-5">';
+                $strHTML.= $crlf.'			<img class="img-center" alt="" src="admin/'. $fila["RutaImag"] .'">';
+                $strHTML.= $crlf.'			<a href="javascript:void(0);" class="quitar" onclick="quitarProd('. $fila["NumeProd"] .')">Quitar</a>';
+                $strHTML.= $crlf.'		</div>';
+                $strHTML.= $crlf.'		<div class="col-lg-6">';
+                $strHTML.= $crlf.'			<p class="titulo">'. $fila["NombProd"] .'</p>';
+                $strHTML.= $crlf.'			<p class="cantidad">Cantidad: <span>'. $fila["CantProd"] .'</span></p>';
+                $strHTML.= $crlf.'			<p class="precio">$ <span>'. $fila["ImpoTota"] .'</span></p>';
+                $strHTML.= $crlf.'		</div>';
+                $strHTML.= $crlf.'	</div>';
+                $strHTML.= $crlf.'</article>';
 
-        //Promocion por cupon
-        $numeProm = buscarDato("SELECT NumeProm FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
-        if ($numeProm != '') {
-            $strSQL = "SELECT NumeTipoProm, ValoProm";
-            $strSQL.= $crlf."FROM promociones pr";
-            $strSQL.= $crlf."WHERE (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
-            $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
-            $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
-            $strSQL.= $crlf."AND NumeProm = ". $numeProm;
-            
-            $promocion = buscarDato($strSQL);
+                $subtotal+= floatval($fila["ImpoTota"]);
+            }
 
-            if ($promocion != '') {
-                switch ($promocion["NumeTipoProm"]) {
-                    case '1': //Porcentaje de descuento
-                        $bonificacion = $subtotal * $promocion["ValoProm"] / 100;
-                        break;
-                    
-                    case '2': //Monto fijo
-                        $bonificacion = $promocion["ValoProm"];
-                        break;
+            //Promocion por cupon
+            $numeProm = buscarDato("SELECT NumeProm FROM carritos WHERE NumeCarr = ". $_SESSION["NumeCarr"]);
+            if ($numeProm != '') {
+                $strSQL = "SELECT NumeTipoProm, ValoProm";
+                $strSQL.= $crlf."FROM promociones pr";
+                $strSQL.= $crlf."WHERE (pr.CantPerm IS NULL OR pr.CantUtil < pr.CantPerm)";
+                $strSQL.= $crlf."AND (pr.FechDesd IS NULL OR pr.FechDesd <= SYSDATE())";
+                $strSQL.= $crlf."AND (pr.FechHast IS NULL OR pr.FechHast > SYSDATE())";
+                $strSQL.= $crlf."AND NumeProm = ". $numeProm;
+                
+                $promocion = buscarDato($strSQL);
+
+                if ($promocion != '') {
+                    switch ($promocion["NumeTipoProm"]) {
+                        case '1': //Porcentaje de descuento
+                            $bonificacion = $subtotal * $promocion["ValoProm"] / 100;
+                            break;
+                        
+                        case '2': //Monto fijo
+                            $bonificacion = $promocion["ValoProm"];
+                            break;
+                    }
+                }
+                else {
+                    $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+                    ejecutarCMD($strSQL);
                 }
             }
-            else {
-                $strSQL = "UPDATE carritos SET NumeProm = NULL WHERE NumeCarr = ". $_SESSION["NumeCarr"];
-                ejecutarCMD($strSQL);
-            }
+
+            $total = $subtotal - $bonificacion;
+        }
+        else {
+            $strHTML.= $crlf."<h4>Tu carrito está vacío</h4>";
+            $strHTML.= $crlf."<br><br><br>";
         }
 
-        $total = $subtotal - $bonificacion;
+        $strSQL = "UPDATE carritos SET ImpoSubt = {$subtotal}, ImpoDesc = 0 WHERE NumeCarr = ". $_SESSION["NumeCarr"];
+        ejecutarCMD($strSQL);
     }
     else {
         $strHTML.= $crlf."<h4>Tu carrito está vacío</h4>";
         $strHTML.= $crlf."<br><br><br>";
     }
-
-    $strSQL = "UPDATE carritos SET ImpoSubt = {$subtotal}, ImpoDesc = 0 WHERE NumeCarr = ". $_SESSION["NumeCarr"];
-    ejecutarCMD($strSQL);
     
     $salida = array(
         "estado"=>true, 
@@ -263,7 +276,7 @@ function carrito() {
         "subtotal"=>$subtotal,
         "bonificacion"=>$bonificacion,
         "total"=>$total,
-        "cantProds"=>$carrito->num_rows
+        "cantProds"=>$cantProd
     );
 
     return $salida;

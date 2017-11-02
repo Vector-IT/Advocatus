@@ -5,7 +5,7 @@
 
 	//Novedades
 	$cantNovedades = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD NOVEDADES HOME'");
-	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
+	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd, p.CantProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."INNER JOIN productosnovedades pn ON p.NumeProd = pn.NumeProd";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
@@ -15,7 +15,7 @@
 
 	//Productos en Promocion
 	$cantPromociones = buscarDato("SELECT ValoConf FROM configuraciones WHERE NombConf = 'CANTIDAD PROMOCIONES HOME'");
-	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd";
+	$strSQL = "SELECT p.NumeProd, p.NombProd, p.ImpoVent, pi.RutaImag, p.SlugProd, p.CantProd";
 	$strSQL.= $crlf."FROM productos p";
 	$strSQL.= $crlf."LEFT JOIN productosimagenes pi ON p.NumeProd = pi.NumeProd AND pi.NumeOrde = 1";
 	$strSQL.= $crlf."WHERE Promocion = 1";
@@ -172,7 +172,9 @@
 									$salida.= $crlf.'		<div class="acciones-producto">';
 									$salida.= $crlf.'			<p class="cantidad-favorito">'.$cantFav.'</p>';
 									$salida.= $crlf.'			<a href="javascript:void(0);" class="favorito activo_"></a>';
-									$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									if ($fila["CantProd"] > 0) {
+										$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									}
 									$salida.= $crlf.'		</div>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
@@ -184,7 +186,7 @@
 
 										while ($promo = $promociones->fetch_assoc()) {
 											if ($promo["ValoFilt"] != '') {
-												$blnFalse = false;
+												$blnPromo = false;
 	
 												switch ($promo["NumeTipoFilt"]) {
 													case '1':
@@ -275,7 +277,9 @@
 									$salida.= $crlf.'		<div class="acciones-producto">';
 									$salida.= $crlf.'			<p class="cantidad-favorito">'.$cantFav.'</p>';
 									$salida.= $crlf.'			<a href="javascript:void(0);" class="favorito activo_"></a>';
-									$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									if ($fila["CantProd"] > 0) {
+										$salida.= $crlf.'			<a href="javascript:void(0);" onclick="agregarProd('.$fila["NumeProd"].', 1)" class="carrito"><img src="./img/home/carrito.png" alt=""></a>';
+									}
 									$salida.= $crlf.'		</div>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["RutaImag"].'" alt="" style="width: 150px; height: 219px;"></a>';
 									$salida.= $crlf.'		<a href="producto/'.$fila["SlugProd"].'.php" class="titulo-producto">'.$fila["NombProd"].'</a>';
@@ -286,7 +290,7 @@
 										
 										while ($promo = $promociones->fetch_assoc()) {
 											if ($promo["ValoFilt"] != '') {
-												$blnFalse = false;
+												$blnPromo = false;
 	
 												switch ($promo["NumeTipoFilt"]) {
 													case '1':
