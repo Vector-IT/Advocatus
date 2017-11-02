@@ -27,14 +27,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	$mail->isHTML(true);
 	$mail->setLanguage('es', $raiz.'admin/php/phpmailer/language/');
 	$mail->isSMTP();
-	$mail->Host = 'mail.eadvocatus.com.ar';
+
+	// $mail->SMTPDebug = 1;
+
+	// $mail->Host = 'mail.eadvocatus.com.ar';
+	// $mail->SMTPAuth = true;
+    // $mail->Username = 'tienda@eadvocatus.com.ar';
+    // $mail->Password = 'Vector159';
+    // $mail->Port = 587;  
+	// $mail->setFrom('tienda@eadvocatus.com.ar', 'Editorial Advocatus');
+
+	$mail->Host = 'smtp.gmail.com';
 	$mail->SMTPAuth = true;
-    $mail->Username = 'tienda@eadvocatus.com.ar';
-    $mail->Password = 'Vector159';
-    //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-    $mail->Port = 587;  
+	$mail->SMTPSecure = 'tls';
+	$mail->Port = 587;
+	$mail->Username = 'tiendavirtualadvocatus';
+	$mail->Password = 'Montevideo635';
+	$mail->setFrom('tiendavirtualadvocatus@gmail.com', 'Tienda Virtual Advocatus');
+	$mail->addReplyTo("tiendavirtualadvocatus@gmail.com","Tienda Virtual Advocatus");
 	
-	$mail->setFrom('tienda@eadvocatus.com.ar', 'Editorial Advocatus');
 	$mail->addAddress($para);
 	$mail->Subject = $titulo;
 	$mail->Body = $mensaje;

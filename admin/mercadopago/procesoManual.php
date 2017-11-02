@@ -23,7 +23,8 @@ try {
     //$payment_info = $mp->get_payment_info($_GET["id"]);
     $numeCarr = $payment_info["response"]["collection"]["external_reference"];
     
-    error_log("Procesando carrito NRO: ". $numeCarr ." - ID: ". $_GET["id"]);
+	error_log("Procesando carrito NRO: ". $numeCarr ." - ID: ". $_GET["id"]);
+	echo "Procesando carrito NRO: ". $numeCarr ." - ID: ". $_GET["id"];
 
     $merchant_order_info = $mp->get("/merchant_orders/" . $payment_info["response"]["collection"]["merchant_order_id"]);
 }
@@ -33,6 +34,7 @@ catch (Exception $e) {
 }
 
 if ($merchant_order_info["status"] == 200) {
+	echo "<br>Cantidad de pagos: ". count($merchant_order_info["response"]["payments"]);
 	// If the payment's transaction amount is equal (or bigger) than the merchant_order's amount you can release your items 
 	$paid_amount = 0;
 
@@ -63,8 +65,13 @@ if ($merchant_order_info["status"] == 200) {
 			$numeEstaCarr = 7;
 			break;
 	}
+	echo "<br>Estado: ". $merchant_order_info["response"]["payments"][0]["status"]. ' - '. $numeEstaCarr;
 
 	$paid_amount = $merchant_order_info["response"]["payments"][0]['transaction_amount'];
+	
+	echo "<br>Monto pagado: ". $paid_amount;
+	echo "<br>Monto del carrito: ". $merchant_order_info["response"]["total_amount"];
+	
 	/*
 	foreach ($merchant_order_info["response"]["payments"] as  $payment) {
 		if ($payment['status'] == 'approved'){
@@ -117,14 +124,18 @@ if ($merchant_order_info["status"] == 200) {
 		}
 		
 		//Descuento stock
-		$strSQL = $crlf."SELECT cd.NumeProd, cd.CantProd";
-        $strSQL.= $crlf."FROM carritosdetalles cd";
-		$strSQL.= $crlf."WHERE cd.NumeCarr = ". $numeCarr;
-		$tblCarrito = $config->cargarTabla($strSQL);
+		if ($numeEstaCarr == 7) {
+			echo "<br>Se descuenta stock";
 
-		while ($fila = $tblCarrito->fetch_assoc()) {
-			$strSQL = $crlf."UPDATE productos SET CantProd = CantProd - {$fila["CantProd"]} WHERE NumeProd = ". $fila["NumeProd"];
-			$config->ejecutarCMD($strSQL);
+			$strSQL = $crlf."SELECT cd.NumeProd, cd.CantProd";
+			$strSQL.= $crlf."FROM carritosdetalles cd";
+			$strSQL.= $crlf."WHERE cd.NumeCarr = ". $numeCarr;
+			$tblCarrito = $config->cargarTabla($strSQL);
+
+			while ($fila = $tblCarrito->fetch_assoc()) {
+				$strSQL = $crlf."UPDATE productos SET CantProd = CantProd - {$fila["CantProd"]} WHERE NumeProd = ". $fila["NumeProd"];
+				$config->ejecutarCMD($strSQL);
+			}
 		}
 
 		//Envio mail

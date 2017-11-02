@@ -517,7 +517,7 @@
 	$tabla->addFieldSelect("NumeEstaCarr", 0, "Estado", true, "", "estadoscarritos", "", "NumeEstaCarr", "NombEstaCarr", "", "", "NombEstaCarr");
 	
 	$tabla->addField("ID_MP", "text", 0, "ID MP");
-	$tabla->fields["ID_MP"]["isHiddenInList"] = true;
+	//$tabla->fields["ID_MP"]["isHiddenInList"] = true;
 
 	$tabla->addField("NombPers", "text", 0, "Envío - Persona");
 	$tabla->fields["NombPers"]["nameAlias"] = "NombPersCarr";

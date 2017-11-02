@@ -81,8 +81,8 @@ if ($merchant_order_info["status"] == 200) {
 		// Totally paid. Release your item
 		$datosUsuario = $config->buscarDato("SELECT NumeUser, NumeInvi, NombPers, MailUser, TeleUser, DireUser, CodiPost, NombLoca, NumeProv FROM carritos WHERE NumeCarr = ".$numeCarr);
 
-		if ($datosUsuario["NombPers"] == '') {
-			if ($datosUsuario["NumeUser"] != '') {
+		if (isset($datosUsuario["NombPers"]) && $datosUsuario["NombPers"] == '') {
+			if (isset($datosUsuario["NumeUser"]) && $datosUsuario["NumeUser"] != '') {
 				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NombLoca, u.NumeProv";
 				$strSQL.= $crlf."FROM usuarios u";
 				$strSQL.= $crlf."WHERE u.NumeUser = ". $datosUsuario["NumeUser"];
@@ -121,16 +121,18 @@ if ($merchant_order_info["status"] == 200) {
 		}
 
 		//Descuento stock
-		$strSQL = "SELECT cd.NumeProd, cd.CantProd";
-        $strSQL.= $crlf."FROM carritosdetalles cd";
-		$strSQL.= $crlf."WHERE cd.NumeCarr = ". $numeCarr;
-		$tblCarrito = $config->cargarTabla($strSQL);
+		if ($numeEstaCarr == 7) {
+			$strSQL = "SELECT cd.NumeProd, cd.CantProd";
+			$strSQL.= $crlf."FROM carritosdetalles cd";
+			$strSQL.= $crlf."WHERE cd.NumeCarr = ". $numeCarr;
+			$tblCarrito = $config->cargarTabla($strSQL);
 
-		while ($fila = $tblCarrito->fetch_assoc()) {
-			$strSQL = $crlf."UPDATE productos SET CantProd = CantProd - {$fila["CantProd"]} WHERE NumeProd = ". $fila["NumeProd"];
-			$config->ejecutarCMD($strSQL);
+			while ($fila = $tblCarrito->fetch_assoc()) {
+				$strSQL = $crlf."UPDATE productos SET CantProd = CantProd - {$fila["CantProd"]} WHERE NumeProd = ". $fila["NumeProd"];
+				$config->ejecutarCMD($strSQL);
+			}
 		}
-
+		
 		//Envio mail
 		$titulo = "Tienda Advocatus - Nueva compra";
 		$mensajeHtml = "Este es un mensaje autom&aacute;tico. Por favor no lo responda.";
