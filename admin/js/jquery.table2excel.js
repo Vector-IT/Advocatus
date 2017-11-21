@@ -127,7 +127,7 @@
 			}
 			delete e.ctx.table;
 
-			var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)			
+			var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
 			//if (typeof msie !== "undefined" && msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))	  // this works ONLY with IE 11!!!
 			if (isIE) {
 				if (typeof Blob !== "undefined") {
@@ -148,6 +148,9 @@
 				}
 
 			} else {
+				e.ctx.table0 = e.ctx.table0.replace(new RegExp('<i class="fa fa-check-square-o fa-fw" aria-hidden="true"></i>', 'g'), 'SI');
+				e.ctx.table0 = e.ctx.table0.replace(new RegExp('<i class="fa fa-square-o fa-fw" aria-hidden="true"></i>', 'g'), 'NO');
+
 				var blob = new Blob([e.format(fullTemplate, e.ctx)], {type: "application/vnd.ms-excel"});
 				window.URL = window.URL || window.webkitURL;
 				link = window.URL.createObjectURL(blob);

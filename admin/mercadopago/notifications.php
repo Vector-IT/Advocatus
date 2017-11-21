@@ -76,13 +76,13 @@ if ($merchant_order_info["status"] == 200) {
 		}	
 	}
 	*/
-
+	
 	if($paid_amount >= $merchant_order_info["response"]["total_amount"]){
 		// Totally paid. Release your item
 		$datosUsuario = $config->buscarDato("SELECT NumeUser, NumeInvi, NombPers, MailUser, TeleUser, DireUser, CodiPost, NombLoca, NumeProv FROM carritos WHERE NumeCarr = ".$numeCarr);
-
-		if (isset($datosUsuario["NombPers"]) && $datosUsuario["NombPers"] == '') {
-			if (isset($datosUsuario["NumeUser"]) && $datosUsuario["NumeUser"] != '') {
+		
+		if ($datosUsuario["NombPers"] == '') {
+			if ($datosUsuario["NumeUser"] != '') {
 				$strSQL = "SELECT u.NombPers, u.MailUser, u.TeleUser, u.DireUser, u.CodiPost, u.NombLoca, u.NumeProv";
 				$strSQL.= $crlf."FROM usuarios u";
 				$strSQL.= $crlf."WHERE u.NumeUser = ". $datosUsuario["NumeUser"];
@@ -99,6 +99,8 @@ if ($merchant_order_info["status"] == 200) {
 		}
 
 		//Actualizo datos del carrito
+		$numeEstaCarr_OLD = $config->buscarDato("SELECT NumeEstaCarr FROM carritos WHERE NumeCarr = ". $numeCarr);
+
 		$strSQL = "UPDATE carritos SET ";
 		$strSQL.= $crlf."ID_MP = '{$_GET["id"]}'";
 		$strSQL.= $crlf.", NumeEstaCarr = ". $numeEstaCarr;
@@ -121,7 +123,7 @@ if ($merchant_order_info["status"] == 200) {
 		}
 
 		//Descuento stock
-		if ($numeEstaCarr == 7) {
+		if ($numeEstaCarr == 7 && $numeEstaCarr_OLD != '7') {
 			$strSQL = "SELECT cd.NumeProd, cd.CantProd";
 			$strSQL.= $crlf."FROM carritosdetalles cd";
 			$strSQL.= $crlf."WHERE cd.NumeCarr = ". $numeCarr;
