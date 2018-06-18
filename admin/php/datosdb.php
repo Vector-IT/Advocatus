@@ -1,8 +1,8 @@
 <?php
 	$dbhost = "localhost";
 	$dbschema = "advocatus";
-	$dbuser = "advocatus";
-	$dbpass = "advocatus";
+	$dbuser = "vuser";
+	$dbpass = "vpass";
 	
 	$crlf = "\n";
 

@@ -668,7 +668,7 @@
 	$tabla->addField("NombTipoProm", "text", 50, "Nombre");
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
-	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';	
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
 
 	$config->tablas["tipospromociones"] = $tabla;
 
@@ -684,6 +684,55 @@
 	$tabla->addField("NombTipoFilt", "text", 50, "Nombre");
 
 	$config->tablas["tipospromocionesfiltros"] = $tabla;
+
+	/**
+	 * ANEXOS
+	 */
+	$tabla = new Tabla("anexos", "anexos", "Anexos", "el Anexo", true, "objeto/anexos.php", "fa-file-pdf-o");
+	$tabla->labelField = "Titulo";
+
+	$tabla->jsFiles = ["admin/js/custom/anexos.js"];
+
+	$tabla->btnList = [
+		array(
+			'id'=> 'btnArchivos',
+			'titulo'=> 'Archivos',
+			'texto'=> '<i class="fa fa-file-pdf-o fa-fw" aria-hidden="true"></i>',
+			'class'=> 'btn-info',
+			'onclick'=> 'verAnexosArchivos'
+		),
+	];
+
+	$tabla->addFieldId("NumeAnex", "Número");
+	$tabla->addField("Titulo", "text", 40, "Título");
+	$tabla->addField("Subtitulo", "textarea", 100, "Subtítulo", false);
+	$tabla->addField("Descripcion", "textarea", 100, "Descripción", false);
+	$tabla->addFieldFileImage("ImagAnex", "Imagen", "imgAnexos");
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
+
+	$config->tablas["anexos"] = $tabla;
+
+	/**
+	 * ANEXOS ARCHIVOS
+	 */
+	$tabla = new Tabla("anexosarchivos", "anexosarchivos", "Archivos", "el archivo", false, '', 'fa-file-pdf-o');
+	$tabla->masterTable = "anexos";
+	$tabla->masterFieldName = "Titulo";
+	$tabla->masterFieldId = "NumeAnex";
+
+	$tabla->addFieldId("CodiIden", "Código", true, true);
+	$tabla->addFIeld("NumeAnex", "number", "Anexo");
+	$tabla->fields["NumeAnex"]["isHiddenInList"] = true;
+	$tabla->fields["NumeAnex"]["isHiddenInForm"] = true;
+
+	$tabla->addFieldFileImage("RutaFile", "Archivo", "anexosFiles", "file");
+	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
+	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
+	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';
+
+	$config->tablas["anexosarchivos"] = $tabla;
 
 	unset($tabla);
 ?>
