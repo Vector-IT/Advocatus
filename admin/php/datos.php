@@ -690,6 +690,7 @@
 	 */
 	$tabla = new Tabla("anexos", "anexos", "Anexos", "el Anexo", true, "objeto/anexos.php", "fa-file-pdf-o");
 	$tabla->labelField = "Titulo";
+	$tabla->orderField = "NumeOrde";
 
 	$tabla->jsFiles = ["admin/js/custom/anexos.js"];
 
@@ -703,8 +704,9 @@
 		),
 	];
 
-	$tabla->addFieldId("NumeAnex", "Número");
+	$tabla->addFieldId("NumeAnex", "Número", true, true);
 	$tabla->addField("Titulo", "text", 40, "Título");
+	$tabla->addField("Slug", "text", 40, "Slug");
 	$tabla->addField("Subtitulo", "textarea", 100, "Subtítulo", false);
 	$tabla->addField("Descripcion", "textarea", 100, "Descripción", false);
 	$tabla->addFieldFileImage("ImagAnex", "Imagen", "imgAnexos");
@@ -727,6 +729,8 @@
 	$tabla->fields["NumeAnex"]["isHiddenInList"] = true;
 	$tabla->fields["NumeAnex"]["isHiddenInForm"] = true;
 
+	$tabla->addField("NombFile", "text", 40, "Nombre");
+	
 	$tabla->addFieldFileImage("RutaFile", "Archivo", "anexosFiles", "file");
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';

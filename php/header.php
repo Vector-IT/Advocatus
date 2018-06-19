@@ -133,6 +133,9 @@
 				<a href="promociones.php">Promociones</a>
 			</li>
 			<li>
+				<a href="anexos.php">Anexos</a>
+			</li>
+			<li>
 				<a href="contacto.php">Contacto</a>
 			</li>
 		</ul>

@@ -4,6 +4,7 @@ RewriteBase /
 
 RewriteRule ^admin/objeto/([^/]*)\.php admin/objeto.php?tb=$1 [QSA,L,PT]
 RewriteRule ^producto/([^/]*)\.php producto.php?slug=$1 [L,PT]
+RewriteRule ^anexo/([^/]*)\.php anexo.php?slug=$1 [L,PT]
 
 RewriteCond %{REQUEST_URI}  !\.(css|js|php|html?|shtml|jpg|gif|png|jpeg|eot|otf|svg|ttf|woff|woff2|pdf)$
 RewriteRule ^(.*)([^/])$ http://%{HTTP_HOST}/$1$2/ [L,R=301]

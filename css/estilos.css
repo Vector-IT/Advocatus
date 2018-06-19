@@ -308,7 +308,8 @@ span#text-lost-msg {
 @media all and (min-width: 768px) {
 .navbar-nav > li {
     float: left;
-    width: 16.666%;
+    /* width: 16.666%; */
+    width: 14.28571428571429%;
 }
 .navbar-nav > li > a {
     padding-top: 8px !important;
