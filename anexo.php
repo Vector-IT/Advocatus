@@ -44,10 +44,10 @@
 			<!-- CONTENIDO -->
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<img alt="" title="" style="widtH: 100%; height: auto;" src="admin/<?php echo $anexo["ImagAnex"]?>">
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-8">
 						<div class="info-producto">
                             <h1><?php echo $anexo["Titulo"]?></h1>
 
@@ -58,11 +58,11 @@
                             <h2>Descargas</h2>
                             <?php
                                 if (!isset($_SESSION['NumeUser'])) {
-                                    echo '<p><strong>Tienes que estar logueado para poder descargar los archivos.</strong></p>';
+                                    echo '<p><strong>Tienes que estar logueado para poder descargar los archivos.</strong> <a href="#" data-toggle="modal" data-target="#login-modal">Iniciar Sesión</a></p>';
                                 }
                                 $salida = '';
                                 while ($fila = $archivos->fetch_assoc()) {
-                                    $valor = '<a href="admin/'. $fila["RutaFile"] .'" target="_blank">DESCARGA</a>';
+                                    $valor = '<a href="admin/'. $fila["RutaFile"] .'" target="_blank">CONTENIDO</a>';
                                     
                                     if ($valor != "") {
                                         $salida.= $crlf.'<p><span class="ucase">'.$fila["NombFile"].':</span> ';

@@ -58,8 +58,8 @@
                     $salida.= $crlf.'<div class="col-sm-4 producto">';
                     $salida.= $crlf.'	<div class="">';
                     $salida.= $crlf.'		<a href="anexo/'.$fila["Slug"].'.php" class="img-producto"><img class="img-center" src="admin/'.$fila["ImagAnex"].'" alt="" style="width: 150px; height: 219px;"></a>';
-                    $salida.= $crlf.'		<a href="anexo/'.$fila["Slug"].'.php" class="titulo-producto">'.$fila["Titulo"].'</a>';
-                    $salida.= $crlf.'       <p>'. $fila["Subtitulo"] .'</p>';
+                    $salida.= $crlf.'		<a href="anexo/'.$fila["Slug"].'.php" class="titulo-producto text-center">'.$fila["Titulo"].'</a>';
+                    $salida.= $crlf.'       <p class="text-center">'. $fila["Subtitulo"] .'</p>';
                     $salida.= $crlf.'	</div>';
                     $salida.= $crlf.'</div>';
 
