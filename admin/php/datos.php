@@ -688,7 +688,7 @@
 	/**
 	 * ANEXOS
 	 */
-	$tabla = new Tabla("anexos", "anexos", "Anexos", "el Anexo", true, "objeto/anexos.php", "fa-file-pdf-o");
+	$tabla = new Tabla("anexos", "anexos", "Anexos", "el Anexo", true, "objeto/anexos.php", "fa-file-pdf-o", "NumeOrde");
 	$tabla->labelField = "Titulo";
 	$tabla->orderField = "NumeOrde";
 
@@ -719,11 +719,13 @@
 	/**
 	 * ANEXOS ARCHIVOS
 	 */
-	$tabla = new Tabla("anexosarchivos", "anexosarchivos", "Archivos", "el archivo", false, '', 'fa-file-pdf-o');
+	$tabla = new Tabla("anexosarchivos", "anexosarchivos", "Archivos", "el archivo", false, '', 'fa-file-pdf-o', "NumeOrde");
 	$tabla->masterTable = "anexos";
 	$tabla->masterFieldName = "Titulo";
 	$tabla->masterFieldId = "NumeAnex";
 
+	$tabla->orderField = "NumeOrde";
+	
 	$tabla->addFieldId("CodiIden", "Código", true, true);
 	$tabla->addFIeld("NumeAnex", "number", "Anexo");
 	$tabla->fields["NumeAnex"]["isHiddenInList"] = true;

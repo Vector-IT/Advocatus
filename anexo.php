@@ -22,6 +22,7 @@
 	$strSQL = "SELECT NombFile, RutaFile";
 	$strSQL.= $crlf."FROM anexosarchivos";
 	$strSQL.= $crlf."WHERE NumeAnex = ". $numeAnex;
+	$strSQL.= $crlf."ORDER BY NumeOrde";
 	$archivos = cargarTabla($strSQL);
 ?>
 <!doctype html>
