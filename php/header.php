@@ -192,7 +192,7 @@
 								<span id="text-lost-msg">Ingrese su e-mail</span>
 							</div>
 							<input id="lost_email" class="form-control" type="text" placeholder="E-Mail" style="text-transform: none !important;" required>
-							<div id="recaptcha1"></div>
+							<div id="recaptcha1" class="g-recaptcha" data-sitekey="6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1"></div>
 						</div>
 					</div>
 					<div id="divLostMsg" class="alert noMargin" role="alert">
@@ -245,7 +245,7 @@
 							<label for="NombPass">Contraseña *</label>
 							<input type="password" class="form-control form-custom" id="NombPass" placeholder="Contraseña *" required>
 							<input type="password" class="form-control form-custom" id="NombPass2" placeholder="Repetir Contraseña *" required>
-							<div id="recaptcha2"></div>
+							<div id="recaptcha2" class="g-recaptcha" data-sitekey="6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1"></div>
 						</div>
 					</div>
 					<div id="divRegisterMsg" class="alert noMargin" role="alert">

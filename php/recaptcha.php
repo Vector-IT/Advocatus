@@ -2,7 +2,7 @@
 ini_set("log_errors", 1);
 ini_set("error_log", "php-error.log");
 
-$secret = '6LdFZWMUAAAAAEYi6SyTnoCoMNT2KKOt9E_Af_xc';
+$secret = '6Ld0Ak4UAAAAAF-L_9pvOZfw9_T4oorIVAI3a3iY';
 
 $url = 'https://www.google.com/recaptcha/api/siteverify';
 $fields = array(
