@@ -29,9 +29,11 @@ $(function() {
                 break;
 
             case "lost-form":
-                msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-info", "glyphicon-refresh gly-spin", "Espere un momento", $("#login-modal"), true);
+                msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-info", "glyphicon-refresh gly-spin", "Espere un momento", $("#login-modal"), false, false, false);
 
-                var respuesta = grecaptcha.getResponse(recaptcha1);
+				var respuesta = grecaptcha.getResponse(recaptcha1);
+				console.log = respuesta;
+
                 $.post(
                     'php/recaptcha.php',
                     {
@@ -49,9 +51,9 @@ $(function() {
                                 },
                                 function (data) {
                                     $formLost.find("#btnRecuperar").fadeIn();
-                                    
+
                                     if (data.estado === true) {
-                                        msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
+                                        msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), false, false, false);
                                     }
                                     else {
                                         msgChange($('#divLostMsg'), $('#iconLost'), $('#txtLostMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
@@ -98,7 +100,7 @@ $(function() {
                                         msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-success", "glyphicon-ok", data.msg, $("#login-modal"), true);
                                     }
                                     else {
-                                        msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false);
+										msgChange($('#divRegisterMsg'), $('#iconRegister'), $('#txtRegisterMsg'), "alert-danger", "glyphicon-remove", data.msg, $("#login-modal"), false, false, false);
                                     }
                                 }
                             );
@@ -109,7 +111,7 @@ $(function() {
                     }
                 );
                 break;
-            
+
             case "frmEnvio":
                 $.post("php/usuariosProcesar.php", {
                         operacion: "3",
@@ -141,7 +143,7 @@ $(function() {
                     }
                 );
                 break;
-            
+
             case "frmQuitarCuponDescuento":
                 $.post("php/carritosProcesar.php", {
                         operacion: "5"
@@ -159,14 +161,14 @@ $(function() {
         }
         return false;
     });
-    
+
     $('#login_register_btn').click( function () { modalAnimate($formLogin, $formRegister) });
     $('#register_login_btn').click( function () { modalAnimate($formRegister, $formLogin); });
     $('#login_lost_btn').click( function () { modalAnimate($formLogin, $formLost); });
     $('#lost_login_btn').click( function () { modalAnimate($formLost, $formLogin); });
     $('#lost_register_btn').click( function () { modalAnimate($formLost, $formRegister); });
     $('#register_lost_btn').click( function () { modalAnimate($formRegister, $formLost); });
-    
+
     function modalAnimate ($oldForm, $newForm) {
         var $oldH = $oldForm.height();
         var $newH = $newForm.height();
@@ -177,35 +179,39 @@ $(function() {
             });
         });
     }
-    
+
     function msgFade ($msgId, $msgText) {
         $msgId.fadeOut($msgAnimateTime, function() {
             $(this).html($msgText).fadeIn($msgAnimateTime);
         });
     }
-    
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, closeModal = true, reloadPage = false, ocultarMsg = true) {
+
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $modal, $closeModal = true, $reloadPage = false, $ocultarMsg = true) {
         var $msgOld = "";
         msgFade($textTag, $msgText);
-        
+
         $divTag.attr('class', 'alert '+ $divClass);
-        
+
         $iconTag.attr('class', "glyphicon " + $iconClass);
-        
-        if (ocultarMsg) {
+
+        if ($ocultarMsg) {
             setTimeout(function() {
                 $divTag.attr('class', 'alert');
                 $iconTag.removeClass();
-                $textTag.html($msgOld);
+                $textTag.html("");
+			}, $msgShowTime);
+		}
 
-                if (closeModal) {
-                    $modal.modal('hide');
-                }
+		if ($closeModal) {
+			setTimeout(function() {
+                $modal.modal('hide');
+			}, $msgShowTime);
+		}
 
-                if (reloadPage) {
-                    location.reload();
-                }
-            }, $msgShowTime);
-        }
+		if ($reloadPage) {
+			setTimeout(function() {
+                location.reload();
+			}, $msgShowTime);
+		}
     }
 });
