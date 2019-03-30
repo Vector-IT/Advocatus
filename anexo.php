@@ -46,11 +46,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-4">
-						<img alt="" title="" style="widtH: 100%; height: auto;" src="admin/<?php echo $anexo["ImagAnex"]?>">
+						<img alt="" title="" style="widtH: 100%; height: auto;" src="admin/imgProductos/RutaImag-fst1j.jpg">
 					</div>
 					<div class="col-sm-8">
 						<div class="info-anexo">
-                            <h1 style="margin-top: 0;"><?php echo $anexo["Titulo"]?></h1>
+                            <h1 style="margin-top: 0;">Docentes Privados</h1>
 
                             <p>
                                 <?php echo $anexo["Descripcion"]?>

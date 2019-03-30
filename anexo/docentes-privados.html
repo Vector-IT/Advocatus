@@ -1,0 +1,726 @@
+<html><head>
+	
+    <base href="/">
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+    <meta name="author" content="">
+    
+    <meta property="og:image" content="http://eadvocatus.com.ar/img/home/logo.jpg">
+    
+    <title>ADVOCATUS | Editorial · Librería</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="admin/css/font-awesome.css">
+    
+    <!-- Custom CSS -->
+    <link href="css/estilos.css" rel="stylesheet">
+    <link href="fuentes/fuentes.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/api2/v1552285980763/recaptcha__es.js"></script><script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Login Modal JavaScript -->
+    <script src="js/forms.js" type="text/javascript"></script>
+    <script src="js/publicos.js" type="text/javascript"></script>
+
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=myCallBackCaptcha&amp;render=explicit" async="" defer=""></script>
+	<!-- Custom CSS -->
+	<link href="css/sidebar.css" rel="stylesheet">
+
+</head>
+<body>
+	<div id="wrapper">
+		<div class="overlay"></div>
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+
+			<!-- HEADER -->
+<nav id="menu-principal" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-nav">
+	<!-- Links Header -->
+	<div class="links-header">
+		<div class="row noMargin">
+			<div class="col-lg-12">
+				<a class="lista-precios pull-right" href="/descargas/Lista Advocatus  Nacional Agosto 2017 - Nº 46  - Revisada, Ordenada - 08 de Agosto 2017.xls">Lista de Precios</a>
+				<a class="mis-compras pull-right" href="mi-carrito.php">Mi Carrito(<span class="cantProds">1</span>)</a>
+				<div id="divLogin" class="logueo pull-right" style="display: none;"><a href="#login-modal" data-toggle="modal" class="navbar-link" role="button">Ingresar</a></div>
+				<div id="divLogout" class="logueo pull-right"><a href="php/logout.php" class="navbar-link clickable" title="Cerrar sesión">Jorge Lacuara</a></div>
+			</div>
+		</div>
+	</div>
+	<!-- Menu Mobile & Logo -->
+	<div class="navbar-header  col-md-3">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="index.php"><img class="img-responsive img-center" src="./img/home/logo.jpg" alt=""></a>
+	</div>
+	<div class="redes-sociales col-md-2 pull-right">
+		
+<a href="https://www.facebook.com/Editorial.Advocatus/" target="_blank"><img class="" src="./img/home/fb.png" alt=""></a>
+<a href="https://twitter.com/EAdvocatus" target="_blank"><img class="" src="./img/home/t.png" alt=""></a>
+<a href="https://www.instagram.com/editorialadvocatus/" target="_blank"><img class="" src="./img/home/i.png" alt=""></a>	</div>
+	<!-- Buscador -->
+	<div class="buscador col-md-7">
+		<!-- <form id="frmBusqueda" class="form-horizontal" role="form"> -->
+			<div class="input-group" id="adv-search">
+				<input type="text" name="texto1" id="bsqTexto1" class="form-control busqueda" placeholder="" value="">
+				<div class="input-group-btn">
+					<div class="btn-group" role="group">
+						<div class="dropdown dropdown-lg">
+							<button type="submit" class="btn btn-primary" onclick="busqSimple()" ;="">Buscar</button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span>Búsqueda Avanzada</span></button>
+							<div class="dropdown-menu dropdown-menu-right" role="menu">
+								<form id="frmBusqueda" class="form-horizontal" role="form" action="productos.php">
+									<input type="hidden" name="buscar" id="bsqBuscar" value="1">
+									<div class="form-group">
+										<label for="filter">Filtrar por</label>
+										<select class="form-control" name="tipo" id="bsqTipo">
+											<option value="">Todos</option>
+											<option value="1">Destacados</option>
+											<option value="2">Promociones</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="filter">Filtrar por Editorial</label>
+										<select class="form-control" name="editorial" id="bsqEditorial">
+											
+<option value="">Seleccione...</option>
+<option value="38">Ad-Hoc</option>
+<option value="39">Advocatus Ediciones</option>
+<option value="45">Astrea</option>
+<option value="40">Errepar</option>
+<option value="41">Garcia Alonso</option>
+<option value="42">La Ley</option>
+<option value="37">Zavalia</option>										</select>
+									</div>
+									<div class="form-group">
+										<label for="filter">Filtrar por Categoría</label>
+										<select class="form-control" name="categoria" id="bsqCategoria">
+											
+<option value="">Seleccione...</option>
+<option value="145">Administracion, Contabilidad y Economia</option>
+<option value="163">Codigos y Leyes</option>
+<option value="125">Derecho</option>
+<option value="157">Jurisprudencia</option>
+<option value="200">Lectura General</option>
+<option value="164">Otros Productos</option>
+<option value="150">Practica Profesional</option>
+<option value="162">Tecnicos, Arquitectura e ingenieria</option>										</select>
+									</div>
+									<div class="form-group">
+										<label for="contain">Autor</label>
+										<input class="form-control" type="text" name="autor" id="bsqAutor" value="">
+									</div>
+									<div class="form-group">
+										<label for="contain">Fecha de edición</label>
+										<input class="form-control" type="text" name="fecha" id="bsqFecha" value="">
+									</div>
+									<div class="form-group">
+										<label for="contain">Contiene las palabras</label>
+										<input class="form-control" type="text" name="texto" id="bsqTexto" value="">
+									</div>
+									<input type="hidden" name="orden" id="bsqOrden" value="1">
+									<input type="hidden" name="subcat" id="bsqSubcat" value="">
+									<input type="hidden" name="cate" id="bsqCate" value="">
+									<button type="submit" class="btn btn-primary" onclick="busqAvanzada();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- </form> -->
+	</div>
+	<!-- Menú -->
+	<div class="col-sm-12 col-md-10 pull-right collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li class="active">
+				<a href="index.php">Home</a>
+			</li>
+			<li>
+				<a href="quienes-somos.php">Quienes Somos</a>
+			</li>
+			<li>
+				<a href="productos.php">Productos</a>
+			</li>
+			<li>
+				<a href="novedades.php">Novedades</a>
+			</li>
+			<li>
+				<a href="promociones.php">Promociones</a>
+			</li>
+			<li>
+				<a href="anexos.php">Anexos</a>
+			</li>
+			<li>
+				<a href="contacto.php">Contacto</a>
+			</li>
+		</ul>
+	</div>
+	<!-- /.navbar-collapse -->
+</div>
+<!-- /.container -->
+</nav>
+<!-- /.HEADER -->
+<!-- MODAL LOGIN -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header" align="center">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			</button>
+		</div>
+		<!-- Begin # DIV Form -->
+		<div id="div-forms">
+			<!-- Begin # Login Form -->
+			<form id="login-form" method="post">
+				<h4 class="modal-title">Iniciar Sesión</h4>
+				<div class="modal-body">
+					<input class="form-control" id="nombUser" type="text" placeholder="Usuario" required="" style="text-transform: none !important;">
+					<input class="form-control" id="nombPass" type="password" placeholder="Contraseña" required="" style="text-transform: none !important;">
+					<div class="checkbox">
+						<label>
+						<input type="checkbox" id="chkRemember"> Recordarme
+						</label>
+					</div>
+					<div id="divLoginMsg" class="alert noMargin" role="alert">
+						<span id="iconLogin" class="" aria-hidden="true"></span>&nbsp;<span id="txtLoginMsg"></span>
+					</div>
+				</div>
+				<div class="modal-footer" style="border-top: none !important;">
+					<div>
+						<button type="submit" class="btn btn-small pull-left">Iniciar Sesión</button>
+					</div>
+					<div>
+						<button id="login_lost_btn" type="button" class="btn btn-link">Recuperar contraseña</button>
+						<button id="login_register_btn" type="button" class="btn btn-link" style="color: #BCAA66 !important;">Registrarse</button>
+					</div>
+				</div>
+			</form>
+			<!-- End # Login Form -->
+			<!-- Begin | Lost Password Form -->
+			<form id="lost-form" method="post" style="display:none;">
+				<h4 class="modal-title">Recuperar Contraseña</h4>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="div-lost-msg">
+								<span id="text-lost-msg">Ingrese su e-mail</span>
+							</div>
+							<input id="lost_email" class="form-control" type="text" placeholder="E-Mail" style="text-transform: none !important;" required="">
+							<div id="recaptcha1"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1&amp;co=aHR0cDovL2VhZHZvY2F0dXMuY29tLmFyOjgw&amp;hl=es&amp;v=v1552285980763&amp;theme=light&amp;size=normal&amp;cb=wqwma6wox39h" width="304" height="78" role="presentation" name="a-symu9wlh8iwf" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div></div>
+						</div>
+					</div>
+					<div id="divLostMsg" class="alert noMargin" role="alert">
+						<span id="iconLost" class="" aria-hidden="true"></span>&nbsp;<span id="txtLostMsg"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-4">
+							<button type="submit" id="btnRecuperar" class="btn btn-small pull-left">Enviar</button>
+						</div>
+						<div class="col-md-8 text-right">
+							<button id="lost_login_btn" type="button" class="btn btn-link">Iniciar Sesión</button>
+							<button id="lost_register_btn" type="button" class="btn btn-link">Registrarse</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!-- End | Lost Password Form -->
+			<!-- Begin | Register Form -->
+			<form id="register-form" style="display:none;">
+				<h4 class="modal-title" style="">Registrarse</h4>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="NombPers">Nombre completo *</label>
+							<input type="text" class="form-control form-custom" id="NombPers" placeholder="Nombre Completo *" required="">
+							<label for="TeleUser">Teléfono *</label>
+							<input type="text" class="form-control form-custom" id="TeleUser" placeholder="Teléfono *" required="">
+							<label for="MailUser">Mail *</label>   
+							<input type="email" class="form-control form-custom" id="MailUser" placeholder="Correo Electrónico *" required="">
+							<div class="row">
+								<div class="col-md-8">
+									<label for="DireUser">Dirección *</label>
+									<input type="text" class="form-control form-custom" id="DireUser" placeholder="Dirección *" required="">
+								</div>
+								<div class="col-md-4">
+									<label for="CodiPost">Código Postal *</label>
+									<input type="text" class="form-control form-custom" id="CodiPost" placeholder="Código Postal" required="">
+								</div>
+							</div>
+							<label from="NombLoca">Localidad *</label>
+							<input type="text" class="form-control form-custom" id="NombLoca" placeholder="Localidad *" required="">
+							<label for="NumeProv">Provincia *</label>
+							<select class="form-control form-custom" id="NumeProv" required="">
+							
+<option value="2">Buenos Aires</option>
+<option value="1">Capital Federal</option>
+<option value="3">Catamarca</option>
+<option value="6">Chaco</option>
+<option value="7">Chubut</option>
+<option value="4">Cordoba</option>
+<option value="5">Corrientes</option>
+<option value="8">Entre Ríos</option>
+<option value="9">Formosa</option>
+<option value="10">Jujuy</option>
+<option value="11">La Pampa</option>
+<option value="12">La Rioja</option>
+<option value="13">Mendoza</option>
+<option value="14">Misiones</option>
+<option value="15">Neuquén</option>
+<option value="16">Río Negro</option>
+<option value="17">Salta</option>
+<option value="18">San Juan</option>
+<option value="19">San Luis</option>
+<option value="20">Santa Cruz</option>
+<option value="21">Santa Fe</option>
+<option value="22">Santiago del Estero</option>
+<option value="23">Tierra del Fuego</option>
+<option value="24">Tucumán</option>							</select>
+							<label for="NombUser">Usuario *</label>
+							<input type="text" class="form-control form-custom" id="NombUser" placeholder="Usuario *" required="">
+							<label for="NombPass">Contraseña *</label>
+							<input type="password" class="form-control form-custom" id="NombPass" placeholder="Contraseña *" required="">
+							<input type="password" class="form-control form-custom" id="NombPass2" placeholder="Repetir Contraseña *" required="">
+							<div id="recaptcha2"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1&amp;co=aHR0cDovL2VhZHZvY2F0dXMuY29tLmFyOjgw&amp;hl=es&amp;v=v1552285980763&amp;theme=light&amp;size=normal&amp;cb=fqcpiqazzrul" width="304" height="78" role="presentation" name="a-z06wertuyhlj" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response-1" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div></div>
+						</div>
+					</div>
+					<div id="divRegisterMsg" class="alert noMargin" role="alert">
+						<span id="iconRegister" class="" aria-hidden="true"></span>&nbsp;<span id="txtRegisterMsg"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-small pull-left">Registrarse</button>  
+						</div>
+						<div class="col-md-8 text-right">
+							<p>Ya eres un usuario registrado? <button id="register_login_btn" type="button" class="btn btn-link">Iniciar sesión</button>    </p>
+						</div>
+					</div>
+				</div>
+			</form>
+			<!-- End | Register Form -->
+		</div>
+		<!-- End # DIV Form -->
+	</div>
+</div>
+</div>
+<!-- /.MODAL LOGIN -->
+			<!-- CONTENIDO -->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<img alt="" title="" style="widtH: 100%; height: auto;" src="admin/imgProductos/RutaImag-fst1j.jpg">
+					</div>
+					<div class="col-sm-8">
+						<div class="info-anexo">
+                            <h1 style="margin-top: 0;">Docentes Privados</h1>
+
+                            <p>
+                                * Régimen Laboral
+    * Normas Constitucionales
+    * Ley 13.047
+    * Ley de Contratos de Trabajo y concordancias con el Codigo Civil y Comercial
+                            </p>
+                            <h2>Información adicional</h2>
+                                                                    <p><span class="ucase">Editorial:</span> Advocatus Ediciones</p>
+                            
+                                                                    <p><span class="ucase">Autor:</span> Seco, Ricardo Francisco</p>
+                            
+                                                                    <p><span class="ucase">Edición:</span> 1ra</p>
+                            
+                                                                    <p><span class="ucase">Fecha de Edición:</span> 2019</p>
+                            
+                                                                    <p><span class="ucase">ISBN:</span> 9789875513839</p>
+                            
+                                                                    <p><span class="ucase">Páginas:</span> 814</p>
+                            
+                                                
+                                                                    <p><span class="ucase">Indice:</span> <a href="admin/Indice/Indice-hka69.pdf" target="_blank">DESCARGA</a></p>
+                            
+                                                                    <p><span class="ucase">Encuadernacion:</span> Rústico</p>
+                            
+                                                
+                                                                    <p><span class="ucase">TIpo de texto:</span> Texto profesional</p>
+
+                            <h2>Contenido</h2>
+                            
+<p>
+    1. <strong>Legislación</strong>
+</p>
+<p style="padding-left: 3%;">
+    1.1. <strong>Internacional</strong></p>
+<div style="padding-left: 6%;">
+<p>
+    1.1.1. Convención Americana Sobre Derechos Humanos (Pacto de San José)
+<a href="/descargas/Convencion%20Americana%20Sobre%20Derechos%20Humanos%20%28Pacto%20de%20San%20Jose%29.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.2. Convención Internacional sobre la Eliminación de todas las Formas de
+    Discriminación Racial
+<a href="/descargas/Convencion%20Internacional%20sobre%20la%20Eliminacion%20de%20todas%20las%20Formas%20de%20Discriminacion%20Racial.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.3. Convención relativa a la Lucha contra la Discriminación en la Esfera
+    de la Enseñanza - UNESCO 1960
+<a href="/descargas/Convencion%20relativa%20a%20la%20lucha%20contra%20la%20discriminacion%20en%20la%20esfera%20de%20la%20ense%C3%B1anza%20-%20UNESCO%201960.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.4. Pacto Internacional de Derechos Civiles y Políticos
+<a href="/descargas/Pacto%20Internacional%20de%20Derechos%20Civiles%20y%20Politicos.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.5. Convención sobre los Derechos de las Personas con Discapacidad
+<a href="/descargas/Convencion%20sobre%20los%20derechos%20de%20las%20personas%20con%20discapacidad.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.6. Protocolo Adicional a la Convención Americana sobre Derechos Humanos
+<a href="/descargas/Protocolo%20Adicional%20a%20la%20Convencion%20Americana%20Sobre%20Derechos%20Humanos.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.7. OIT - C87 Convenio sobre la Libertad Sindical y la Protección del
+    Derecho de Sindicación
+<a href="/descargas/OIT%20-%20C87%20Convenio%20sobre%20la%20libertad%20sindical%20y%20la%20proteccion%20del%20derecho%20de%20sindicacion.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.8. OIT - C95 Convenio sobre la Protección del Salario
+<a href="/descargas/OIT%20-%20C95%20Convenio%20sobre%20la%20proteccion%20del%20salario.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.9. OIT - C98 Convenio sobre el Derecho de Sindicación y de Negociación
+    Colectiva
+<a href="/descargas/OIT%20-%20C98%20Convenio%20sobre%20el%20derecho%20de%20sindicacion%20y%20de%20negociacion%20colectiva.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.1.10. Recomendación de OIT - UNESCO 1966 y UNESCO 1997
+<a href="/descargas/Recomendaci%C3%B3n%20de%20OIT-UNESCO%201966%20y%20UNESCO%201997.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+</div>
+<p style="padding-left: 3%;">
+    1.2. <strong>Leyes nacionales y decretos</strong></p>
+<div style="padding-left: 6%;">
+<p>
+    1.2.1. Constitución de la Nación Argentina
+<a href="/descargas/Constitucion%20de%20la%20Nacion%20Argentina.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.2. Ley 26.206 - Ley de Educación Nacional
+<a href="/descargas/Ley%2026.206%20-%20Ley%20de%20Educacion%20Nacional.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.3. Ley 24.521 - Educación Superior
+<a href="/descargas/Ley%2024.521%20-%20Educaci%C3%B3n%20Superior.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.4. Ley 20.744 - Ley de Contrato de Trabajo
+<a href="/descargas/Ley%2020.744%20-%20Ley%20de%20Contrato%20de%20Trabajo.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.5. Ley 25.573 - Educación Superior - Modificación de Ley N° 24.521
+<a href="/descargas/Ley%2025.573%20-%20Educacion%20Superior%20-%20Modificacion%20de%20Ley%20N%C2%B0%2024.521.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.6. Ley 13.047 - Estatuto del Docente de Establecimientos Privados
+<a href="/descargas/Ley%2013.047%20-%20Estatuto%20del%20Docente%20de%20Establecimientos%20Privados.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.7. Ley 16.727 - Creación del fondo escolar permanente
+<a href="/descargas/Ley%2016.727%20Creacion%20del%20fondo%20escolar%20permanente.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.8. Ley 24.049 - Transferencia a las Provincias y a la Municipalidad de
+    Buenos Aires de Servicios Educativos
+<a href="/descargas/Ley%2024.049%20-%20Transferencia%20a%20las%20Provincias%20y%20a%20la%20Municipalidad%20de%20Buenos%20Aires%20de%20Servicios%20Educativos.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.9. Ley 24.557 - Riesgos del Trabajo
+<a href="/descargas/Ley%2024.557%20-%20Riesgos%20del%20Trabajo.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.10. Ley 25.864 - Establecimientos donde se imparta Educación Inicial -
+    General - Básica y Polimodal o sus equivalentes
+<a href="/descargas/Ley%2025.864%20-%20Establecimientos%20donde%20se%20imparta%20Educacion%20Inicial%20-%20General%20-%20Basica%20y%20Polimodal%20o%20sus%20equivalentes.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.11. Ley 25.919 - Fondo Nacional de Incentivo Docente - Modifica Ley
+    25.053
+<a href="/descargas/Ley%2025.919%20-%20Fondo%20Nacional%20de%20Incentivo%20Docente%20-%20Modifica%20Ley%2025.053.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.12. Ley 25.923 - Obligaciones tributarias con relación al fondo
+    nacional de incentivo docente
+<a href="/descargas/Ley%2025.923%20-%20Obligaciones%20tributarias%20con%20relacion%20al%20fondo%20nacional%20de%20incentivo%20docente.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.13. Ley 26.058 - Ley de Educación Técnico Profesional
+<a href="/descargas/Ley%2026.058%20-%20Ley%20de%20Educacion%20Tecnico%20Profesional.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.14. Ley 26.061 - Ley de Protección Integral de los Derechos de las
+    Niñas Niños y Adolescentes
+<a href="/descargas/Ley%2026.061%20-%20Ley%20de%20Proteccion%20Integral%20de%20los%20Derechos%20de%20las%20Ni%C3%B1as%20Ni%C3%B1os%20y%20Adolescentes.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.15. Ley 26.075 - Modificación de Ley N° 25.919 - Fondo Nacional de
+    Incentivo Docente
+<a href="/descargas/Ley%2026.075%20-%20Modificacion%20de%20Ley%20N%C2%B0%2025.919%20-%20Fondo%20Nacional%20de%20Incentivo%20Docente.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.16. Ley 26.150 - Programa Nacional de Educación Sexual Integral
+<a href="/descargas/Ley%2026.150%20-%20Programa%20Nacional%20de%20Educacion%20Sexual%20Integral.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.17. Ley 26.233 - Centro de Desarrollo Infantil
+<a href="/descargas/Ley%2026.233%20-%20Centro%20de%20Desarrollo%20Infantil.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.18. Ley 26.773 - Riesgos del Trabajo
+<a href="/descargas/Ley%2026.773%20-%20Riesgos%20del%20Trabajo.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.19. Ley 27.064 - Jardines Maternales - Infantes
+<a href="/descargas/Ley%2027.064%20-%20Jardines%20Maternales%20-%20Infantes.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.20. Ley 27.348 - Complementaria de la Ley sobre Riesgos del Trabajo
+<a href="/descargas/Ley%2027.348%20-%20Complementaria%20de%20la%20Ley%20sobre%20Riesgos%20del%20Trabajo.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.21. Ley 25.053 - Fondo Nacional de Incentivo Docente
+<a href="/descargas/Ley%2025.053%20-%20Fondo%20Nacional%20de%20Incentivo%20Docente.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.22. Ley 26.485 - Protección Integral a las Mujeres
+<a href="/descargas/Ley%2026.485%20Proteccion%20Integral%20a%20las%20Mujeres.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.23. Ley 26.892 - Para la promoción de la convivencia y el abordaje de
+    la conflictividad social en las instituciones educativas
+<a href="/descargas/Ley%2026.892%20-%20Para%20la%20promocion%20de%20la%20%20convivencia%20y%20el%20abordaje%20de%20la%20conflictividad%20social%20en%20las%20instituciones%20educativas.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.24. Decreto 54-17
+<a href="/descargas/Decreto.%2054-17.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.25. Decreto 571-80 reglamentario de la Ley 13.047
+<a href="/descargas/Decreto%20571-80%20reglamentario%20de%20la%20Ley%2013.047.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.26. Resolución SRT 319-17
+<a href="/descargas/Resolucion%20SRT%20%20319-17.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.27. Resolución SRT 298-17
+<a href="/descargas/Resolucion%20SRT%20298-17.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+<p>
+    1.2.28. Resolución SRT 326-17
+<a href="/descargas/Resolucion%20SRT%20326-17.pdf" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a></p>
+</div>
+
+<p style="padding-left: 3%;">
+    1.3. <strong>Leyes Provinciales</strong>
+</p>
+<div style="padding-left: 6%;">
+<p>
+    1.3.1. <strong> </strong>Buenos Aires
+<a href="/descargas/buenos_aires.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    1.3.2. Ciudad Autónoma de Buenos aires
+<a href="/descargas/Ciudad_Autonoma_de_Bs_As.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    1.3.3. Córdoba
+<a href="/descargas/Cordoba.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    1.3.4. Mendoza
+<a href="/descargas/Mendoza.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    1.3.5. Santa Fe
+<a href="/descargas/Santa%20Fe.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+</div>
+<p>
+    2. <strong>Jurisprudencia</strong>
+</p>
+<p style="padding-left: 3%;">
+    <strong>2.1. </strong>
+    <strong>Corte Suprema de Justicia de la Nación</strong>
+    <strong></strong>
+<a href="/descargas/1-%20Corte%20Suprema%20de%20Justicia%20de%20la%20Nacion.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p style="padding-left: 3%;">
+    <strong>2.2. </strong>
+    <strong>Cámara Nacional de Apelaciones del Trabajo</strong>
+    <strong></strong>
+    <a href="/descargas/2-%20Camara%20Nacional%20de%20Apelaciones%20del%20Trabajo.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p style="padding-left: 3%;">
+    <strong>2.3. </strong>
+    <strong>Tribunales Provinciales</strong>
+    <strong></strong>
+</p>
+<div style="padding-left: 6%;">
+<p>
+    2.3.1. Provincia de Buenos Aires
+<a href="/descargas/Provincia_de_Buenos_Aires.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    2.3.2. Provincia de Córdoba
+<a href="/descargas/Provincia_de_Cordoba.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    2.3.3. Provincia de Mendoza
+<a href="/descargas/Provincia_de_Mendoza.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    2.3.4. Provincia de Santa Fe
+<a href=/descargas/Provincia_de_Santa_Fe.zip target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+</div>
+<p style="padding-left: 3%;">
+    <strong>2.4. </strong>
+    <strong>Boletines de Jurisprudencia</strong>
+    <strong></strong>
+<a href="" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<div style="padding-left: 6%;">
+<p>
+    2.4.1. Corte Suprema de Justicia de la Nación
+<a href="/descargas/4.a-Corte%20Suprema%20de%20Justicia%20de%20la%20Nacion.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    2.4.2. Cámara Nacional de Apelaciones del Trabajo
+<a href="/descargas/4.b-Camara%20Nacional%20de%20Apelaci%C3%B3nes%20del%20Trabajo.zip" target="_blank" title="Descargar"><i class="fa fa-fw fa-download"  style="display: none;" aria-hidden="true"></i></a></p>
+<p>
+    2.4.2.1. Boletines de Novedades de Jurisprudencia
+</p>
+</div>
+<div style="padding-left: 9%;">
+<p>
+    2.4.2.1.1. 2003
+</p>
+<p>
+    2.4.2.1.2. 2004
+</p>
+<p>
+    2.4.2.1.3. 2005
+</p>
+<p>
+    2.4.2.1.4. 2006
+</p>
+<p>
+    2.4.2.1.5. 2007
+</p>
+<p>
+    2.4.2.1.6. 2008
+</p>
+<p>
+    2.4.2.1.7. 2009
+</p>
+<p>
+    2.4.2.1.8. 2010
+</p>
+<p>
+    2.4.2.1.9. 2011
+</p>
+<p>
+    2.4.2.1.10. 2012
+</p>
+<p>
+    2.4.2.1.11. 2013
+</p>
+<p>
+    2.4.2.1.12. 2014
+</p>
+<p>
+    2.4.2.1.13. 2015
+</p>
+</div>
+<p  style="padding-left: 6%;">
+    2.4.2.2. Boletines Temáticos
+</p>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.CONTENIDO -->
+
+			    <!-- FOOTER -->
+    <div class="container-full">
+      <footer>
+        <div class="row noMargin">
+          <div class="col-lg-1">
+          </div>
+          <div class="col-lg-10">
+            <div class="col-sm-4">
+              <a href="#"><img src="./img/home/logo-footer.png" alt="" style="margin-bottom: 25px;"></a>
+              <div class="col-sm-12 redes-sociales">
+                
+<a href="https://www.facebook.com/Editorial.Advocatus/" target="_blank"><img class="img-center" src="./img/home/social_fb.png" alt=""></a>
+<a href="https://twitter.com/EAdvocatus" target="_blank"><img class="img-center" src="./img/home/social_tw.png" alt=""></a>
+<a href="https://www.instagram.com/editorialadvocatus/" target="_blank"><img class="img-center" src="./img/home/social_inst.png" alt=""></a>              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="col-sm-6">
+                <ul>
+                  <li><a href="index.php">Home</a></li>
+                  <li><a href="quienes-somos.php">Quienes Somos</a></li>
+                  <li><a href="productos.php">Productos</a></li>
+                </ul>
+              </div>
+              <div class="col-sm-6">
+                <ul>
+                  <li><a href="novedades.php">Novedades</a></li>
+                  <li><a href="promociones.php">Promociones</a></li>
+                  <li><a href="contacto.php">Contacto</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <a class="btn-suscripcion" href="#">SUSCRIBIRSE AL BOLETIN DE NOTICIAS</a>
+              <a class="btn-envios" href="#">ENVIOS</a>
+            </div>
+          </div>
+          <div class="col-lg-1">
+          </div>
+        </div>
+        <!-- /.row -->
+        <div class="row noMargin subfooter">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-10">
+          <div class="row noMargin noPadding">
+          <div class="col-lg-3">
+           <p class="tels">Tel.: +54 351 446 - 1931 / 1932</p>  
+          </div>
+          <div class="col-lg-5">
+            <a href="https://www.mercadopago.com.ar/promociones" target="_blank"><img class="img-responsive img-center" src="./img/home/tarjetas-footer.png" alt="" style="max-width: 500px;"></a>
+          </div>
+          <div class="col-lg-3">             
+            <p class="copyright">EDITORIAL ADVOCATUS LIBRERIA. ©2017</p>    
+          </div>
+          <div class="col-lg-1">    
+          <a href="http://qr.afip.gob.ar/?qr=pFPVKyHQXZNOU1w81V302A,," target="_blank" style="display: inline-block;/*! width: 50px; */">
+            <img class="img-responsive" src="./img/afip-dataweb.jpg" alt="" style="max-width: 60px;display: inline-block;width: 40px;height: auto;">
+          </a>
+          </div>
+          </div>
+          </div>
+          <div class="col-lg-1"></div>
+        </div>
+        <!-- /.row -->
+      </footer>
+    </div>
+    <!-- /.FOOTER -->
+		</div>
+		 <!-- /#page-content-wrapper --> 
+
+		 <!-- Sidebar -->
+<nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+	<ul class="nav sidebar-nav">
+		<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-bottom"></span> </button>
+		<h1>Carrito de Compras</h1>
+
+		<div id="divCarrito"></div>
+
+		<p class="subtotal">Subtotal: $ <span id="subtotal">0</span></p>
+		<p class="subtotal">Bonificación: $ <span id="bonificacion">0</span></p>
+		<p class="total">Total: $ <span id="total">0</span></p>
+		<a href="mi-carrito.php" class="btn-carrito-negro">Comprar</a>  
+	</ul>
+</nav>
+<!-- /#sidebar-wrapper --> 	  </div>
+	  <!-- /#wrapper --> 
+
+	<!-- Menu Handler JavaScript -->    
+<script>
+	$(document).ready(function () {
+		var url = window.location;
+		// Will only work if string in href matches with location
+		$('ul.nav a[href="' + url + '"]').parent().addClass('active');
+		// Will also work for relative and absolute hrefs
+		$('ul.nav a').filter(function() {
+			return this.href == url;
+		}).parent().addClass('active');
+
+		if ($('ul.nav.navbar-nav li.active').length == 0) {
+			$('ul.nav.navbar-nav a[href="index.php"]').parent().addClass('active');
+		}
+    });
+</script>
+<div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility 0s linear 0.3s, opacity 0.3s linear 0s; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div class="g-recaptcha-bubble-arrow" style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;"></div><div class="g-recaptcha-bubble-arrow" style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;"></div><div style="z-index: 2000000000; position: relative;"><iframe title="Reto recaptcha" src="https://www.google.com/recaptcha/api2/bframe?hl=es&amp;v=v1552285980763&amp;k=6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1&amp;cb=7ylw63hu4x18" name="c-3wakwuikipg7" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox" style="width: 100%; height: 100%;"></iframe></div></div><div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility 0s linear 0.3s, opacity 0.3s linear 0s; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div class="g-recaptcha-bubble-arrow" style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;"></div><div class="g-recaptcha-bubble-arrow" style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;"></div><div style="z-index: 2000000000; position: relative;"><iframe title="Reto recaptcha" src="https://www.google.com/recaptcha/api2/bframe?hl=es&amp;v=v1552285980763&amp;k=6Ld0Ak4UAAAAAI84FUlVizjpdpVeJoAbZkbgMbE1&amp;cb=zi05pxp1taud" name="c-z6kxqjxresan" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox" style="width: 100%; height: 100%;"></iframe></div></div></body></html>

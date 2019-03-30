@@ -38,7 +38,7 @@
 
     
         <!-- ANEXOS -->
-        <div class="container">
+        <div class="container" style="display: none;">
         <?php 
             if ($anexos->num_rows > 0) {
                 $J = 0;
@@ -70,6 +70,36 @@
             }
         ?>
         </div>
+        <!-- /.ANEXOS -->
+
+<!-- ANEXOS -->
+        <div class="container">
+        
+        <div class="row row-eq-height">
+        <div class="col-sm-4 producto">
+            <div class="">
+                <a href="anexo/derecho-transito.php" class="img-producto"><img class="img-center" src="admin/imgAnexos/ImagAnex-0pec0.jpg" alt="" style="width: 150px; height: 219px;"></a>
+                <a href="anexo/derecho-transito.php" class="titulo-producto text-center">Derecho de Tránsito</a>
+               <p class="text-center">Maximiliano Calderón - Paulina R. Chiacchiera Castro - Armando G. Mayor</p>
+            </div>
+        </div>
+        <div class="col-sm-4 producto">
+            <div class="">
+                <a href="anexo/Codigo de Convivencia Ciudadana de la Provincia de Córdoba.php" class="img-producto"><img class="img-center" src="admin/imgAnexos/ImagAnex-f754q.jpg" alt="" style="width: 150px; height: 219px;"></a>
+                <a href="anexo/Codigo de Convivencia Ciudadana de la Provincia de Córdoba.php" class="titulo-producto text-center">Codigo de Convivencia Ciudadana de la Provincia de Córdoba</a>
+               <p class="text-center">Comentado
+        Ley Nº 10.326</p>
+            </div>
+        </div>
+        <div class="col-sm-4 producto">
+            <div class="">
+                <a href="anexo/docentes-privados.html" class="img-producto"><img class="img-center" src="admin/imgProductos/RutaImag-fst1j.jpg" alt="" style="width: 150px; height: 219px;"></a>
+                <a href="anexo/docentes-privados.html" class="titulo-producto text-center">Docentes Privados</a>
+               <p class="text-center">Seco, Ricardo Francisco</p>
+            </div>
+        </div>
+
+        </div>        </div>
         <!-- /.ANEXOS -->
 
         <?php include 'php/footer.php'; ?>
