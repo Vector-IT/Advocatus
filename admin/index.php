@@ -105,6 +105,8 @@
 	$strSQL.= $crlf."INNER JOIN productos p ON cd.NumeProd = p.NumeProd";
 	$strSQL.= $crlf."WHERE cd.NumeCarr IN (SELECT NumeCarr FROM carritos c WHERE c.NumeEstaCarr >= 7)";
 	$strSQL.= $crlf."GROUP BY p.NombProd";
+	$strSQL.= $crlf."ORDER BY 2 DESC";
+	$strSQL.= $crlf."LIMIT 10";
 
 	$prodVend = $config->cargarTabla($strSQL);
 
@@ -219,7 +221,7 @@
 				},
 				title: {
 					display: true,
-					text: 'Productos más vendidos',
+					text: 'Top 10 Productos más vendidos',
 					fontSize: 16
 				},
 				animation: {

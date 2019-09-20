@@ -54,6 +54,7 @@ class Tabla
 	public $jsOnList; //String - Nombre de función en JavaScript para ejecutar al listar items
 	public $jsOnNew; //String - Nombre de función en JavaScript para ejecutar al crear un item
 	public $jsOnEdit; //String - Nombre de función en JavaScript para ejecutar al editar un item
+	public $jsAfterSubmit;        // String - Código JavaScript para ejecutar al final de aceptar
 	
 	public $cssFiles; //Array - Ruta de archivos css para cargar
 
@@ -125,6 +126,7 @@ class Tabla
 		$this->jsOnList = '';
 		$this->jsOnNew = '';
 		$this->jsOnEdit = '';
+		$this->jsAfterSubmit        = '';
 
 		$this->cssFiles = [];
 
@@ -463,7 +465,7 @@ class Tabla
 		echo $strSalida;
 	}
 
-	protected function createField($field, $prefix = '')
+	public function createField($field, $prefix = '')
 	{
 		global $crlf, $config;
 
@@ -1719,6 +1721,9 @@ class Tabla
 			$strSalida.= $crlf.'				$(".selectpicker").selectpicker("deselectAll");';
 			if ($this->allowNew || $this->allowEdit) {
 				$strSalida.= $crlf.'				editar'. $this->tabladb .'(-1);';
+			}
+			if ($this->jsAfterSubmit != '') {
+				$strSalida.= $crlf.'				'.$this->jsAfterSubmit;
 			}
 			$strSalida.= $crlf.'				listar'. $this->tabladb .'();';
 			$strSalida.= $crlf.'			}';

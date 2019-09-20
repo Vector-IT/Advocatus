@@ -723,17 +723,23 @@
 	$tabla->masterTable = "anexos";
 	$tabla->masterFieldName = "Titulo";
 	$tabla->masterFieldId = "NumeAnex";
-
 	$tabla->orderField = "NumeOrde";
+
+	$tabla->jsFiles[] = 'admin/js/custom/anexos.js';
+	$tabla->jsAfterSubmit = 'cargarPadres();';
 	
 	$tabla->addFieldId("CodiIden", "Código", true, true);
 	$tabla->addFIeld("NumeAnex", "number", "Anexo");
 	$tabla->fields["NumeAnex"]["isHiddenInList"] = true;
 	$tabla->fields["NumeAnex"]["isHiddenInForm"] = true;
 
-	$tabla->addField("NombFile", "text", 40, "Nombre");
+	$tabla->addFieldSelect('NumePadr', 60, 'Padre', false, '', 'anexosarchivos', 'aa', 'CodiIden', 'NombFile', 'NumeAnex = '. (isset($_REQUEST["NumeAnex"]) ? $_REQUEST["NumeAnex"] : "''"), '', 'NumeOrde', true);
+	$tabla->fields['NumePadr']['nameAlias'] = 'NombPadr';
+
+	$tabla->addField("NombFile", "text", 60, "Nombre");
 	
-	$tabla->addFieldFileImage("RutaFile", "Archivo", "anexosFiles", "file");
+	$tabla->addFieldFileImage("RutaFile", "Archivo", "anexosFiles", "file", 80, false, true);
+
 	$tabla->addField("NumeEsta", "select", 0, "Estado", true, false, false, true, '1', '', 'estados', 'NumeEsta', 'NombEsta', 'NumeEsta IN (0, 1)', 'NombEsta');
 	$tabla->fields["NumeEsta"]["condFormat"] = 'return ($fila[$field["name"]] == 0);';
 	$tabla->fields["NumeEsta"]["classFormat"] = 'txtRed';

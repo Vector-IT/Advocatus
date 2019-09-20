@@ -19,9 +19,10 @@
     $numeAnex = $anexo["NumeAnex"];
 
 	//Archivos
-	$strSQL = "SELECT NombFile, RutaFile";
+	$strSQL = "SELECT CodiIden, NombFile, RutaFile";
 	$strSQL.= $crlf."FROM anexosarchivos";
 	$strSQL.= $crlf."WHERE NumeAnex = ". $numeAnex;
+	$strSQL.= $crlf."AND NumePadr IS NULL";
 	$strSQL.= $crlf."ORDER BY NumeOrde";
 	$archivos = cargarTabla($strSQL);
 ?>
@@ -32,7 +33,6 @@
 
 	<!-- Custom CSS -->
 	<link href="css/sidebar.css" rel="stylesheet">
-
 </head>
 <body>
 	<div id="wrapper">
@@ -46,31 +46,39 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-4">
-						<img alt="" title="" style="widtH: 100%; height: auto;" src="admin/imgProductos/RutaImag-fst1j.jpg">
+						<img style="width: 100%; height: auto;" src="admin/<?php echo $anexo["ImagAnex"]?>">
 					</div>
 					<div class="col-sm-8">
 						<div class="info-anexo">
-                            <h1 style="margin-top: 0;">Docentes Privados</h1>
+							<h1 style="margin-top: 0;"><?php echo $anexo["Titulo"]?></h1>
+							<p><?php echo $anexo["Subtitulo"]?></p>
 
-                            <p>
-                                <?php echo $anexo["Descripcion"]?>
-                            </p>
+							<h2>Información Adicional</h2>
+                            <p><?php echo $anexo["Descripcion"]?></p>
+
                             <h2>Contenido</h2>
                             <?php
                                 if (!isset($_SESSION['NumeUser'])) {
                                     echo '<p><strong>Tienes que estar logueado para poder descargar los archivos.</strong> <a href="#" data-toggle="modal" data-target="#login-modal">Iniciar Sesión</a></p>';
-                                }
+								}
+								
                                 $salida = '';
-                                while ($fila = $archivos->fetch_assoc()) {
-                                    $valor = '<a href="admin/'. $fila["RutaFile"] .'" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a>';
+                                while ($archivo = $archivos->fetch_assoc()) {
+									if ($archivo["RutaFile"] != '') {
+										$valor = '<a href="admin/'. $archivo["RutaFile"] .'" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a>';
+									}
+									else {
+										$valor = '';
+									}
                                     
-                                    if ($valor != "") {
-                                        $salida.= $crlf.'<p style="paffing-bottom: 10px;"><strong class="ucase">'.$fila["NombFile"].'</strong>';
-                                        if (isset($_SESSION['NumeUser'])) {
-                                            $salida.= ' '.$valor;
-                                        }
-                                        $salida.= '</p>';
-                                    }
+									$salida.= $crlf.'<p><strong>'.$archivo["NombFile"].'</strong>';
+									if (isset($_SESSION['NumeUser'])) {
+										$salida.= ' '.$valor;
+									}
+									$salida.= '</p>';
+
+									//Archivos
+									$salida.= cargarHijos($archivo["CodiIden"], 1);
                                 }
 
                                 echo $salida;
@@ -93,3 +101,34 @@
 	<?php include 'php/scripts-footer.php'; ?>
 </body>
 </html>
+<?php 
+	function cargarHijos($CodiIden, $I) {
+		global $crlf;
+
+		$strSQL = "SELECT CodiIden, NombFile, RutaFile";
+		$strSQL.= $crlf."FROM anexosarchivos";
+		$strSQL.= $crlf."WHERE NumePadr = ". $CodiIden;
+		$strSQL.= $crlf."ORDER BY NumeOrde";
+		$archivos = cargarTabla($strSQL);
+
+		$salida = '';
+		while ($archivo = $archivos->fetch_assoc()) {
+			$valor = '';
+
+			if ($archivo["RutaFile"] != '') {
+				$valor = '<a href="admin/'. $archivo["RutaFile"] .'" target="_blank" title="Descargar"><i class="fa fa-fw fa-download" aria-hidden="true"></i></a>';
+			}
+			
+			$salida.= $crlf.'<p style="margin-left: '.(20*$I).'px;">'.$archivo["NombFile"];
+			if (isset($_SESSION['NumeUser'])) {
+				$salida.= ' '.$valor;
+			}
+			$salida.= '</p>';
+
+			//Archivos
+			$salida.= cargarHijos($archivo["CodiIden"], $I+1);
+		}
+
+		return $salida;		
+	}
+?>

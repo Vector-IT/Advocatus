@@ -137,6 +137,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			header('Content-Type: application/json');
 			echo json_encode($array);
 			break;
+
+		// Crear campo
+		case "101":
+			echo $tabla->createField($tabla->fields[$_POST["field"]]);
+		break;
 	}
 }
 
